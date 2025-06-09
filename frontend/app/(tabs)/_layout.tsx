@@ -1,77 +1,66 @@
-import React from 'react';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Link, Tabs } from 'expo-router';
-import { Pressable } from 'react-native';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
-
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
-  color: string;
-}) {
-  return <MaterialCommunityIcons size={28} style={{ marginBottom: -3 }} {...props} />;
-}
+import { colors } from "@/constants/colors";
+import { Tabs } from "expo-router";
+import { Dumbbell, Home, LineChart, User, Utensils } from "lucide-react-native";
+import React from "react";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
+        tabBarActiveTintColor: colors.accent,
+        tabBarInactiveTintColor: colors.text.muted,
+        tabBarStyle: {
+          backgroundColor: colors.background.secondary,
+          borderTopColor: colors.divider,
+        },
+        headerStyle: {
+          backgroundColor: colors.background.main,
+        },
+        headerTitleStyle: {
+          fontWeight: "600",
+          color: colors.text.primary,
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Tab',
-          tabBarIcon: ({ color }) => <TabBarIcon name="view-dashboard-outline" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <MaterialCommunityIcons
-                    name="information"
-                    size={25}
-                    color={Colors[colorScheme ?? 'light'].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
+          title: "Dashboard",
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="food"
+        options={{
+          title: "Food",
+          tabBarIcon: ({ color, size }) => (
+            <Utensils size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="diary"
+        name="exercise"
         options={{
-          title: 'Diary',
-          tabBarIcon: ({ color }) => <TabBarIcon  name="book" color={color} />,
+          title: "Exercise",
+          tabBarIcon: ({ color, size }) => (
+            <Dumbbell size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="progress"
         options={{
-          title: 'add',
-          tabBarIcon: ({ color }) => <TabBarIcon name="plus" color={color} />,
+          title: "Progress",
+          tabBarIcon: ({ color, size }) => (
+            <LineChart size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="more"
+        name="profile"
         options={{
-          title: 'Progress',
-          tabBarIcon: ({ color }) => <TabBarIcon name="chart-line" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="add"
-        options={{
-          title: 'More',
-          tabBarIcon: ({ color }) => <TabBarIcon name="dots-horizontal" color={color} />,
+          title: "Profile",
+          tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
         }}
       />
     </Tabs>
