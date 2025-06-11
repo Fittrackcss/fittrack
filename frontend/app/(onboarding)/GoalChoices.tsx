@@ -9,16 +9,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CustomFooter from "@/components/ui/CustomFooter";
 
 const data = [
-  { id: "1", name: "Lose Weight" },
-  { id: "2", name: "Maintain Weight" },
-  { id: "3", name: "Gain Weight" },
-  { id: "4", name: "Gain Muscle" },
-  { id: "5", name: "Modify My Diet" },
-  { id: "6", name: "Plan Meals" },
-  { id: "7", name: "Manage Stress" },
-  { id: "8", name: "Stay Active" },
+  { id: "1", name: "Tone up" },
+  { id: "2", name: "Bulk up" },
+  { id: "3", name: "Get Strong" },
 ];
 
 const GoalItem = React.memo(
@@ -60,47 +57,53 @@ const GoalItem = React.memo(
   )
 );
 
-const Goals = () => {
+const GoalChoices = () => {
   const { toggleSelection, getSelections } = useOnboardingStore();
-  const selectedGoals = getSelections("goals-screen");
-  const [showModal, setShowModal] = useState(false);
-
-  const handleToggle = (id: string) => {
-    if (!selectedGoals.includes(id) && selectedGoals.length >= 3) {
-      setShowModal(true);
-      return;
-    }
-    toggleSelection("goals-screen", id, "multi-max-3");
-  };
+  const selected = getSelections("goal-choices-screen");
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <GoalItem
-            item={item}
-            isChecked={selectedGoals.includes(item.id)}
-            onToggle={handleToggle}
-          />
-        )}
-      />
-      <CustomModal
-        visible={showModal}
-        onClose={() => setShowModal(false)}
-        title="Error"
-        message="You can select up to 3 goals. Deselect one to add another."
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Goals</Text>
+        <Text style={styles.headerDesc}>Select your primary fitness goal</Text>
+        <Text style={styles.sub}>Select one</Text>
+      </View>
+      <View style={styles.container}>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <GoalItem
+              item={item}
+              isChecked={selected.includes(item.id)}
+              onToggle={(id) =>
+                toggleSelection("goal-choices-screen", id, "single")
+              }
+            />
+          )}
+        />
+      </View>
+      <View
+        style={{
+          position: "absolute",
+          bottom: 15,
+          width: "100%",
+        }}
+      >
+        <CustomFooter
+          item="MealPlanning"
+          screenId="goal-choices-screen"
+          mode="single"
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
-export default Goals;
+export default GoalChoices;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.9,
     padding: 20,
     backgroundColor: "#fff",
   },
@@ -126,7 +129,29 @@ const styles = StyleSheet.create({
   itemName: {
     flex: 1,
     fontSize: 16,
-    color: colors.text.primary,
+    color: colors.text.secondary,
     fontWeight: "700",
+  },
+  header: {
+    height: 150,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    padding: 20,
+    gap: 10,
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "600",
+    color: colors.text.secondary,
+  },
+  headerDesc: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: colors.text.primary,
+  },
+  sub: {
+    fontSize: 15,
+    color: colors.text.muted,
   },
 });

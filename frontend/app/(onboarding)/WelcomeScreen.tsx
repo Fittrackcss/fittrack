@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, useCallback } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -11,91 +11,95 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
-import { colors } from "../../constants/colors";
+import { colors } from "../../constants/Colors";
 import { useOnboardingStore } from "../../store/useOnboardingStore";
 import { onboardingSteps } from "./onboardingScreens";
+import CustomModal from "../../components/ui/CustomModal";
 
 const { width } = Dimensions.get("window");
 
 const WelcomeScreen = () => {
   const [isFocused, setIsFocused] = useState(false);
+  const [showValidationModal, setShowValidationModal] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
   const swiperRef = useRef(null);
 
-  // Zustand state
-  const onboardingIndex = useOnboardingStore((state) => state.currentIndex);
-  const setOnboardingIndex = useOnboardingStore(
-    (state) => state.setCurrentIndex
-  );
-  const formData = useOnboardingStore((state) => state.formData);
-  const updateFormData = useOnboardingStore((state) => state.updateFormData);
+  // Store state
+  const { currentIndex, setCurrentIndex, formData, updateFormData } =
+    useOnboardingStore();
 
-  const [localIndex, setLocalIndex] = useState(onboardingIndex);
+  // Get current step
+  const currentStep = onboardingSteps[currentIndex];
 
-  useEffect(() => {
-    if (localIndex !== onboardingIndex) {
-      setLocalIndex(onboardingIndex);
-      swiperRef.current?.scrollToIndex({ index: onboardingIndex });
+  // Handle validation
+  const validateCurrentStep = useCallback(() => {
+    if (currentStep?.input && !formData[currentStep.key]?.trim()) {
+      setValidationMessage(`Please ${currentStep.placeholder}`);
+      setShowValidationModal(true);
+      return false;
     }
-  }, [onboardingIndex]);
+    return true;
+  }, [currentStep, formData]);
 
-  const goToNext = () => {
-    const nextIndex = localIndex + 1;
+  // Navigation handlers
+  const goToNext = useCallback(() => {
+    if (!validateCurrentStep()) return;
 
-    if (localIndex === 1) {
-      router.push("/(onboarding)/GoalMid");
+    const nextIndex = currentIndex + 1;
+
+    // Special navigation case
+    if (currentIndex === 1) {
+      router.push("/(onboarding)/NextGoals");
       return;
     }
 
+    // Normal progression
     if (nextIndex < onboardingSteps.length) {
-      setLocalIndex(nextIndex);
-      setOnboardingIndex(nextIndex);
-      swiperRef.current?.scrollToIndex({ index: nextIndex });
+      setCurrentIndex(nextIndex);
+      swiperRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+    } else {
+      router.replace("/(auth)/login");
     }
-  };
+  }, [currentIndex, validateCurrentStep]);
 
-  const goToPrev = () => {
-    if (localIndex > 0) {
-      const prev = localIndex - 1;
-      setLocalIndex(prev);
-      setOnboardingIndex(prev);
-      swiperRef.current?.scrollToIndex({ index: prev });
+  const goToPrev = useCallback(() => {
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      swiperRef.current?.scrollToIndex({ index: prevIndex, animated: true });
     } else {
       router.back();
     }
-  };
+  }, [currentIndex]);
 
-  const currentStep = onboardingSteps[localIndex];
+  // Handle index change safely
+  const handleIndexChange = useCallback(
+    ({ index }: { index: number }) => {
+      if (index !== currentIndex) {
+        setCurrentIndex(index);
+      }
+    },
+    [currentIndex]
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.titleContainer}>
-        <Text key={localIndex} style={styles.title}>
-          {currentStep?.title}
-        </Text>
+        <Text style={styles.title}>{currentStep?.title}</Text>
       </View>
 
       <SwiperFlatList
         ref={swiperRef}
-        index={localIndex}
+        index={currentIndex}
         data={onboardingSteps}
         horizontal
         showPagination={false}
         scrollEnabled={false}
-        onChangeIndex={({ index }) => {
-          if (index !== localIndex) {
-            setLocalIndex(index);
-            setOnboardingIndex(index);
-          }
-        }}
+        onChangeIndex={handleIndexChange}
         renderItem={({ item }) => (
           <View style={[styles.slide, item.customComponent && { padding: 0 }]}>
             {item.header && (
-              <View
-                style={[
-                  styles.headerWrapper,
-                  item.customComponent && { padding: 20 },
-                ]}
-              >
+              <View style={[item.customComponent && { padding: 20 }]}>
                 <Text style={styles.header}>{item.header}</Text>
                 <Text style={styles.sub}>{item.sub}</Text>
               </View>
@@ -105,7 +109,7 @@ const WelcomeScreen = () => {
               <item.customComponent />
             ) : item.input ? (
               <View style={{ width: "100%", marginTop: 20 }}>
-                <Text style={styles.inputLabel}>{item.placeholder}</Text>
+                <Text style={styles.inputLabel}>{item.label}</Text>
                 <TextInput
                   value={formData[item.key] || ""}
                   onChangeText={(text) => updateFormData({ [item.key]: text })}
@@ -115,6 +119,7 @@ const WelcomeScreen = () => {
                   selectionColor={colors.primary}
                   placeholder={item.placeholder}
                   placeholderTextColor="#999"
+                  returnKeyType="done"
                 />
               </View>
             ) : null}
@@ -122,14 +127,14 @@ const WelcomeScreen = () => {
         )}
       />
 
-      {!currentStep.customComponent && (
+      {currentStep && !currentStep.customComponent && (
         <View style={styles.paginationWrapper}>
           {onboardingSteps.map((_, i) => (
             <View
               key={i}
               style={[
                 styles.paginationItem,
-                i === localIndex && styles.paginationItemActive,
+                i === currentIndex && styles.paginationItemActive,
               ]}
             />
           ))}
@@ -142,14 +147,23 @@ const WelcomeScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity onPress={goToNext} style={styles.nextButton}>
-          <Text style={styles.nextText}>Next</Text>
+          <Text style={styles.nextText}>
+            {currentIndex === onboardingSteps.length - 1
+              ? "Get Started"
+              : "Next"}
+          </Text>
         </TouchableOpacity>
       </View>
+
+      <CustomModal
+        visible={showValidationModal}
+        onClose={() => setShowValidationModal(false)}
+        title="Required Field"
+        message={validationMessage}
+      />
     </SafeAreaView>
   );
 };
-
-export default WelcomeScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -159,7 +173,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     height: 50,
     width: "100%",
-    marginBottom: 20,
+    marginBottom: 5,
     paddingLeft: 20,
     justifyContent: "center",
   },
@@ -171,9 +185,6 @@ const styles = StyleSheet.create({
   slide: {
     width,
     padding: 20,
-  },
-  headerWrapper: {
-    marginBottom: 25,
   },
   header: {
     fontSize: 20,
@@ -254,3 +265,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
+export default WelcomeScreen;

@@ -1,4 +1,4 @@
-import MidScreenSwitch from "../../components/MidScreenSwitch";
+import MidScreenSwitch from "../../components/ui/MidScreenSwitch";
 const GoalMid = () => {
   const item = "GoalReason";
   const title = "Goals";

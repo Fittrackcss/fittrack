@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const CustomModal = ({ visible, onClose, title, message }) => {

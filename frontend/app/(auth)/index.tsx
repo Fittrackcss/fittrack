@@ -1,5 +1,5 @@
-import { Button } from "@/components/Button";
-import { colors } from "@/constants/colors";
+import { Button } from "../../components/ui/Button";
+import { colors } from "@/constants/Colors";
 import { useUserStore } from "@/store/userStore";
 import { Redirect, useRouter } from "expo-router";
 import React from "react";

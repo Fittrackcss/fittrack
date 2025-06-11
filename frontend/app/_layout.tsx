@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import "@/global-styles/patchText";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -89,9 +89,6 @@ export default function RootLayoutNav() {
   );
 }
 
-
-
-
 // import FontAwesome from '@expo/vector-icons/FontAwesome';
 // import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 // import { useFonts } from 'expo-font';
@@ -99,7 +96,6 @@ export default function RootLayoutNav() {
 // import * as SplashScreen from 'expo-splash-screen';
 // import { useEffect } from 'react';
 // import 'react-native-reanimated';
-
 
 // import { useColorScheme } from '@/components/useColorScheme';
 

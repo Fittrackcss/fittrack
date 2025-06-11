@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { Food } from "@/types";
 import { Plus } from "lucide-react-native";
 import React from "react";

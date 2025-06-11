@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { Food, MealEntry } from "@/types";
 import { useRouter } from "expo-router";

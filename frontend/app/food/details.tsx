@@ -1,6 +1,6 @@
-import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
-import { colors } from "@/constants/colors";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { colors } from "@/constants/Colors";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";

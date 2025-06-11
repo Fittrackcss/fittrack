@@ -3,7 +3,7 @@ import { DateSelector } from "@/components/DateSelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { MacroProgressBar } from "@/components/MacroProgressBar";
 import { MealCard } from "@/components/MealCard";
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";

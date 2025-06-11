@@ -1,5 +1,5 @@
 import FoodSearchScreen from "@/components/FoodSearchScreen";
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { Food } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";

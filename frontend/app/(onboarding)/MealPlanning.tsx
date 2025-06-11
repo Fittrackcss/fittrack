@@ -9,16 +9,15 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CustomFooter from "@/components/ui/CustomFooter";
 
 const data = [
-  { id: "1", name: "Lose Weight" },
-  { id: "2", name: "Maintain Weight" },
-  { id: "3", name: "Gain Weight" },
-  { id: "4", name: "Gain Muscle" },
-  { id: "5", name: "Modify My Diet" },
-  { id: "6", name: "Plan Meals" },
-  { id: "7", name: "Manage Stress" },
-  { id: "8", name: "Stay Active" },
+  { id: "1", name: "Never" },
+  { id: "2", name: "Rarely" },
+  { id: "3", name: "Occasionally" },
+  { id: "4", name: "Frequently" },
+  { id: "5", name: "Always" },
 ];
 
 const GoalItem = React.memo(
@@ -60,43 +59,39 @@ const GoalItem = React.memo(
   )
 );
 
-const Goals = () => {
+const MealPlanning = () => {
   const { toggleSelection, getSelections } = useOnboardingStore();
-  const selectedGoals = getSelections("goals-screen");
-  const [showModal, setShowModal] = useState(false);
-
-  const handleToggle = (id: string) => {
-    if (!selectedGoals.includes(id) && selectedGoals.length >= 3) {
-      setShowModal(true);
-      return;
-    }
-    toggleSelection("goals-screen", id, "multi-max-3");
-  };
+  const selected = getSelections("meal-planning-screen");
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={data}
-        showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <GoalItem
-            item={item}
-            isChecked={selectedGoals.includes(item.id)}
-            onToggle={handleToggle}
-          />
-        )}
-      />
-      <CustomModal
-        visible={showModal}
-        onClose={() => setShowModal(false)}
-        title="Error"
-        message="You can select up to 3 goals. Deselect one to add another."
-      />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Goals</Text>
+        <Text style={styles.headerDesc}>
+          How often do you plan your meals in advance
+        </Text>
+        <Text style={styles.sub}>Select one</Text>
+      </View>
+      <View style={styles.container}>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <GoalItem
+              item={item}
+              isChecked={selected.includes(item.id)}
+              onToggle={(id) =>
+                toggleSelection("meal-planning-screen", id, "single")
+              }
+            />
+          )}
+        />
+      </View>
+      <CustomFooter item="InfoCollection" screenId="meal-planning-screen" />
+    </SafeAreaView>
   );
 };
 
-export default Goals;
+export default MealPlanning;
 
 const styles = StyleSheet.create({
   container: {
@@ -126,7 +121,31 @@ const styles = StyleSheet.create({
   itemName: {
     flex: 1,
     fontSize: 16,
-    color: colors.text.primary,
+    color: colors.text.secondary,
     fontWeight: "700",
+  },
+  header: {
+    height: 150,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    padding: 20,
+    gap: 10,
+    marginBottom: 20,
+  },
+  headerText: {
+    fontSize: 30,
+    fontWeight: "600",
+    color: colors.text.secondary,
+  },
+  headerDesc: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: colors.text.primary,
+    marginBottom: 10,
+  },
+  sub: {
+    fontSize: 15,
+    color: colors.text.muted,
   },
 });

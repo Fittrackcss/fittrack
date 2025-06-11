@@ -1,7 +1,7 @@
 import { StyleSheet, Text } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
-import CustomFooter from "../../components/CustomFooter";
-import { colors } from "../../constants/colors";
+import CustomFooter from "../../components/ui/CustomFooter";
+import { colors } from "../../constants/Colors";
 
 const GoalReason = () => {
   return (

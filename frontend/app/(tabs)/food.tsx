@@ -1,6 +1,6 @@
 import { DateSelector } from "@/components/DateSelector";
 import { MealCard } from "@/components/MealCard";
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { useRouter } from "expo-router";
 import { Plus, Search } from "lucide-react-native";

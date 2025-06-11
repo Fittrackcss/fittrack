@@ -1,6 +1,6 @@
 import { DateSelector } from "@/components/DateSelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useRouter } from "expo-router";
 import { Plus, Search } from "lucide-react-native";

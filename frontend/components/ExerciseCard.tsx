@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { Exercise } from "@/types";
 import { useRouter } from "expo-router";

@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { colors } from "../../constants/colors";
+import { colors } from "../../constants/Colors";
 
 const layout = () => {
   return (
@@ -30,6 +30,7 @@ const layout = () => {
       />
       <Stack.Screen name="Screen1" options={{ headerShown: false }} />
       <Stack.Screen name="SignUp" options={{ headerTitle: "Sign Up" }} />
+      <Stack.Screen name="Goals" options={{ headerShown: false }} />
       <Stack.Screen
         name="WelcomeScreen"
         options={{
@@ -39,6 +40,10 @@ const layout = () => {
       />
       <Stack.Screen name="GoalMid" options={{ headerShown: false }} />
       <Stack.Screen name="GoalReason" options={{ headerShown: false }} />
+      <Stack.Screen name="NextGoals" options={{ headerShown: false }} />
+      <Stack.Screen name="GoalChoices" options={{ headerShown: false }} />
+      <Stack.Screen name="MealPlanning" options={{ headerShown: false }} />
+      <Stack.Screen name="InfoCollection" options={{ headerShown: false }} />
     </Stack>
   );
 };

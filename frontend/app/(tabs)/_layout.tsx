@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { Tabs } from "expo-router";
 import { Dumbbell, Home, LineChart, User, Utensils } from "lucide-react-native";
 import React from "react";

@@ -1,4 +1,4 @@
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useProgressStore } from "@/store/progressStore";
 import { useUserStore } from "@/store/userStore";
 import { WeightEntry } from "@/types";

@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
-import { colors } from "../../constants/colors";
+import { colors } from "../../constants/Colors";
 
 const { width } = Dimensions.get("window");
 

@@ -1,5 +1,5 @@
 import { ExerciseSearchItem } from "@/components/ExerciseSearchItem";
-import { colors } from "@/constants/colors";
+import { colors } from "@/constants/Colors";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { Exercise } from "@/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
