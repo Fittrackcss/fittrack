@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     color: colors.primary,
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ccc",
     marginHorizontal: 5,
     margin: 25,
+    marginBottom: 35,
   },
   paginationItemActive: {
     backgroundColor: "#ff6347",
@@ -171,16 +172,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   desc: {
-    fontSize: 20,
+    fontSize: 18,
     color: colors.text.secondary,
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: "bold",
   },
   signup: {
     backgroundColor: "#ff8e0c",
     padding: 10,
+    height: 50,
     borderRadius: 50,
-    width: "90%",
+    width: "100%",
     alignItems: "center",
   },
   login: {

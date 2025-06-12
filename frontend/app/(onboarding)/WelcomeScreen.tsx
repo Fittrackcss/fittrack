@@ -179,17 +179,18 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    color: colors.text.secondary,
-    fontWeight: "500",
+    color: 'black',
+    fontWeight: "600",
   },
   slide: {
     width,
     padding: 20,
   },
   header: {
+    marginTop: 35,
     fontSize: 20,
     fontWeight: "700",
-    color: colors.text.secondary,
+    color: 'black',
   },
   sub: {
     fontSize: 13,
@@ -202,20 +203,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   input: {
-    borderWidth: 2.5,
+    borderWidth: 1.5,
     borderColor: colors.border,
     borderRadius: 6,
     padding: 12,
     marginTop: 10,
     height: 60,
-    color: colors.text.secondary,
+    color: 'black',
   },
   inputFocused: {
+    borderWidth: 2,
     borderColor: colors.primary,
     shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    fontWeight:800,
   },
   footer: {
     flexDirection: "row",
@@ -247,8 +250,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   paginationItem: {
+    marginTop: 15,
     width: 42,
-    height: 5,
+    height: 3,
     borderRadius: 2,
     backgroundColor: "#ccc",
     marginHorizontal: 5,

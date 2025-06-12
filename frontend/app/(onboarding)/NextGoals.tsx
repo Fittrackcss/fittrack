@@ -2,6 +2,7 @@ import CustomModal from "@/components/ui/CustomModal";
 import { colors } from "@/constants/Colors";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
 import React, { useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   FlatList,
   StyleSheet,
@@ -37,7 +38,7 @@ const GoalItem = React.memo(
       style={[
         styles.item,
         isChecked && {
-          borderWidth: 2,
+          borderWidth: 1.5,
           borderColor: colors.primary,
         },
       ]}
@@ -50,11 +51,11 @@ const GoalItem = React.memo(
         <View
           style={[
             styles.checked,
-            isChecked && { backgroundColor: colors.primary },
+            isChecked && { backgroundColor: 'white' },
           ]}
         >
           {isChecked && (
-            <Text style={{ color: "white", fontWeight: "bold" }}>✓</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}><MaterialCommunityIcons name="checkbox-marked-circle" size={20} color={colors.primary} /></Text>
           )}
         </View>
       </TouchableOpacity>
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: "row",
     alignItems: "center",
-    height: 80,
+    height: 70,
     width: "100%",
     backgroundColor: colors.secondary,
     marginBottom: 10,
@@ -120,6 +121,7 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 4,
     borderWidth: 2,
+    backgroundColor: 'white',
     borderColor: colors.accent,
     justifyContent: "center",
     alignItems: "center",
@@ -139,9 +141,10 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   headerText: {
-    fontSize: 30,
+    fontSize: 28,
     fontWeight: "600",
-    color: colors.text.secondary,
+    color: 'black',
+    marginBottom: 30,
   },
   headerDesc: {
     fontSize: 20,
@@ -151,6 +154,7 @@ const styles = StyleSheet.create({
   },
   sub: {
     fontSize: 15,
+    fontWeight: 800,
     color: colors.text.muted,
   },
 });

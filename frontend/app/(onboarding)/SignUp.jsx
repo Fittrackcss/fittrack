@@ -22,10 +22,10 @@ const SignUp = () => {
       </TouchableOpacity>
       <Text
         style={{
-          fontSize: 30,
-          fontWeight: "600",
-          color: colors.text.secondary,
-          margin: 20,
+          fontSize: 20,
+          fontWeight: "800",
+          color: 'black',
+          marginTop: 10,
         }}
       >
         OR
@@ -53,10 +53,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 24,
-    color: colors.text.secondary,
+    fontSize: 20,
+    color: '#000',
     textAlign: "center",
-    fontWeight: "500",
+    fontWeight: "800",
     marginHorizontal: 20,
   },
   button: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "80%",
     height: 50,
-    backgroundColor: colors.accent,
+    backgroundColor: colors.primary,
     padding: 15,
     borderRadius: 50,
     marginTop: 20,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     width: "80%",
-    marginTop: 10,
+    marginTop: 100,
   },
 
   googleButtonText: {
