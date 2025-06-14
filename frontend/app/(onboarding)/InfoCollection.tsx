@@ -14,8 +14,6 @@ import { colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import CustomFooter from "@/components/ui/CustomFooter";
-import WelcomeScreen from "../(auth)";
 
 const InfoCollection = () => {
   const {
@@ -50,6 +48,7 @@ const InfoCollection = () => {
     "Austria",
     "Belgium",
     "Ireland",
+    "Ghana",
   ];
 
   const handleBack = () => {
