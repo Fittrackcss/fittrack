@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../constants/Colors";
-import { onboardingSteps } from "@/app/(onboarding)/onboardingScreens";
+import { onboardingSteps } from "../../constants/onboardingScreens";
 import { useOnboardingStore } from "../../store/useOnboardingStore";
 import CustomSwiper from "./CustomSwiper";
 

@@ -178,11 +178,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   signup: {
-    backgroundColor: "#ff8e0c",
+    backgroundColor: colors.button.primary,
     padding: 10,
     height: 50,
     borderRadius: 50,
     width: "100%",
+    justifyContent: "center",
     alignItems: "center",
   },
   login: {

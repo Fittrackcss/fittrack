@@ -15,31 +15,40 @@ const SignUp = () => {
       <Text style={styles.text}>
         Welcome! Let's customize{"\n"} Fittrack for your goals
       </Text>
-      <TouchableOpacity style={styles.button} onPress={handleContinue}>
-        <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600" }}>
-          Continue
-        </Text>
-      </TouchableOpacity>
-      <Text
+      <View
         style={{
-          fontSize: 20,
-          fontWeight: "800",
-          color: 'black',
-          marginTop: 10,
+          height: 200,
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+          marginTop: 20,
         }}
       >
-        OR
-      </Text>
+        <TouchableOpacity style={styles.button} onPress={handleContinue}>
+          <Text style={{ fontSize: 16, color: "#fff", fontWeight: "600" }}>
+            Continue
+          </Text>
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: 20,
+            fontWeight: "800",
+            color: "black",
+          }}
+        >
+          OR
+        </Text>
 
-      <TouchableOpacity style={styles.googleButton}>
-        <Ionicons
-          name="logo-google"
-          size={20}
-          color={colors.accent}
-          style={{ marginRight: 10 }}
-        />
-        <Text style={styles.googleButtonText}>Continue with Google</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.googleButton}>
+          <Ionicons
+            name="logo-google"
+            size={20}
+            color={colors.accent}
+            style={{ marginRight: 10 }}
+          />
+          <Text style={styles.googleButtonText}>Continue with Google</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -54,7 +63,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: '#000',
+    color: colors.text.original,
     textAlign: "center",
     fontWeight: "800",
     marginHorizontal: 20,
@@ -67,7 +76,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: 15,
     borderRadius: 50,
-    marginTop: 20,
   },
   googleButton: {
     flexDirection: "row",
@@ -78,7 +86,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     width: "80%",
-    marginTop: 100,
   },
 
   googleButtonText: {

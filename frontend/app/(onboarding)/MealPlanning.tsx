@@ -1,7 +1,6 @@
-import CustomModal from "@/components/ui/CustomModal";
 import { colors } from "@/constants/Colors";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
-import React, { useState } from "react";
+import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   FlatList,
@@ -46,13 +45,16 @@ const GoalItem = React.memo(
         style={{ flexDirection: "row", alignItems: "center" }}
       >
         <View
-          style={[
-            styles.checked,
-            isChecked && { backgroundColor: 'white' },
-          ]}
+          style={[styles.checked, isChecked && { backgroundColor: "white" }]}
         >
           {isChecked && (
-            <Text style={{ color: "white", fontWeight: "bold" }}><MaterialCommunityIcons name="checkbox-marked-circle" size={20} color={colors.primary} /></Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              <MaterialCommunityIcons
+                name="checkbox-marked-circle"
+                size={20}
+                color={colors.primary}
+              />
+            </Text>
           )}
         </View>
       </TouchableOpacity>
@@ -87,7 +89,7 @@ const MealPlanning = () => {
           )}
         />
       </View>
-      <CustomFooter item="InfoCollection" screenId="meal-planning-screen" />
+      <CustomFooter item="FinishScreens" screenId="meal-planning-screen" />
     </SafeAreaView>
   );
 };
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 20,
     borderWidth: 2,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderColor: colors.accent,
     justifyContent: "center",
     alignItems: "center",
