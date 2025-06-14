@@ -57,21 +57,21 @@ export const CalorieCircle = ({
       >
         <View style={styles.goalContainer}>
           <View>
-            <View style={{ flexDirection: "row" }}>
+            <View style={styles.holder}>
               <Ionicons name="flag" size={24} color={colors.accent} />
               <Text style={styles.goalLabel}>Base Goal</Text>
             </View>
             <Text style={styles.goalValue}>{goal}</Text>
           </View>
           <View>
-            <View style={{ flexDirection: "row" }}>
+            <View style={styles.holder}>
               <Ionicons name="restaurant" size={24} color="blue" />
               <Text style={styles.goalLabel}>Food</Text>
             </View>
             <Text style={styles.goalValue}>{consumed}</Text>
           </View>
           <View>
-            <View style={{ flexDirection: "row" }}>
+            <View style={styles.holder}>
               <Ionicons name="flame" size={24} color="blue" />
               <Text style={styles.goalLabel}>Exercise</Text>
             </View>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   },
   goalContainer: {
     flexDirection: "column",
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: 5,
   },
   goalLabel: {
@@ -157,7 +157,12 @@ const styles = StyleSheet.create({
   goalValue: {
     fontSize: 12,
     fontWeight: "600",
-    color: colors.text.primary,
-    textAlign: "center",
+    color: colors.text.muted,
+    textAlign: "left",
+  },
+  holder: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
 });
