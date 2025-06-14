@@ -44,6 +44,7 @@ const layout = () => {
       <Stack.Screen name="GoalChoices" options={{ headerShown: false }} />
       <Stack.Screen name="MealPlanning" options={{ headerShown: false }} />
       <Stack.Screen name="InfoCollection" options={{ headerShown: false }} />
+      <Stack.Screen name="FinishScreens" options={{ headerShown: false }} />
     </Stack>
   );
 };

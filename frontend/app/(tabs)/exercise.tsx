@@ -47,7 +47,7 @@ export default function ExerciseScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.searchResultItem}
-            onPress={() => router.push(`/exercise/details?id=${item.id}`)}
+            onPress={() => router.push(`/exercise/detail?id=${item.id}`)}
           >
             <View>
               <Text style={styles.exerciseName}>{item.name}</Text>

@@ -1,6 +1,7 @@
 import { colors } from "@/constants/Colors";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 type CalorieCircleProps = {
   consumed: number;
@@ -11,17 +12,18 @@ type CalorieCircleProps = {
 export const CalorieCircle = ({
   consumed,
   goal,
-  size = 180,
+  size = 200,
 }: CalorieCircleProps) => {
   const percentage = Math.min(100, (consumed / goal) * 100);
   const remaining = Math.max(0, goal - consumed);
   const strokeWidth = size * 0.1;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
+  const exercise = Math.floor(Math.min((remaining - consumed) / consumed));
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
+    <View style={[styles.container, { width: size * 1.7, height: size }]}>
       <View style={styles.backgroundCircle}>
         <View style={styles.progressCircleContainer}>
           <View
@@ -43,9 +45,37 @@ export const CalorieCircle = ({
           <Text style={styles.remainingText}>{remaining}</Text>
           <Text style={styles.remainingLabel}>remaining</Text>
           <View style={styles.divider} />
-          <View style={styles.goalContainer}>
-            <Text style={styles.goalLabel}>Goal</Text>
+        </View>
+      </View>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          height: "auto",
+          width: "40%",
+        }}
+      >
+        <View style={styles.goalContainer}>
+          <View>
+            <View style={styles.holder}>
+              <Ionicons name="flag" size={24} color={colors.accent} />
+              <Text style={styles.goalLabel}>Base Goal</Text>
+            </View>
             <Text style={styles.goalValue}>{goal}</Text>
+          </View>
+          <View>
+            <View style={styles.holder}>
+              <Ionicons name="restaurant" size={24} color="blue" />
+              <Text style={styles.goalLabel}>Food</Text>
+            </View>
+            <Text style={styles.goalValue}>{consumed}</Text>
+          </View>
+          <View>
+            <View style={styles.holder}>
+              <Ionicons name="flame" size={24} color="blue" />
+              <Text style={styles.goalLabel}>Exercise</Text>
+            </View>
+            <Text style={styles.goalValue}>{exercise}%</Text>
           </View>
         </View>
       </View>
@@ -55,12 +85,24 @@ export const CalorieCircle = ({
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-between",
+    padding: 10,
+    borderRadius: 15,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: "#fff",
   },
   backgroundCircle: {
-    width: "100%",
-    height: "100%",
+    width: "45%",
+    height: "80%",
     borderRadius: 999,
     backgroundColor: colors.background.secondary,
     alignItems: "center",
@@ -103,17 +145,24 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   goalContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
+    flexDirection: "column",
+    alignItems: "flex-start",
+    gap: 5,
   },
   goalLabel: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.text.secondary,
+    marginLeft: 10,
   },
   goalValue: {
     fontSize: 12,
     fontWeight: "600",
-    color: colors.text.primary,
+    color: colors.text.muted,
+    textAlign: "left",
+  },
+  holder: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
 });
