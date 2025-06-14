@@ -44,16 +44,33 @@ const GoalItem = React.memo(
       <Text style={styles.itemName}>{item.name}</Text>
       <TouchableOpacity
         onPress={() => onToggle(item.id)}
-        style={{ flexDirection: "row", alignItems: "center" }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         <View
           style={[
             styles.checked,
-            isChecked && { backgroundColor: 'white' },
+            isChecked && {
+              backgroundColor: "white",
+            },
           ]}
         >
           {isChecked && (
-            <Text style={{ color: "black", fontWeight: "bold" }}><MaterialCommunityIcons name="checkbox-marked-circle" size={20} color={colors.primary} /></Text>
+            <Text
+              style={{
+                color: "black",
+                fontWeight: "bold",
+              }}
+            >
+              <MaterialCommunityIcons
+                name="checkbox-marked"
+                size={20}
+                color={colors.primary}
+              />
+            </Text>
           )}
         </View>
       </TouchableOpacity>
@@ -120,7 +137,7 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 4,
     borderWidth: 2,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
@@ -128,7 +145,7 @@ const styles = StyleSheet.create({
   itemName: {
     flex: 1,
     fontSize: 16,
-    color: colors.text.primary,
+    color: colors.text.secondary,
     fontWeight: "700",
   },
 });

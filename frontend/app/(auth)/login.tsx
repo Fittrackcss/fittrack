@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
 import { colors } from "@/constants/Colors";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -49,22 +54,32 @@ export default function LoginScreen() {
 
         {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
-        <Input
-          label="Email"
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Enter your email"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            placeholder="Enter your email"
+            placeholderTextColor={colors.text.secondary}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            cursorColor={colors.primary}
+          />
+        </View>
 
-        <Input
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Enter your password"
-          secureTextEntry
-        />
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Enter your password"
+            placeholderTextColor={colors.text.secondary}
+            secureTextEntry
+            cursorColor={colors.primary}
+          />
+        </View>
 
         <TouchableOpacity style={styles.forgotPasswordContainer}>
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
@@ -115,6 +130,25 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: "#FFF1F2",
     borderRadius: 8,
+  },
+  inputContainer: {
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 14,
+    color: colors.text.primary,
+    marginBottom: 8,
+    fontWeight: "500",
+  },
+  input: {
+    height: 48,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: colors.text.primary,
+    backgroundColor: colors.background.secondary,
   },
   forgotPasswordContainer: {
     alignSelf: "flex-end",

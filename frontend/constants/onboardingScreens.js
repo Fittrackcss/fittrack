@@ -1,4 +1,5 @@
-import Goals from "./Goals";
+import Goals from "../app/(onboarding)/Goals";
+import InfoCollection from "../app/(onboarding)/InfoCollection";
 
 export const onboardingSteps = [
   {
@@ -6,7 +7,7 @@ export const onboardingSteps = [
     title: "Welcome",
     header: "First, what can we call you?",
     sub: "We'd like to get to know you.",
-    label:"Preferred name",
+    label: "Preferred name",
     placeholder: "Enter your name here",
     input: true,
     field: "name",
@@ -17,14 +18,17 @@ export const onboardingSteps = [
     header: "Let's start with goals",
     sub: "Select up to 3 that are important to you including one weight goal.",
     input: false,
+    componentExists: true,
     customComponent: Goals,
     field: "agreeToTerms",
   },
   {
     id: "goals-1",
-    title: "Goals",
-    header: "Hello",
-    input: true,
+    title: "You",
+    header: "Tell us a little bit yourself",
+    input: false,
+    customComponent: false,
+    customComponent: InfoCollection,
     placeholder: "Enter something",
     // field: "email",
   },

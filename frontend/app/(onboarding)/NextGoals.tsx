@@ -55,7 +55,7 @@ const GoalItem = React.memo(
           ]}
         >
           {isChecked && (
-            <Text style={{ color: "white", fontWeight: "bold" }}><MaterialCommunityIcons name="checkbox-marked-circle" size={20} color={colors.primary} /></Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}><MaterialCommunityIcons name="checkbox-marked" size={20} color={colors.primary} /></Text>
           )}
         </View>
       </TouchableOpacity>

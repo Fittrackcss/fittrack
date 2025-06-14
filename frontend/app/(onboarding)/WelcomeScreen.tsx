@@ -13,7 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { colors } from "../../constants/Colors";
 import { useOnboardingStore } from "../../store/useOnboardingStore";
-import { onboardingSteps } from "./onboardingScreens";
+import { onboardingSteps } from "../../constants/onboardingScreens";
 import CustomModal from "../../components/ui/CustomModal";
 
 const { width } = Dimensions.get("window");
@@ -25,8 +25,14 @@ const WelcomeScreen = () => {
   const swiperRef = useRef(null);
 
   // Store state
-  const { currentIndex, setCurrentIndex, formData, updateFormData } =
-    useOnboardingStore();
+  const {
+    currentIndex,
+    setCurrentIndex,
+    formData,
+    updateFormData,
+    incrementIndex,
+    decrementIndex,
+  } = useOnboardingStore();
 
   // Get current step
   const currentStep = onboardingSteps[currentIndex];
@@ -64,13 +70,12 @@ const WelcomeScreen = () => {
 
   const goToPrev = useCallback(() => {
     if (currentIndex > 0) {
-      const prevIndex = currentIndex - 1;
-      setCurrentIndex(prevIndex);
+      const prevIndex = decrementIndex();
       swiperRef.current?.scrollToIndex({ index: prevIndex, animated: true });
     } else {
       router.back();
     }
-  }, [currentIndex]);
+  }, [currentIndex, decrementIndex]);
 
   // Handle index change safely
   const handleIndexChange = useCallback(
@@ -127,7 +132,7 @@ const WelcomeScreen = () => {
         )}
       />
 
-      {currentStep && !currentStep.customComponent && (
+      {currentStep && !currentStep.componentExists && (
         <View style={styles.paginationWrapper}>
           {onboardingSteps.map((_, i) => (
             <View
@@ -179,7 +184,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 25,
-    color: 'black',
+    color: "black",
     fontWeight: "600",
   },
   slide: {
@@ -190,7 +195,7 @@ const styles = StyleSheet.create({
     marginTop: 35,
     fontSize: 20,
     fontWeight: "700",
-    color: 'black',
+    color: "black",
   },
   sub: {
     fontSize: 13,
@@ -209,7 +214,8 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 10,
     height: 60,
-    color: 'black',
+    fontSize: 17,
+    color: colors.text.primary,
   },
   inputFocused: {
     borderWidth: 2,
@@ -218,7 +224,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-    fontWeight:800,
   },
   footer: {
     flexDirection: "row",

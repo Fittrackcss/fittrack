@@ -6,17 +6,26 @@ type ScreenSelections = {
 };
 
 type FormData = {
-  [key: string]: string;
+  sex?: "male" | "female";
+  age?: string;
+  country?: string;
+  [key: string]: string | undefined;
 };
 
-export type SelectionMode = "single" | "multi" | "multi-max-3" | "";
+export type SelectionMode =
+  | "single"
+  | "multi"
+  | "multi-max-3"
+  | "navigate-after-one";
 
 type OnboardingStore = {
-  // Navigation state (using both names for compatibility)
+  // Navigation state
   currentIndex: number;
-  onboardingIndex: number; // Added for backward compatibility
+  onboardingIndex: number;
   setCurrentIndex: (index: number) => void;
-  setOnboardingIndex: (index: number) => void; // Added for backward compatibility
+  setOnboardingIndex: (index: number) => void;
+  incrementIndex: () => void;
+  decrementIndex: () => void;
 
   // Selection state
   selections: ScreenSelections;
@@ -26,29 +35,50 @@ type OnboardingStore = {
     mode: SelectionMode
   ) => void;
   getSelections: (screenId: string) => string[];
+  getSelectedSex: () => "male" | "female" | undefined;
 
   // Form data state
   formData: FormData;
   updateFormData: (data: Partial<FormData>) => void;
+  setSex: (sex: "male" | "female") => void;
+  setAge: (age: string) => void;
+  setCountry: (country: string) => void;
 };
 
 export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
   // Navigation state
   currentIndex: 0,
-  onboardingIndex: 0, // Mirrors currentIndex
+  onboardingIndex: 0,
 
-  // Setter functions that update both values
+  // Navigation setters
   setCurrentIndex: (index) =>
     set({
       currentIndex: index,
-      onboardingIndex: index, // Keep them in sync
+      onboardingIndex: index,
     }),
-
   setOnboardingIndex: (index) =>
     set({
       onboardingIndex: index,
-      currentIndex: index, // Keep them in sync
+      currentIndex: index,
     }),
+  incrementIndex: () => {
+    const { currentIndex } = get();
+    const newIndex = currentIndex + 1;
+    set({
+      currentIndex: newIndex,
+      onboardingIndex: newIndex,
+    });
+    return newIndex;
+  },
+  decrementIndex: () => {
+    const { currentIndex } = get();
+    const newIndex = Math.max(0, currentIndex - 1);
+    set({
+      currentIndex: newIndex,
+      onboardingIndex: newIndex,
+    });
+    return newIndex;
+  },
 
   // Selection management
   selections: {},
@@ -66,7 +96,7 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
       if (mode === "multi-max-3" && newSelection.length > 3) {
         return;
       }
-      if (mode === "" && newSelection.length > 1) {
+      if (mode === "navigate-after-one" && newSelection.length > 1) {
         router.push("/(onboarding)/InfoCollection");
       }
     }
@@ -81,10 +111,36 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
 
   getSelections: (screenId) => get().selections[screenId] || [],
 
+  // Specific getter for sex
+  getSelectedSex: () => {
+    const sex = get().formData.sex;
+    return sex === "male" || sex === "female" ? sex : undefined;
+  },
+
   // Form data management
   formData: {},
   updateFormData: (data) =>
     set((state) => ({
       formData: { ...state.formData, ...data },
+    })),
+
+  // Specific setters for InfoCollection data
+  setSex: (sex) =>
+    set((state) => ({
+      formData: { ...state.formData, sex },
+      selections: {
+        ...state.selections,
+        "info-collection-screen": [sex],
+      },
+    })),
+
+  setAge: (age) =>
+    set((state) => ({
+      formData: { ...state.formData, age },
+    })),
+
+  setCountry: (country) =>
+    set((state) => ({
+      formData: { ...state.formData, country },
     })),
 }));
