@@ -111,7 +111,7 @@ const InfoCollection = () => {
 
         <View style={styles.hintContainer}>
           <View style={styles.hintIcon}>
-            <Text style={styles.hintIconText}>?</Text>
+            <Text style={styles.hintIconText}>i</Text>
           </View>
           <Text style={styles.hint}>Which one should I choose?</Text>
         </View>
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "flex-start",
     alignContent: "center",
-    paddingTop: 50,
+    // paddingTop: 50,
     backgroundColor: colors.background.main,
   },
   backButton: {
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     marginBottom: 5,
-    color: colors.text.muted,
+    color: colors.text.primary,
     fontWeight: "600",
   },
   sexOptionsContainer: {
@@ -295,9 +295,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   hint: {
-    fontSize: 14,
+    fontSize: 12,
     color: colors.text.muted,
-    fontStyle: "italic",
   },
   input: {
     height: 50,

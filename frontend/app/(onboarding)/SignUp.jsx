@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: colors.primary,
     padding: 15,
-    borderRadius: 50,
+    borderRadius: 15,
   },
   googleButton: {
     flexDirection: "row",

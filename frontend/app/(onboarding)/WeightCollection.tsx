@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingTop: 50,
+    paddingTop: 30,
   },
   subtitle: {
     fontSize: 20,
@@ -135,7 +135,6 @@ const styles = StyleSheet.create({
   note: {
     fontSize: 14,
     color: colors.text.muted,
-    fontStyle: "italic",
     marginTop: 8,
   },
 });
