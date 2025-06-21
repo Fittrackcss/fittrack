@@ -9,7 +9,8 @@ import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, ImageBackground } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -44,64 +45,82 @@ export default function DashboardScreen() {
   const caloriesRemaining = user ? user.dailyCalorieGoal - netCalories : 0;
 
   return (
-    <ScrollView style={styles.container}>
-      <DateSelector date={selectedDate} onDateChange={setSelectedDate} />
+    <View style={styles.container}>
+      <ScrollView 
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+      >
+     
 
-      <View style={styles.summaryContainer}>
-        <CalorieCircle
-          consumed={netCalories}
-          goal={user?.dailyCalorieGoal || 2000}
-        />
+        <View style={styles.summaryContainer}>
+          <CalorieCircle
+            consumed={netCalories}
+            goal={user?.dailyCalorieGoal || 2000}
+          />
 
-        <View style={styles.macrosContainer}>
-          <MacroProgressBar
-            label="Protein"
-            current={nutritionSummary.protein}
-            goal={user?.macroGoals.protein || 150}
-            color={colors.primary}
+          <View style={styles.macrosContainer}>
+            <MacroProgressBar
+              label="Protein"
+              current={nutritionSummary.protein}
+              goal={user?.macroGoals.protein || 150}
+              color={colors.primary}
+            />
+            <MacroProgressBar
+              label="Carbs"
+              current={nutritionSummary.carbs}
+              goal={user?.macroGoals.carbs || 200}
+              color="#F5A623"
+            />
+            <MacroProgressBar
+              label="Fat"
+              current={nutritionSummary.fat}
+              goal={user?.macroGoals.fat || 70}
+              color="#4CD964"
+            />
+          </View>
+        </View>
+
+        <View style={styles.mealsContainer}>
+          <MealCard
+            title="Breakfast"
+            mealType="breakfast"
+            date={selectedDate.toISOString()}
           />
-          <MacroProgressBar
-            label="Carbs"
-            current={nutritionSummary.carbs}
-            goal={user?.macroGoals.carbs || 200}
-            color="#F5A623"
+          <MealCard
+            title="Lunch"
+            mealType="lunch"
+            date={selectedDate.toISOString()}
           />
-          <MacroProgressBar
-            label="Fat"
-            current={nutritionSummary.fat}
-            goal={user?.macroGoals.fat || 70}
-            color="#4CD964"
+          <MealCard
+            title="Dinner"
+            mealType="dinner"
+            date={selectedDate.toISOString()}
+          />
+          <MealCard
+            title="Snacks"
+            mealType="snack"
+            date={selectedDate.toISOString()}
           />
         </View>
-      </View>
 
-      <View style={styles.mealsContainer}>
-        <MealCard
-          title="Breakfast"
-          mealType="breakfast"
-          date={selectedDate.toISOString()}
-        />
-        <MealCard
-          title="Lunch"
-          mealType="lunch"
-          date={selectedDate.toISOString()}
-        />
-        <MealCard
-          title="Dinner"
-          mealType="dinner"
-          date={selectedDate.toISOString()}
-        />
-        <MealCard
-          title="Snacks"
-          mealType="snack"
-          date={selectedDate.toISOString()}
-        />
-      </View>
+        <ExerciseCard date={selectedDate.toISOString()} />
 
-      <ExerciseCard date={selectedDate.toISOString()} />
+        <View style={styles.spacer} />
+      </ScrollView>
 
-      <View style={styles.spacer} />
-    </ScrollView>
+      {/* Fixed Tab at the bottom */}
+     <View style={styles.tab}>
+  <View style={styles.tabcontent}>
+    <View style={styles.imageContainer}>
+      <ImageBackground 
+        style={styles.img} 
+        source={{ uri: "https://img.freepik.com/free-photo/low-angle-view-unrecognizable-muscular-build-man-preparing-lifting-barbell-health-club_637285-2497.jpg?" }}
+      />
+    </View>
+    <MaterialCommunityIcons style={{marginTop:15}} name="bell-outline" size={30} color={'black'}/>
+  </View>
+</View>
+    </View>
   );
 }
 
@@ -109,6 +128,56 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
+  },
+  scrollView: {
+    flex: 1,
+  },
+   imageContainer: {
+    borderRadius: 50, // Half of your image height/width to make it perfectly circular
+    overflow: 'hidden', // This ensures the image respects the border radius
+    width: 50,
+    height: 50,
+  },
+  img:{
+    height:50,
+    width:50,
+    borderRadius:600,
+  }, 
+  tabcontent:{
+    display:'flex',
+    marginTop:20,
+    flexDirection:'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+
+  },
+  scrollContent: {
+     marginTop: 130,
+    paddingBottom: 100, // Equal to tab height to prevent content from being hidden
+  },
+  tab: {
+    position: 'absolute',
+    bottom: 'auto',
+    marginBottom:10,
+    left: 0,
+    right: 0,
+    height: 100,
+    backgroundColor: 'white',
+    
+    // Shadow properties
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3, // Negative value to put shadow above the tab
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 10, // For Android
+    
+    // Optional styling
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 16,
   },
   summaryContainer: {
     padding: 16,
