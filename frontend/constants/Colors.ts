@@ -5,6 +5,7 @@ export const colors = {
   success: "#34C759", // Fresh green (iOS-style)
   warning: "#FF9500", // Rich warning tone
   danger: "#FF3B30", // Apple-style red for errors
+  gray: '#AAA8AA',
 
   text: {
     primary: "#2C2C2C", // Dark charcoal for high readability on light background
