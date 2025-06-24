@@ -10,7 +10,15 @@ import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
-import { ScrollView, StyleSheet, View, ImageBackground,Text, TouchableOpacity } from "react-native";
+import Swiper from "react-native-swiper";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  ImageBackground,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DiscoverCards from "@/components/Discover";
 import { Bold } from "lucide-react-native";
@@ -37,7 +45,6 @@ export default function DashboardScreen() {
     if (selectedDate) {
       const nutrition = getDailyNutritionSummary(selectedDate.toISOString());
       const exercise = getDailyExerciseSummary(selectedDate.toISOString());
-
       setNutritionSummary(nutrition);
       setExerciseSummary(exercise);
     }
@@ -45,31 +52,131 @@ export default function DashboardScreen() {
 
   const netCalories =
     nutritionSummary.calories - exerciseSummary.totalCaloriesBurned;
-  const caloriesRemaining = user ? user.dailyCalorieGoal - netCalories : 0;
+
+  const calculateAngle = (consumed: number, goal: number) => {
+    const percentage = Math.min(100, (consumed / goal) * 100);
+    return (percentage / 100) * 360;
+  };
+
+  const macros = {
+    protein: {
+      consumed: nutritionSummary.protein,
+      goal: user?.macroGoals.protein || 150,
+      color: colors.primary,
+    },
+    carbs: {
+      consumed: nutritionSummary.carbs,
+      goal: user?.macroGoals.carbs || 200,
+      color: "#F5A623",
+    },
+    fat: {
+      consumed: nutritionSummary.fat,
+      goal: user?.macroGoals.fat || 70,
+      color: "#4CD964",
+    },
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-     
-
         <View style={styles.summaryContainer}>
-          <SwiperFlatList style={{margin:10}}>
+          {/* <SwiperFlatList style={{ margin: 10 }}>
+            <CalorieCircle
+              consumed={netCalories}
+              goal={user?.dailyCalorieGoal || 2000}
+            />
+          </SwiperFlatList> */}
+          <Swiper
+            style={styles.wrapper}
+            showsButtons={false}
+            dotColor={colors.gray}
+            activeDotColor={colors.primary}
+            loop={false}
+          >
+            {/* First slide - Calorie Circle with shadow */}
+            <View style={styles.slide}>
+              <CalorieCircle
+                consumed={netCalories}
+                goal={user?.dailyCalorieGoal || 2000}
+              />
+            </View>
 
-          <CalorieCircle
-            consumed={netCalories}
-            goal={user?.dailyCalorieGoal || 2000}
-          />
-          </SwiperFlatList>
+            {/* Second slide - Macro Circle with shadow */}
+            <View style={styles.slide}>
+              <View
+                style={[styles.shadowContainer, styles.macroShadowContainer]}
+              >
+                <View style={styles.macroContainer}>
+                  {/* Circular Macro Display */}
+                  <View style={styles.circleContainer}>
+                    <View
+                      style={[
+                        styles.circle,
+                        {
+                          borderTopColor: macros.protein.color,
+                          borderRightColor: macros.carbs.color,
+                          borderBottomColor: macros.fat.color,
+                          borderLeftColor: "transparent",
+                          transform: [
+                            {
+                              rotate: `${calculateAngle(
+                                macros.protein.consumed,
+                                macros.protein.goal
+                              )}deg`,
+                            },
+                          ],
+                        },
+                      ]}
+                    >
+                      <View style={styles.innerCircle}>
+                        <Text style={styles.macroTitle}>Macros</Text>
+                      </View>
+                    </View>
+                  </View>
+
+                  {/* Macro Values */}
+                  <View style={styles.macroValues}>
+                    {Object.entries(macros).map(([key, macro]) => (
+                      <View key={key} style={styles.macroRow}>
+                        <View
+                          style={[
+                            styles.macroDot,
+                            { backgroundColor: macro.color },
+                          ]}
+                        />
+                        <View style={styles.macroText}>
+                          <Text style={{ color: colors.text.primary }}>
+                            {key.charAt(0).toUpperCase() + key.slice(1)}
+                          </Text>
+                          <Text
+                            style={{
+                              color: colors.text.secondary,
+                              fontSize: 13,
+                            }}
+                          >
+                            {macro.consumed}/{macro.goal}g
+                          </Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Swiper>
+
+          <View style={styles.spacer} />
         </View>
-
 
         <View style={styles.containerText}>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Choose your next habit</Text>
-            <Text style={styles.subtitle}>Big goals start with small habits.</Text>
+            <Text style={styles.subtitle}>
+              Big goals start with small habits.
+            </Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button}>
@@ -78,49 +185,59 @@ export default function DashboardScreen() {
           </View>
         </View>
 
+        {/* Step and Exercise*/}
 
+        <View style={styles.containerCard}>
+          {/* Steps Card */}
+          <TouchableOpacity style={styles.card}>
+            <Text style={styles.cardTitle}>Steps</Text>
+            <View style={{ flexDirection: "row" }}>
+              <MaterialCommunityIcons name="run" size={30} color={"blue"} />
+              <View style={{ marginLeft: 4, width: "50%" }}>
+                <Text style={styles.cardSubtitle}>Connect to track steps.</Text>
+              </View>
+              <MaterialCommunityIcons
+                name="chevron-right"
+                size={30}
+                color={"black"}
+              />
+            </View>
+          </TouchableOpacity>
 
-    {/* Step and Exercise*/}
-
-          <View style={styles.containerCard}>
-      {/* Steps Card */}
-      <TouchableOpacity style={styles.card}>
-        <Text style={styles.cardTitle}>Steps</Text>
-      <View style={{flexDirection: 'row', }}>
-        <MaterialCommunityIcons name="run" size={30} color={'blue'}/>
-       <View style={{marginLeft:4, width:'50%'}}>
-        <Text style={styles.cardSubtitle}>Connect to track steps.</Text>
-       </View>
-         <MaterialCommunityIcons name="chevron-right" size={30} color={'black'}/>
-      </View>
-      </TouchableOpacity>
-
-      {/* Exercise Card */}
-      <TouchableOpacity style={styles.card}>
-        <Text style={styles.cardTitle}>Exercise</Text>
-        <View style={styles.exerciseStats}>
-          <View style={styles.statItem}>
-           <MaterialCommunityIcons name="fire" size={17} color={colors.primary}/>
-            <Text style={styles.statValue}>0 cal</Text>
-          </View>
-          <View style={styles.statItem}>
-            <MaterialCommunityIcons name="clock" size={15} color={colors.primary}/>
-            <Text style={styles.statValue}>0:00 hr</Text>
-          </View>
+          {/* Exercise Card */}
+          <TouchableOpacity style={styles.card}>
+            <Text style={styles.cardTitle}>Exercise</Text>
+            <View style={styles.exerciseStats}>
+              <View style={styles.statItem}>
+                <MaterialCommunityIcons
+                  name="fire"
+                  size={17}
+                  color={colors.primary}
+                />
+                <Text style={styles.statValue}>0 cal</Text>
+              </View>
+              <View style={styles.statItem}>
+                <MaterialCommunityIcons
+                  name="clock"
+                  size={15}
+                  color={colors.primary}
+                />
+                <Text style={styles.statValue}>0:00 hr</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
-    </View>
 
-    {/* Discover Cards */}
+        {/* Discover Cards */}
 
-    <View style={{backgroundColor: colors.secondary}} >
-      <Text style={{fontWeight:'bold', fontSize:23, margin:20}}> Discover</Text>
+        <View style={{ backgroundColor: colors.secondary }}>
+          <Text style={{ fontWeight: "bold", fontSize: 23, margin: 20 }}>
+            {" "}
+            Discover
+          </Text>
 
-    <DiscoverCards/>
-    </View>
-
-
-
+          <DiscoverCards />
+        </View>
 
         {/* <ExerciseCard date={selectedDate.toISOString()} /> */}
 
@@ -128,18 +245,34 @@ export default function DashboardScreen() {
       </ScrollView>
 
       {/* Fixed Tab at the top */}
-     <View style={styles.tab}>
-  <View style={styles.tabcontent}>
-    <View style={styles.imageContainer}>
-      <ImageBackground 
-        style={styles.img} 
-        source={{ uri: "https://img.freepik.com/free-photo/low-angle-view-unrecognizable-muscular-build-man-preparing-lifting-barbell-health-club_637285-2497.jpg?" }}
-      />
-    </View>
-    <Text  style={{marginTop:15, color:colors.primary, fontWeight:'bold', fontSize: 25}}>Fittrack</Text>
-    <MaterialCommunityIcons style={{marginTop:15}} name="bell-outline" size={30} color={'black'}/>
-  </View>
-</View>
+      <View style={styles.tab}>
+        <View style={styles.tabcontent}>
+          <View style={styles.imageContainer}>
+            <ImageBackground
+              style={styles.img}
+              source={{
+                uri: "https://img.freepik.com/free-photo/low-angle-view-unrecognizable-muscular-build-man-preparing-lifting-barbell-health-club_637285-2497.jpg?",
+              }}
+            />
+          </View>
+          <Text
+            style={{
+              marginTop: 15,
+              color: colors.primary,
+              fontWeight: "bold",
+              fontSize: 25,
+            }}
+          >
+            Fittrack
+          </Text>
+          <MaterialCommunityIcons
+            style={{ marginTop: 15 }}
+            name="bell-outline"
+            size={30}
+            color={"black"}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -152,41 +285,45 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-   imageContainer: {
+  imageContainer: {
     borderRadius: 50, // Half of your image height/width to make it perfectly circular
-    overflow: 'hidden', // This ensures the image respects the border radius
+    overflow: "hidden", // This ensures the image respects the border radius
     width: 50,
     height: 50,
   },
-  img:{
-    height:50,
-    width:50,
-    borderRadius:600,
-  }, 
-  tabcontent:{
-    display:'flex',
-    marginTop:20,
-    flexDirection:'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-
+  heading: {
+    color: colors.primary,
+    fontSize: 25,
+    fontWeight: "900",
+  },
+  img: {
+    height: 50,
+    width: 50,
+    borderRadius: 600,
+  },
+  tabcontent: {
+    display: "flex",
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "center",
   },
   scrollContent: {
-     marginTop: 130,
+    marginTop: 130,
     paddingBottom: 100,
-     // Equal to tab height to prevent content from being hidden
+    // Equal to tab height to prevent content from being hidden
   },
   tab: {
-    position: 'absolute',
-    bottom: 'auto',
-    marginBottom:10,
+    position: "absolute",
+    bottom: "auto",
+    marginBottom: 10,
     left: 0,
     right: 0,
     height: 100,
-    backgroundColor: 'white',
-    
+    backgroundColor: "white",
+
     // Shadow properties
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: -3, // Negative value to put shadow above the tab
@@ -194,19 +331,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 6,
     elevation: 10, // For Android
-    
+
     // Optional styling
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 16,
   },
   summaryContainer: {
-    padding: 16,
     alignItems: "center",
   },
   macrosContainer: {
     width: "100%",
-    marginTop: 50,
   },
   mealsContainer: {
     padding: 16,
@@ -214,18 +349,26 @@ const styles = StyleSheet.create({
   spacer: {
     height: 40,
   },
-
- containerText: {
-  width:'95%',
-  marginRight:10,
-  marginLeft:10,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+  wrapper: {
+    height: 300,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  containerText: {
+    width: "95%",
+    marginRight: 10,
+    marginLeft: 10,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     padding: 10,
-    borderRadius:15,
-    backgroundColor: '#fff',
+    borderRadius: 15,
+    backgroundColor: "#fff",
     // Shadow properties
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: -1, // Negative value to put shadow above the tab
@@ -236,50 +379,49 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     marginBottom: 40,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    textAlign: 'left',
+    textAlign: "left",
   },
   subtitle: {
     fontSize: 16,
     color: colors.gray,
-    textAlign: 'left',
+    textAlign: "left",
   },
   buttonContainer: {
-    width: '50%',
+    width: "50%",
   },
   button: {
     backgroundColor: colors.secondary,
     padding: 8,
     borderRadius: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   buttonText: {
     color: colors.primary,
     fontSize: 18,
-    fontWeight: 'semibold',
+    fontWeight: "semibold",
   },
 
   containerCard: {
-    width:'100%',
+    width: "100%",
     padding: 16,
-    display: 'flex',
-    gap:10,
-    flexDirection: 'row',
-   
+    display: "flex",
+    gap: 10,
+    flexDirection: "row",
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
-    width:'50%',
-    display:'flex',
+    width: "50%",
+    display: "flex",
     padding: 16,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -287,20 +429,20 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   cardSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
   },
   exerciseStats: {
-    flexDirection: 'column',
+    flexDirection: "column",
     marginTop: 8,
   },
   statItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginRight: 20,
   },
   statIcon: {
@@ -308,8 +450,73 @@ const styles = StyleSheet.create({
   },
   statValue: {
     fontSize: 14,
-    color: '#333',
+    color: "#333",
   },
-
-
+  shadowContainer: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 20,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  macroShadowContainer: {
+    maxWidth: "100%",
+  },
+  macroContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 10,
+    justifyContent: "space-between",
+    alignContent: "center",
+  },
+  circleContainer: {
+    width: 150,
+    height: 150,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circle: {
+    width: 140,
+    height: 140,
+    borderRadius: 75,
+    borderWidth: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  innerCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  macroTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: colors.primary,
+  },
+  macroValues: {
+    marginLeft: 20,
+  },
+  macroRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 8,
+  },
+  macroDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  macroText: {
+    flexDirection: "column",
+  },
 });
