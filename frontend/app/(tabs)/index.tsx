@@ -9,8 +9,11 @@ import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View, ImageBackground } from "react-native";
+import { SwiperFlatList } from "react-native-swiper-flatlist";
+import { ScrollView, StyleSheet, View, ImageBackground,Text, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import DiscoverCards from "@/components/Discover";
+import { Bold } from "lucide-react-native";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -53,62 +56,78 @@ export default function DashboardScreen() {
      
 
         <View style={styles.summaryContainer}>
+          <SwiperFlatList style={{margin:10}}>
+
           <CalorieCircle
             consumed={netCalories}
             goal={user?.dailyCalorieGoal || 2000}
           />
+          </SwiperFlatList>
+        </View>
 
-          <View style={styles.macrosContainer}>
-            <MacroProgressBar
-              label="Protein"
-              current={nutritionSummary.protein}
-              goal={user?.macroGoals.protein || 150}
-              color={colors.primary}
-            />
-            <MacroProgressBar
-              label="Carbs"
-              current={nutritionSummary.carbs}
-              goal={user?.macroGoals.carbs || 200}
-              color="#F5A623"
-            />
-            <MacroProgressBar
-              label="Fat"
-              current={nutritionSummary.fat}
-              goal={user?.macroGoals.fat || 70}
-              color="#4CD964"
-            />
+
+        <View style={styles.containerText}>
+          <View style={styles.textContainer}>
+            <Text style={styles.title}>Choose your next habit</Text>
+            <Text style={styles.subtitle}>Big goals start with small habits.</Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Start a habit</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.mealsContainer}>
-          <MealCard
-            title="Breakfast"
-            mealType="breakfast"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Lunch"
-            mealType="lunch"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Dinner"
-            mealType="dinner"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Snacks"
-            mealType="snack"
-            date={selectedDate.toISOString()}
-          />
-        </View>
 
-        <ExerciseCard date={selectedDate.toISOString()} />
+
+    {/* Step and Exercise*/}
+
+          <View style={styles.containerCard}>
+      {/* Steps Card */}
+      <TouchableOpacity style={styles.card}>
+        <Text style={styles.cardTitle}>Steps</Text>
+      <View style={{flexDirection: 'row', }}>
+        <MaterialCommunityIcons name="run" size={30} color={'blue'}/>
+       <View style={{marginLeft:4, width:'50%'}}>
+        <Text style={styles.cardSubtitle}>Connect to track steps.</Text>
+       </View>
+         <MaterialCommunityIcons name="chevron-right" size={30} color={'black'}/>
+      </View>
+      </TouchableOpacity>
+
+      {/* Exercise Card */}
+      <TouchableOpacity style={styles.card}>
+        <Text style={styles.cardTitle}>Exercise</Text>
+        <View style={styles.exerciseStats}>
+          <View style={styles.statItem}>
+           <MaterialCommunityIcons name="fire" size={17} color={colors.primary}/>
+            <Text style={styles.statValue}>0 cal</Text>
+          </View>
+          <View style={styles.statItem}>
+            <MaterialCommunityIcons name="clock" size={15} color={colors.primary}/>
+            <Text style={styles.statValue}>0:00 hr</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    </View>
+
+    {/* Discover Cards */}
+
+    <View style={{backgroundColor: colors.secondary}} >
+      <Text style={{fontWeight:'bold', fontSize:23, margin:20}}> Discover</Text>
+
+    <DiscoverCards/>
+    </View>
+
+
+
+
+        {/* <ExerciseCard date={selectedDate.toISOString()} /> */}
 
         <View style={styles.spacer} />
       </ScrollView>
 
-      {/* Fixed Tab at the bottom */}
+      {/* Fixed Tab at the top */}
      <View style={styles.tab}>
   <View style={styles.tabcontent}>
     <View style={styles.imageContainer}>
@@ -117,6 +136,7 @@ export default function DashboardScreen() {
         source={{ uri: "https://img.freepik.com/free-photo/low-angle-view-unrecognizable-muscular-build-man-preparing-lifting-barbell-health-club_637285-2497.jpg?" }}
       />
     </View>
+    <Text  style={{marginTop:15, color:colors.primary, fontWeight:'bold', fontSize: 25}}>Fittrack</Text>
     <MaterialCommunityIcons style={{marginTop:15}} name="bell-outline" size={30} color={'black'}/>
   </View>
 </View>
@@ -153,7 +173,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
      marginTop: 130,
-    paddingBottom: 100, // Equal to tab height to prevent content from being hidden
+    paddingBottom: 100,
+     // Equal to tab height to prevent content from being hidden
   },
   tab: {
     position: 'absolute',
@@ -185,7 +206,7 @@ const styles = StyleSheet.create({
   },
   macrosContainer: {
     width: "100%",
-    marginTop: 24,
+    marginTop: 50,
   },
   mealsContainer: {
     padding: 16,
@@ -193,4 +214,102 @@ const styles = StyleSheet.create({
   spacer: {
     height: 40,
   },
+
+ containerText: {
+  width:'95%',
+  marginRight:10,
+  marginLeft:10,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    padding: 10,
+    borderRadius:15,
+    backgroundColor: '#fff',
+    // Shadow properties
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -1, // Negative value to put shadow above the tab
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  textContainer: {
+    marginBottom: 40,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'left',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.gray,
+    textAlign: 'left',
+  },
+  buttonContainer: {
+    width: '50%',
+  },
+  button: {
+    backgroundColor: colors.secondary,
+    padding: 8,
+    borderRadius: 15,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: colors.primary,
+    fontSize: 18,
+    fontWeight: 'semibold',
+  },
+
+  containerCard: {
+    width:'100%',
+    padding: 16,
+    display: 'flex',
+    gap:10,
+    flexDirection: 'row',
+   
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    width:'50%',
+    display:'flex',
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: '#666',
+  },
+  exerciseStats: {
+    flexDirection: 'column',
+    marginTop: 8,
+  },
+  statItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  statIcon: {
+    marginRight: 10,
+  },
+  statValue: {
+    fontSize: 14,
+    color: '#333',
+  },
+
+
 });

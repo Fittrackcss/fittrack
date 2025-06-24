@@ -1,6 +1,6 @@
 export const colors = {
   primary: "#ff8e0c", // Bright brand orange
-  secondary: "#FFECD1", // Warm light background that complements primary
+  secondary: "#FFF8F2", // Warm light background that complements primary
   accent: "#FF6B00", // Slightly deeper orange for accents
   success: "#34C759", // Fresh green (iOS-style)
   warning: "#FF9500", // Rich warning tone

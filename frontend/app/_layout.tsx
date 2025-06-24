@@ -17,7 +17,7 @@ export default function RootLayoutNav() {
   useEffect(() => {
     const checkOnboarding = async () => {
       // For now, force show onboarding always will change later
-      setInitialRoute("(onboarding)");
+      setInitialRoute("(tabs)");
     };
     checkOnboarding();
   }, []);
