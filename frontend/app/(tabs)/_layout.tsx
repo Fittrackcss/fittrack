@@ -107,7 +107,7 @@ export default function TabLayout() {
         name="progress"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: () => (
             <View style={styles.progressTab}>
               <Ionicons 
                 name="add" 

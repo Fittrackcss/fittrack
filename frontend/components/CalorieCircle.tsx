@@ -14,13 +14,27 @@ export const CalorieCircle = ({
   goal,
   size = 200,
 }: CalorieCircleProps) => {
-  const percentage = Math.min(100, (consumed / goal) * 100);
-  const remaining = Math.max(0, goal - consumed);
+  // Ensure all inputs are non-negative
+  const safeConsumed = Math.max(0, consumed);
+  const safeGoal = Math.max(1, goal);
+
+  // Calculate percentage (capped at 100%)
+  const percentage = Math.min(100, (safeConsumed / safeGoal) * 100);
+
+  // Calculate remaining calories (can't be negative)
+  const remaining = Math.max(0, safeGoal - safeConsumed);
+
+  // Circle styling calculations
   const strokeWidth = size * 0.1;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const exercise = Math.floor(Math.min((remaining - consumed) / consumed));
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+  // Exercise shows percentage over goal (only if consumed > goal)
+  const overPercentage =
+    safeConsumed > safeGoal
+      ? Math.floor(((safeConsumed - safeGoal) / safeGoal) * 100)
+      : 0;
 
   return (
     <View style={[styles.container, { width: size * 1.7, height: size }]}>
@@ -36,7 +50,7 @@ export const CalorieCircle = ({
                 borderWidth: strokeWidth,
                 borderColor: "transparent",
                 borderTopColor: colors.primary,
-                transform: [{ rotateZ: `-${percentage * 3.6}deg` }],
+                transform: [{ rotateZ: `${percentage * 3.6}deg` }],
               },
             ]}
           />
@@ -61,21 +75,21 @@ export const CalorieCircle = ({
               <Ionicons name="flag" size={24} color={colors.accent} />
               <Text style={styles.goalLabel}>Base Goal</Text>
             </View>
-            <Text style={styles.goalValue}>{goal}</Text>
+            <Text style={styles.goalValue}>{safeGoal}</Text>
           </View>
           <View>
             <View style={styles.holder}>
               <Ionicons name="restaurant" size={24} color="blue" />
               <Text style={styles.goalLabel}>Food</Text>
             </View>
-            <Text style={styles.goalValue}>{consumed}</Text>
+            <Text style={styles.goalValue}>{safeConsumed}</Text>
           </View>
           <View>
             <View style={styles.holder}>
               <Ionicons name="flame" size={24} color="blue" />
               <Text style={styles.goalLabel}>Exercise</Text>
             </View>
-            <Text style={styles.goalValue}>{exercise}%</Text>
+            <Text style={styles.goalValue}>{overPercentage}%</Text>
           </View>
         </View>
       </View>

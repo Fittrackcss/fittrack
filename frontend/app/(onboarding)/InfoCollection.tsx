@@ -51,6 +51,15 @@ const InfoCollection = () => {
     "Ghana",
   ];
 
+  const validateAge = (text: string): string => {
+    if (/^\d*$/.test(text)) {
+      const age = parseInt(text);
+      if (age > 0 && age <= 120) return text;
+      if (text === "") return "";
+    }
+    return formData.age?.toString() || "";
+  };
+
   const handleBack = () => {
     incrementIndex();
     router.back();
@@ -119,13 +128,26 @@ const InfoCollection = () => {
 
       <View style={styles.section}>
         <Text style={styles.label}>How old are you?</Text>
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           value={formData.age || ""}
           onChangeText={handleAgeChange}
-          keyboardType="numeric"
           placeholder="Enter your age"
           placeholderTextColor={colors.text.muted}
+          cursorColor={colors.primary}
+          selectionColor={`${colors.primary}50`}
+        /> */}
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          value={formData.age?.toString() || ""}
+          onChangeText={(text) => {
+            const validated = validateAge(text);
+            setAge(validated === "" ? undefined : parseInt(validated));
+          }}
+          placeholder="Enter your age"
+          placeholderTextColor={colors.text.muted}
+          maxLength={3}
           cursorColor={colors.primary}
           selectionColor={`${colors.primary}50`}
         />

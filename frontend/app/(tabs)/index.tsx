@@ -1,16 +1,13 @@
 import { CalorieCircle } from "@/components/CalorieCircle";
-import { DateSelector } from "@/components/DateSelector";
-import { ExerciseCard } from "@/components/ExerciseCard";
-import { MacroProgressBar } from "@/components/MacroProgressBar";
-import { MealCard } from "@/components/MealCard";
 import { colors } from "@/constants/Colors";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
+import Swiper from "react-native-swiper";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View, ImageBackground } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ScrollView, StyleSheet, View, Text } from "react-native";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -34,7 +31,6 @@ export default function DashboardScreen() {
     if (selectedDate) {
       const nutrition = getDailyNutritionSummary(selectedDate.toISOString());
       const exercise = getDailyExerciseSummary(selectedDate.toISOString());
-
       setNutritionSummary(nutrition);
       setExerciseSummary(exercise);
     }
@@ -42,84 +38,126 @@ export default function DashboardScreen() {
 
   const netCalories =
     nutritionSummary.calories - exerciseSummary.totalCaloriesBurned;
-  const caloriesRemaining = user ? user.dailyCalorieGoal - netCalories : 0;
+
+  const calculateAngle = (consumed, goal) => {
+    const percentage = Math.min(100, (consumed / goal) * 100);
+    return (percentage / 100) * 360;
+  };
+
+  const macros = {
+    protein: {
+      consumed: nutritionSummary.protein,
+      goal: user?.macroGoals.protein || 150,
+      color: colors.primary,
+    },
+    carbs: {
+      consumed: nutritionSummary.carbs,
+      goal: user?.macroGoals.carbs || 200,
+      color: "#F5A623",
+    },
+    fat: {
+      consumed: nutritionSummary.fat,
+      goal: user?.macroGoals.fat || 70,
+      color: "#4CD964",
+    },
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-     
-
-        <View style={styles.summaryContainer}>
-          <CalorieCircle
-            consumed={netCalories}
-            goal={user?.dailyCalorieGoal || 2000}
-          />
-
-          <View style={styles.macrosContainer}>
-            <MacroProgressBar
-              label="Protein"
-              current={nutritionSummary.protein}
-              goal={user?.macroGoals.protein || 150}
-              color={colors.primary}
-            />
-            <MacroProgressBar
-              label="Carbs"
-              current={nutritionSummary.carbs}
-              goal={user?.macroGoals.carbs || 200}
-              color="#F5A623"
-            />
-            <MacroProgressBar
-              label="Fat"
-              current={nutritionSummary.fat}
-              goal={user?.macroGoals.fat || 70}
-              color="#4CD964"
+        <Swiper
+          style={styles.wrapper}
+          showsButtons={false}
+          dotColor={colors.gray}
+          activeDotColor={colors.primary}
+          loop={false}
+        >
+          {/* First slide - Calorie Circle with shadow */}
+          <View style={styles.slide}>
+            <CalorieCircle
+              consumed={netCalories}
+              goal={user?.dailyCalorieGoal || 2000}
             />
           </View>
-        </View>
 
-        <View style={styles.mealsContainer}>
-          <MealCard
-            title="Breakfast"
-            mealType="breakfast"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Lunch"
-            mealType="lunch"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Dinner"
-            mealType="dinner"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Snacks"
-            mealType="snack"
-            date={selectedDate.toISOString()}
-          />
-        </View>
+          {/* Second slide - Macro Circle with shadow */}
+          <View style={styles.slide}>
+            <View style={[styles.shadowContainer, styles.macroShadowContainer]}>
+              <View style={styles.macroContainer}>
+                {/* Circular Macro Display */}
+                <View style={styles.circleContainer}>
+                  <View
+                    style={[
+                      styles.circle,
+                      {
+                        borderTopColor: macros.protein.color,
+                        borderRightColor: macros.carbs.color,
+                        borderBottomColor: macros.fat.color,
+                        borderLeftColor: "transparent",
+                        transform: [
+                          {
+                            rotate: `${calculateAngle(
+                              macros.protein.consumed,
+                              macros.protein.goal
+                            )}deg`,
+                          },
+                        ],
+                      },
+                    ]}
+                  >
+                    <View style={styles.innerCircle}>
+                      <Text style={styles.macroTitle}>Macros</Text>
+                    </View>
+                  </View>
+                </View>
 
-        <ExerciseCard date={selectedDate.toISOString()} />
+                {/* Macro Values */}
+                <View style={styles.macroValues}>
+                  {Object.entries(macros).map(([key, macro]) => (
+                    <View key={key} style={styles.macroRow}>
+                      <View
+                        style={[
+                          styles.macroDot,
+                          { backgroundColor: macro.color },
+                        ]}
+                      />
+                      <Text style={styles.macroText}>
+                        {key.charAt(0).toUpperCase() + key.slice(1)}:{" "}
+                        {macro.consumed}/{macro.goal}g
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </View>
+          </View>
+        </Swiper>
 
         <View style={styles.spacer} />
       </ScrollView>
 
       {/* Fixed Tab at the bottom */}
-     <View style={styles.tab}>
-  <View style={styles.tabcontent}>
-    <View style={styles.imageContainer}>
-      <ImageBackground 
-        style={styles.img} 
-        source={{ uri: "https://img.freepik.com/free-photo/low-angle-view-unrecognizable-muscular-build-man-preparing-lifting-barbell-health-club_637285-2497.jpg?" }}
-      />
-    </View>
-    <MaterialCommunityIcons style={{marginTop:15}} name="bell-outline" size={30} color={'black'}/>
-  </View>
-</View>
+      <View style={styles.tab}>
+        <View style={styles.tabcontent}>
+          <View style={styles.imageContainer}>
+            <Ionicons name="person-circle" size={50} color={colors.primary} />
+          </View>
+          <View style={{ justifyContent: "flex-end" }}>
+            <Text style={styles.heading}>FitTrack</Text>
+          </View>
+          <View>
+            <MaterialCommunityIcons
+              style={{ marginTop: 15 }}
+              name="bell-outline"
+              size={25}
+              color={"black"}
+            />
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -129,68 +167,127 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background.main,
   },
+  heading: {
+    color: colors.primary,
+    fontSize: 25,
+    fontWeight: "900",
+  },
   scrollView: {
     flex: 1,
   },
-   imageContainer: {
-    borderRadius: 50, // Half of your image height/width to make it perfectly circular
-    overflow: 'hidden', // This ensures the image respects the border radius
+  imageContainer: {
+    borderRadius: 50,
+    overflow: "hidden",
     width: 50,
     height: 50,
   },
-  img:{
-    height:50,
-    width:50,
-    borderRadius:600,
-  }, 
-  tabcontent:{
-    display:'flex',
-    marginTop:20,
-    flexDirection:'row',
-    justifyContent: 'space-between',
-    alignContent: 'center',
-
+  tabcontent: {
+    marginTop: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignContent: "center",
   },
   scrollContent: {
-     marginTop: 130,
-    paddingBottom: 100, // Equal to tab height to prevent content from being hidden
+    marginTop: 130,
+    paddingBottom: 100,
   },
   tab: {
-    position: 'absolute',
-    bottom: 'auto',
-    marginBottom:10,
+    position: "absolute",
+    bottom: "auto",
+    marginBottom: 10,
     left: 0,
     right: 0,
     height: 100,
-    backgroundColor: 'white',
-    
-    // Shadow properties
-    shadowColor: '#000',
+    backgroundColor: "white",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: -3, // Negative value to put shadow above the tab
+      height: -3,
     },
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 10, // For Android
-    
-    // Optional styling
+    elevation: 10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 16,
   },
-  summaryContainer: {
-    padding: 16,
-    alignItems: "center",
-  },
-  macrosContainer: {
-    width: "100%",
-    marginTop: 24,
-  },
-  mealsContainer: {
-    padding: 16,
-  },
   spacer: {
     height: 40,
+  },
+  wrapper: {
+    height: 300,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  shadowContainer: {
+    backgroundColor: "white",
+    borderRadius: 12,
+    padding: 20,
+    width: "100%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  macroShadowContainer: {
+    maxWidth: "90%",
+  },
+  macroContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circleContainer: {
+    width: 150,
+    height: 150,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circle: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  innerCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  macroTitle: {
+    fontWeight: "bold",
+    fontSize: 16,
+    color: colors.dark,
+  },
+  macroValues: {
+    marginLeft: 20,
+  },
+  macroRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 8,
+  },
+  macroDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8,
+  },
+  macroText: {
+    fontSize: 14,
+    color: colors.text.primary,
   },
 });

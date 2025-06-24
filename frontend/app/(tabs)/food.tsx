@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ProgressScreen() {
   const router = useRouter();
@@ -137,7 +138,7 @@ export default function ProgressScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Weight Progress</Text>
 
@@ -220,7 +221,7 @@ export default function ProgressScreen() {
       >
         <Plus size={24} color="#fff" />
       </TouchableOpacity>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -362,7 +363,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: "absolute",
-    bottom: 24,
+    bottom: "37%",
     right: 24,
     width: 56,
     height: 56,

@@ -1,4 +1,3 @@
-import CustomModal from "@/components/ui/CustomModal";
 import { colors } from "@/constants/Colors";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
 import React, { useState } from "react";

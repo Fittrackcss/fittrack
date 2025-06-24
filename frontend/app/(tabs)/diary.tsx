@@ -5,6 +5,7 @@ import { useExerciseStore } from "@/store/exerciseStore";
 import { useRouter } from "expo-router";
 import { Plus, Search } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   FlatList,
   StyleSheet,
@@ -64,7 +65,7 @@ export default function ExerciseScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
           <Search
@@ -111,7 +112,7 @@ export default function ExerciseScreen() {
       ) : (
         renderSearchResults()
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

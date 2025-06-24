@@ -5,6 +5,7 @@ import { useNutritionStore } from "@/store/nutritionStore";
 import { useRouter } from "expo-router";
 import { Plus, Search } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   FlatList,
   StyleSheet,
@@ -87,7 +88,7 @@ export default function FoodScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
           <Search
@@ -132,7 +133,7 @@ export default function FoodScreen() {
       ) : (
         renderSearchResults()
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -39,7 +39,7 @@ const WelcomeScreen = () => {
 
   // Handle validation
   const validateCurrentStep = useCallback(() => {
-    if (currentStep?.input && !formData[currentStep.key]?.trim()) {
+    if (currentStep?.input && formData[currentStep.key]?.trim()) {
       setValidationMessage(`Please ${currentStep.placeholder}`);
       setShowValidationModal(true);
       return false;
@@ -115,7 +115,7 @@ const WelcomeScreen = () => {
             ) : item.input ? (
               <View style={{ width: "100%", marginTop: 20 }}>
                 <Text style={styles.inputLabel}>{item.label}</Text>
-                <TextInput
+                {/* <TextInput
                   value={formData[item.key] || ""}
                   onChangeText={(text) => updateFormData({ [item.key]: text })}
                   onFocus={() => setIsFocused(true)}
@@ -125,6 +125,18 @@ const WelcomeScreen = () => {
                   placeholder={item.placeholder}
                   placeholderTextColor="#999"
                   returnKeyType="done"
+                /> */}
+                <TextInput
+                  value={formData.name || ""}
+                  onChangeText={(text) => updateFormData({ name: text.trim() })}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  style={[styles.input, isFocused && styles.inputFocused]}
+                  selectionColor={colors.primary}
+                  placeholder="Enter your name"
+                  placeholderTextColor="#999"
+                  returnKeyType="done"
+                  maxLength={50}
                 />
               </View>
             ) : null}
