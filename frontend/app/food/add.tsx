@@ -36,48 +36,7 @@ export default function AddFoodScreen() {
     router.back();
   };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <Search
-          size={20}
-          color={colors.text.secondary}
-          style={styles.searchIcon}
-        />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search foods..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          autoFocus
-          returnKeyType="search"
-        />
-      </View>
-
-      <View style={styles.resultsContainer}>
-        {searchQuery.length > 0 ? (
-          <FlatList
-            data={searchResults}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <FoodSearchScreen food={item} onAdd={handleAddFood} />
-            )}
-            ListEmptyComponent={
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>No foods found</Text>
-              </View>
-            }
-          />
-        ) : (
-          <View style={styles.initialContainer}>
-            <Text style={styles.initialText}>
-              Search for foods to add to your {mealType}
-            </Text>
-          </View>
-        )}
-      </View>
-    </View>
-  );
+  return <FoodSearchScreen />;
 }
 
 const styles = StyleSheet.create({

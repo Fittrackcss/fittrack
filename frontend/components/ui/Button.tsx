@@ -173,10 +173,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   mediumText: {
-    fontSize: 14,
+    fontSize: 16,
   },
   largeText: {
-    fontSize: 16,
+    fontSize: 18,
   },
 
   // Disabled state
