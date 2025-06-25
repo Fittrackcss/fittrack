@@ -9,7 +9,6 @@ import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { SwiperFlatList } from "react-native-swiper-flatlist";
 import Swiper from "react-native-swiper";
 import {
   ScrollView,
@@ -82,13 +81,14 @@ export default function DashboardScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
+        {/* Edit Button */}
+        <TouchableOpacity>
+        <View style={{justifyContent:'center', marginLeft:'80%', marginRight: 50, backgroundColor:colors.secondary, borderRadius: 20, height:30, width:70}}><Text style={{textAlign:'center', fontWeight:'bold', color: colors.primary}}>Edit</Text>
+        </View>
+        </TouchableOpacity>
+
         <View style={styles.summaryContainer}>
-          {/* <SwiperFlatList style={{ margin: 10 }}>
-            <CalorieCircle
-              consumed={netCalories}
-              goal={user?.dailyCalorieGoal || 2000}
-            />
-          </SwiperFlatList> */}
+          
           <Swiper
             style={styles.wrapper}
             showsButtons={false}
@@ -206,7 +206,14 @@ export default function DashboardScreen() {
 
           {/* Exercise Card */}
           <TouchableOpacity style={styles.card}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={styles.cardTitle}>Exercise</Text>
+             <MaterialCommunityIcons
+                  name="plus"
+                  size={24}
+                  color={'black'}
+                />
+            </View>
             <View style={styles.exerciseStats}>
               <View style={styles.statItem}>
                 <MaterialCommunityIcons
@@ -244,6 +251,7 @@ export default function DashboardScreen() {
         <View style={styles.spacer} />
       </ScrollView>
 
+
       {/* Fixed Tab at the top */}
       <View style={styles.tab}>
         <View style={styles.tabcontent}>
@@ -265,12 +273,15 @@ export default function DashboardScreen() {
           >
             Fittrack
           </Text>
+          <TouchableOpacity>
+            
           <MaterialCommunityIcons
             style={{ marginTop: 15 }}
             name="bell-outline"
-            size={30}
+            size={28}
             color={"black"}
           />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -286,10 +297,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
+    marginTop: 10,
     borderRadius: 50, // Half of your image height/width to make it perfectly circular
     overflow: "hidden", // This ensures the image respects the border radius
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
   },
   heading: {
     color: colors.primary,
@@ -299,7 +311,7 @@ const styles = StyleSheet.create({
   img: {
     height: 50,
     width: 50,
-    borderRadius: 600,
+    borderRadius: 800,
   },
   tabcontent: {
     display: "flex",
@@ -323,13 +335,13 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
 
     // Shadow properties
-    shadowColor: "#000",
+    shadowColor: "#7F9497",
     shadowOffset: {
       width: 0,
       height: -3, // Negative value to put shadow above the tab
     },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
     elevation: 10, // For Android
 
     // Optional styling
@@ -350,7 +362,7 @@ const styles = StyleSheet.create({
     height: 40,
   },
   wrapper: {
-    height: 300,
+    height: 400,
   },
   slide: {
     flex: 1,
@@ -360,6 +372,7 @@ const styles = StyleSheet.create({
   },
   containerText: {
     width: "95%",
+    height: 'auto',
     marginRight: 10,
     marginLeft: 10,
     justifyContent: "flex-start",
@@ -368,7 +381,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: "#fff",
     // Shadow properties
-    shadowColor: "#000",
+    shadowColor: "#7F9497",
     shadowOffset: {
       width: 0,
       height: -1, // Negative value to put shadow above the tab
@@ -378,7 +391,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textContainer: {
-    marginBottom: 40,
+    marginBottom: 15,
     alignItems: "center",
   },
   title: {
@@ -403,7 +416,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.primary,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "semibold",
   },
 
@@ -457,14 +470,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
     width: "100%",
-    shadowColor: "#000",
+    shadowColor: "#7F9497",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: -2,
     },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 6,
   },
   macroShadowContainer: {
     maxWidth: "100%",

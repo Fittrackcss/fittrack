@@ -43,7 +43,7 @@ const DiscoverCards = () => {
         },
         {
             icon: "account-group",
-            title: "Recipe",
+            title: "Community",
             subtitle: "Food & Fitness inspo",
             color: colors.primary
         }
@@ -81,16 +81,16 @@ const styles = StyleSheet.create({
     card: {
         justifyContent: 'center',
         alignContent:'center',
-        width: '48%',
+        width: '48.5%',
         backgroundColor: '#fff',
         borderRadius: 12,
         padding: 16,
         marginBottom: 12,
-        shadowColor: '#000',
+        shadowColor: '##7F9497',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
+        shadowOpacity: 0.05,
         shadowRadius: 4,
-        elevation: 3,
+        elevation: 4,
         flexDirection: 'column',
         alignItems: 'center',
     },

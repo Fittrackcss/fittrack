@@ -76,7 +76,7 @@ export const MealCard = ({ title, mealType, date }: MealCardProps) => {
       )}
 
       <TouchableOpacity style={styles.addButton} onPress={handleAddFood}>
-        <Plus size={16} color={colors.primary} />
+        <Plus size={20} color={colors.primary} />
         <Text style={styles.addButtonText}>Add Food</Text>
       </TouchableOpacity>
     </View>
@@ -85,25 +85,27 @@ export const MealCard = ({ title, mealType, date }: MealCardProps) => {
 
 const styles = StyleSheet.create({
   container: {
+    width: '45.5%',
     backgroundColor: colors.background.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
-    shadowColor: "#000",
+    shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 2,
+    margin:8
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom:0,
   },
   title: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "bold",
     color: colors.text.primary,
   },
   calories: {
@@ -112,7 +114,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
   foodList: {
-    marginBottom: 12,
+    marginBottom: 10,
   },
   foodItem: {
     flexDirection: "row",
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
   },
   emptyState: {
-    paddingVertical: 16,
+    paddingVertical: 8,
     alignItems: "center",
   },
   emptyText: {
@@ -148,11 +150,10 @@ const styles = StyleSheet.create({
   addButton: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
     paddingVertical: 8,
   },
   addButtonText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "500",
     color: colors.primary,
     marginLeft: 4,

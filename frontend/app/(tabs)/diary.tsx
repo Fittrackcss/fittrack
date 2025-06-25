@@ -8,11 +8,14 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList,
   StyleSheet,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MealCard } from "@/components/MealCard";
 
 export default function ExerciseScreen() {
   const router = useRouter();
@@ -65,6 +68,8 @@ export default function ExerciseScreen() {
 
   return (
     <View style={styles.container}>
+      <ScrollView>
+
       <View style={styles.searchContainer}>
         <View style={styles.searchInputContainer}>
           <Search
@@ -111,6 +116,54 @@ export default function ExerciseScreen() {
       ) : (
         renderSearchResults()
       )}
+
+      <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', backgroundColor:colors.secondary,}}>
+
+       <MealCard
+            title="Breakfast"
+            mealType="breakfast"
+            date={selectedDate.toISOString()}
+          />
+          <MealCard
+            title="Lunch"
+            mealType="lunch"
+            date={selectedDate.toISOString()}
+          />
+          <MealCard
+            title="Dinner"
+            mealType="dinner"
+            date={selectedDate.toISOString()}
+          />
+          <MealCard
+            title="Snacks"
+            mealType="snack"
+            date={selectedDate.toISOString()}
+          />
+      </View>
+
+      
+
+{/* Tab at the top */}
+      </ScrollView>
+      <View style={styles.tab}>
+
+        <View style={{ flexDirection: 'row', marginTop:20}}>
+
+          <TouchableOpacity>
+            
+          <MaterialCommunityIcons
+            style={{ marginTop: 15 }}
+            name="chevron-left"
+            size={28}
+            color={"black"}
+          />
+          </TouchableOpacity>
+          <TouchableOpacity>
+
+          <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20, marginTop:13}}>Diary</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 }
@@ -119,6 +172,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
+   
+  },
+   tab: {
+    position: "absolute",
+    bottom: "auto",
+    marginBottom: 10,
+    left: 0,
+    right: 0,
+    height: 100,
+    backgroundColor: "white",
+
+    // Shadow properties
+    shadowColor: "#7F9497",
+    shadowOffset: {
+      width: 0,
+      height: -3, // Negative value to put shadow above the tab
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 10, // For Android
+
+    // Optional styling
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 16,
   },
   searchContainer: {
     flexDirection: "row",
@@ -126,6 +204,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
+        marginTop:125
   },
   searchInputContainer: {
     flex: 1,

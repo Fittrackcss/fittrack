@@ -2,6 +2,7 @@ import { colors } from "@/constants/Colors";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { TestTube } from "lucide-react-native";
 
 type CalorieCircleProps = {
   consumed: number;
@@ -23,9 +24,16 @@ export const CalorieCircle = ({
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
+    <View>
+        <View style={{flexDirection: 'column', display:'flex', marginBottom:20}}>
+        <Text style={{fontWeight: 'bold', fontSize:24}}>Calories</Text>
+        <Text>Remaining = Goal - Food + Exercise</Text>
+      </View>
     <View style={[styles.container, { width: size * 1.7, height: size }]}>
       <View style={styles.backgroundCircle}>
         <View style={styles.progressCircleContainer}>
+          <View style={styles.inside}>
+
           <View
             style={[
               styles.progressCircle,
@@ -41,6 +49,8 @@ export const CalorieCircle = ({
             ]}
           />
         </View>
+          </View>
+       
         <View style={styles.textContainer}>
           <Text style={styles.remainingText}>{remaining}</Text>
           <Text style={styles.remainingLabel}>remaining</Text>
@@ -58,7 +68,7 @@ export const CalorieCircle = ({
         <View style={styles.goalContainer}>
           <View>
             <View style={styles.holder}>
-              <Ionicons name="flag" size={24} color={colors.accent} />
+              <Ionicons name="flag" size={24} color={colors.gray} />
               <Text style={styles.goalLabel}>Base Goal</Text>
             </View>
             <Text style={styles.goalValue}>{goal}</Text>
@@ -72,13 +82,14 @@ export const CalorieCircle = ({
           </View>
           <View>
             <View style={styles.holder}>
-              <Ionicons name="flame" size={24} color="blue" />
+              <Ionicons name="flame" size={24} color={colors.primary} />
               <Text style={styles.goalLabel}>Exercise</Text>
             </View>
             <Text style={styles.goalValue}>{exercise}%</Text>
           </View>
         </View>
       </View>
+    </View>
     </View>
   );
 };
@@ -90,7 +101,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     borderRadius: 15,
-    shadowColor: "#000",
+    shadowColor: "#7F9497",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -100,11 +111,20 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: "#fff",
   },
+  inside:{
+    backgroundColor:'white',
+     width: "90%",
+    height: "90%",
+    borderRadius: 999,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative",
+  },
   backgroundCircle: {
     width: "45%",
     height: "80%",
     borderRadius: 999,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: colors.primary,
     alignItems: "center",
     justifyContent: "center",
     position: "relative",

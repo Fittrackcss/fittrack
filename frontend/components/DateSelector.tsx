@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: colors.background.secondary,
+    backgroundColor: colors.secondary,
   },
   dateText: {
     fontSize: 14,
