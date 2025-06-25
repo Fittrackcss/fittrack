@@ -65,6 +65,12 @@ export default function RootLayoutNav() {
           }}
         />
         <Stack.Screen
+          name="food/foodstore"
+          options={{
+            title: "Food Store",
+          }}
+        />
+        <Stack.Screen
           name="exercise/add"
           options={{
             title: "Add Exercise",

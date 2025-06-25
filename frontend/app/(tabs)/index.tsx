@@ -83,12 +83,30 @@ export default function DashboardScreen() {
       >
         {/* Edit Button */}
         <TouchableOpacity>
-        <View style={{justifyContent:'center', marginLeft:'80%', marginRight: 50, backgroundColor:colors.secondary, borderRadius: 20, height:30, width:70}}><Text style={{textAlign:'center', fontWeight:'bold', color: colors.primary}}>Edit</Text>
-        </View>
+          <View
+            style={{
+              justifyContent: "center",
+              marginLeft: "80%",
+              marginRight: 50,
+              backgroundColor: colors.secondary,
+              borderRadius: 20,
+              height: 30,
+              width: 70,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: colors.primary,
+              }}
+            >
+              Edit
+            </Text>
+          </View>
         </TouchableOpacity>
 
         <View style={styles.summaryContainer}>
-          
           <Swiper
             style={styles.wrapper}
             showsButtons={false}
@@ -106,6 +124,28 @@ export default function DashboardScreen() {
 
             {/* Second slide - Macro Circle with shadow */}
             <View style={styles.slide}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignContent: "flex-start",
+                  width: "100%",
+                  marginBottom: 25,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: colors.text.primary,
+                    fontWeight: "900",
+                  }}
+                >
+                  Macros
+                </Text>
+                <Text style={{ color: colors.text.muted }}>
+                  Explore your macros and track consumption
+                </Text>
+              </View>
+
               <View
                 style={[styles.shadowContainer, styles.macroShadowContainer]}
               >
@@ -206,13 +246,11 @@ export default function DashboardScreen() {
 
           {/* Exercise Card */}
           <TouchableOpacity style={styles.card}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.cardTitle}>Exercise</Text>
-             <MaterialCommunityIcons
-                  name="plus"
-                  size={24}
-                  color={'black'}
-                />
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.cardTitle}>Exercise</Text>
+              <MaterialCommunityIcons name="plus" size={24} color={"black"} />
             </View>
             <View style={styles.exerciseStats}>
               <View style={styles.statItem}>
@@ -251,7 +289,6 @@ export default function DashboardScreen() {
         <View style={styles.spacer} />
       </ScrollView>
 
-
       {/* Fixed Tab at the top */}
       <View style={styles.tab}>
         <View style={styles.tabcontent}>
@@ -274,13 +311,12 @@ export default function DashboardScreen() {
             Fittrack
           </Text>
           <TouchableOpacity>
-            
-          <MaterialCommunityIcons
-            style={{ marginTop: 15 }}
-            name="bell-outline"
-            size={28}
-            color={"black"}
-          />
+            <MaterialCommunityIcons
+              style={{ marginTop: 15 }}
+              name="bell-outline"
+              size={28}
+              color={"black"}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -372,7 +408,7 @@ const styles = StyleSheet.create({
   },
   containerText: {
     width: "95%",
-    height: 'auto',
+    height: "auto",
     marginRight: 10,
     marginLeft: 10,
     justifyContent: "flex-start",

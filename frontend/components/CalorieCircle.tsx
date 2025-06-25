@@ -25,71 +25,74 @@ export const CalorieCircle = ({
 
   return (
     <View>
-        <View style={{flexDirection: 'column', display:'flex', marginBottom:20}}>
-        <Text style={{fontWeight: 'bold', fontSize:24}}>Calories</Text>
-        <Text>Remaining = Goal - Food + Exercise</Text>
-      </View>
-    <View style={[styles.container, { width: size * 1.7, height: size }]}>
-      <View style={styles.backgroundCircle}>
-        <View style={styles.progressCircleContainer}>
-          <View style={styles.inside}>
-
-          <View
-            style={[
-              styles.progressCircle,
-              {
-                width: size,
-                height: size,
-                borderRadius: size / 2,
-                borderWidth: strokeWidth,
-                borderColor: "transparent",
-                borderTopColor: colors.primary,
-                transform: [{ rotateZ: `-${percentage * 3.6}deg` }],
-              },
-            ]}
-          />
-        </View>
-          </View>
-       
-        <View style={styles.textContainer}>
-          <Text style={styles.remainingText}>{remaining}</Text>
-          <Text style={styles.remainingLabel}>remaining</Text>
-          <View style={styles.divider} />
-        </View>
-      </View>
       <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          height: "auto",
-          width: "40%",
-        }}
+        style={{ flexDirection: "column", display: "flex", marginBottom: 20 }}
       >
-        <View style={styles.goalContainer}>
-          <View>
-            <View style={styles.holder}>
-              <Ionicons name="flag" size={24} color={colors.gray} />
-              <Text style={styles.goalLabel}>Base Goal</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 24 }}>Calories</Text>
+        <Text style={{ color: colors.text.muted }}>
+          Remaining = Goal - Food + Exercise
+        </Text>
+      </View>
+      <View style={[styles.container, { width: size * 1.7, height: size }]}>
+        <View style={styles.backgroundCircle}>
+          <View style={styles.progressCircleContainer}>
+            <View style={styles.inside}>
+              <View
+                style={[
+                  styles.progressCircle,
+                  {
+                    width: size,
+                    height: size,
+                    borderRadius: size / 2,
+                    borderWidth: strokeWidth,
+                    borderColor: "transparent",
+                    borderTopColor: colors.primary,
+                    transform: [{ rotateZ: `-${percentage * 3.6}deg` }],
+                  },
+                ]}
+              />
             </View>
-            <Text style={styles.goalValue}>{goal}</Text>
           </View>
-          <View>
-            <View style={styles.holder}>
-              <Ionicons name="restaurant" size={24} color="blue" />
-              <Text style={styles.goalLabel}>Food</Text>
-            </View>
-            <Text style={styles.goalValue}>{consumed}</Text>
+
+          <View style={styles.textContainer}>
+            <Text style={styles.remainingText}>{remaining}</Text>
+            <Text style={styles.remainingLabel}>remaining</Text>
+            <View style={styles.divider} />
           </View>
-          <View>
-            <View style={styles.holder}>
-              <Ionicons name="flame" size={24} color={colors.primary} />
-              <Text style={styles.goalLabel}>Exercise</Text>
+        </View>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            height: "auto",
+            width: "40%",
+          }}
+        >
+          <View style={styles.goalContainer}>
+            <View>
+              <View style={styles.holder}>
+                <Ionicons name="flag" size={24} color={colors.gray} />
+                <Text style={styles.goalLabel}>Base Goal</Text>
+              </View>
+              <Text style={styles.goalValue}>{goal}</Text>
             </View>
-            <Text style={styles.goalValue}>{exercise}%</Text>
+            <View>
+              <View style={styles.holder}>
+                <Ionicons name="restaurant" size={24} color="blue" />
+                <Text style={styles.goalLabel}>Food</Text>
+              </View>
+              <Text style={styles.goalValue}>{consumed}</Text>
+            </View>
+            <View>
+              <View style={styles.holder}>
+                <Ionicons name="flame" size={24} color={colors.primary} />
+                <Text style={styles.goalLabel}>Exercise</Text>
+              </View>
+              <Text style={styles.goalValue}>{exercise}%</Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
     </View>
   );
 };
@@ -111,9 +114,9 @@ const styles = StyleSheet.create({
     elevation: 5,
     backgroundColor: "#fff",
   },
-  inside:{
-    backgroundColor:'white',
-     width: "90%",
+  inside: {
+    backgroundColor: "white",
+    width: "90%",
     height: "90%",
     borderRadius: 999,
     alignItems: "center",

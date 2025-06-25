@@ -54,11 +54,6 @@ export default function ProgressScreen() {
     const change = newestWeight - oldestWeight;
     const isGain = change > 0;
 
-    const app_id = "ba825b15";
-    const app_key = "4908a945198c5d05cfeb579c4bfb0517	—";
-
-    const query = "chicken";
-
     return (
       <View style={styles.changeContainer}>
         <Text style={styles.changeLabel}>
