@@ -158,8 +158,14 @@ const FoodSearchScreen = () => {
       setSearchTerm(searchQuery);
     }
   };
-  const handleAdd = () => {
-    router.push("/food/foodstore");
+  const handleAdd = (item) => {
+    router.push({
+      pathname: "/food/foodstore",
+      params: {
+        foodData: JSON.stringify(item),
+        // mealType: mealType || "breakfast", // Pass current meal type
+      },
+    });
   };
 
   return (
@@ -234,7 +240,7 @@ const FoodSearchScreen = () => {
                     marginTop: 10,
                     backgroundColor: colors.primary,
                   }}
-                  onPress={handleAdd}
+                  onPress={() => handleAdd(item)}
                 >
                   <Text>Add</Text>
                 </TouchableOpacity>

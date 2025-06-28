@@ -67,12 +67,16 @@
 //   );
 // }
 
-
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { MaterialIcons,MaterialCommunityIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { StyleSheet, View } from 'react-native';
-import { colors } from '../../constants/Colors';
+import { Tabs } from "expo-router";
+import React from "react";
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+  Ionicons,
+} from "@expo/vector-icons";
+import { StyleSheet, View } from "react-native";
+import { colors } from "../../constants/Colors";
 
 export default function TabLayout() {
   return (
@@ -88,7 +92,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Dashboard',
+          title: "Dashboard",
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="dashboard" size={24} color={color} />
           ),
@@ -97,31 +101,27 @@ export default function TabLayout() {
       <Tabs.Screen
         name="diary"
         options={{
-          title: 'Diary',
+          title: "Diary",
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="book" size={20} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="progress"
+        name="food"
         options={{
-          title: '',
-          tabBarIcon: ({ color }) => (
+          title: "",
+          tabBarIcon: () => (
             <View style={styles.progressTab}>
-              <Ionicons 
-                name="add" 
-                size={24} 
-                color={'white'} 
-              />
+              <Ionicons name="add" size={24} color={"white"} />
             </View>
           ),
         }}
       />
       <Tabs.Screen
-        name="food"
+        name="progress"
         options={{
-          title: 'Progress',
+          title: "Progress",
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="chart-line" size={20} color={color} />
           ),
@@ -130,9 +130,13 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'More',
+          title: "More",
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="dots-horizontal" size={24} color={color} />
+            <MaterialCommunityIcons
+              name="dots-horizontal"
+              size={24}
+              color={color}
+            />
           ),
         }}
       />
@@ -147,15 +151,15 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     borderTopWidth: 0,
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     borderRadius: 15,
     shadowOpacity: 1.5,
     shadowRadius: 8,
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   tabBarLabel: {
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 4,
   },
   progressTab: {
@@ -163,13 +167,13 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
     shadowRadius: 8,
     shadowOpacity: 0.5,
     marginBottom: 10,
     borderWidth: 3,
-    borderColor: 'white',
+    borderColor: "white",
   },
 });
