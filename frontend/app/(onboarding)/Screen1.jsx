@@ -198,8 +198,6 @@
 //   },
 // });
 
-
-
 import { useRouter } from "expo-router";
 import {
   Dimensions,
@@ -215,7 +213,6 @@ import { colors } from "../../constants/Colors";
 import slide1 from "../../assets/images/slide1.jpg";
 import food from "../../assets/images/food.jpg";
 import image from "../../assets/images/image.png";
-
 const { width } = Dimensions.get("window");
 
 const slides = [
@@ -268,9 +265,7 @@ const Screen1 = () => {
                 source={item.img}
                 style={styles.slideImage}
                 resizeMode="cover"
-              >
-               
-              </ImageBackground>
+              ></ImageBackground>
               <View style={styles.textDescription}>
                 <Text style={styles.desc}>{item.description}</Text>
                 {item.supporting && (
@@ -327,10 +322,11 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   slideImage: {
-    width: width * 0.85,
+    width: width * 0.8,
+    marginHorizontal: (width * 0.2) / 5,
     height: 400,
     borderRadius: 10,
-    margin: 10,
+    // margin: 10,
     overflow: "hidden",
     justifyContent: "flex-end",
     shadowColor: "#000",

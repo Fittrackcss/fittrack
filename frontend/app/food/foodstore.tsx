@@ -5,13 +5,10 @@ import {
   TextInput,
   Button,
   FlatList,
-  Image,
-  ScrollView,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useFoodStore } from "@/store/foodStore";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "@/constants/Colors";
 
 const foodstore = () => {
@@ -21,7 +18,7 @@ const foodstore = () => {
   const { foods, addFood, removeFood } = useFoodStore();
 
   // Get food data from navigation if coming from search
-  const incomingFood = params.foodData ? JSON.parse(params.foodData) : null;
+  const incomingFood = params.foodData ? JSON.parse(params.foodDatauj) : null;
   const [mealType, setMealType] = useState(params.mealType || "breakfast");
 
   const handleAddFood = () => {
@@ -44,19 +41,11 @@ const foodstore = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {incomingFood ? (
         // Add new food view
         <View style={styles.addContainer}>
           <Text style={styles.title}>Add {incomingFood.name}</Text>
-
-          {incomingFood.image && (
-            <Image
-              source={{ uri: incomingFood.image }}
-              style={styles.foodImageLarge}
-              resizeMode="contain"
-            />
-          )}
 
           <View style={styles.inputGroup}>
             <Text>Quantity:</Text>
@@ -76,7 +65,7 @@ const foodstore = () => {
                   key={type}
                   title={type}
                   onPress={() => setMealType(type)}
-                  color={mealType === type ? "#4CAF50" : "#CCCCCC"}
+                  color={mealType === type ? "#6F4E37" : "#FFF5E5"}
                 />
               ))}
             </View>
@@ -85,7 +74,7 @@ const foodstore = () => {
           <Button
             title="Add to Food Log"
             onPress={handleAddFood}
-            color="#4CAF50"
+            color="#ff8e0c"
           />
         </View>
       ) : (
@@ -101,26 +90,13 @@ const foodstore = () => {
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <View style={styles.foodItem}>
-                  {item.image && (
-                    <Image
-                      source={{ uri: item.image }}
-                      style={styles.foodImage}
-                      resizeMode="contain"
-                    />
-                  )}
-                  <View style={styles.foodDetails}>
-                    <Text style={styles.foodName}>{item.name}</Text>
-                    <Text style={{ color: colors.text.muted }}>
-                      Quantity: {item.quantity}
-                    </Text>
-                    <Text style={{ color: colors.text.muted }}>
-                      Meal: {item.mealType}
-                    </Text>
-                    <Text style={{ color: colors.text.muted }}>
-                      Calories: {item.nutrition?.nutrients[0]?.amount || "N/A"}{" "}
-                      {item.nutrition?.nutrients[0]?.unit || ""}
-                    </Text>
-                  </View>
+                  <Text style={styles.foodName}>{item.name}</Text>
+                  <Text>Quantity: {item.quantity}</Text>
+                  <Text>Meal: {item.mealType}</Text>
+                  <Text>
+                    Calories: {item.nutrition?.nutrients[0]?.amount || "N/A"}{" "}
+                    {item.nutrition?.nutrients[0]?.unit || ""}
+                  </Text>
                   <Button
                     title="Remove"
                     onPress={() => handleRemoveFood(item.id)}
@@ -132,7 +108,7 @@ const foodstore = () => {
           )}
         </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -149,17 +125,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: 25,
+    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: colors.accent,
   },
   inputGroup: {
     marginBottom: 15,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: colors.border,
     padding: 10,
     marginTop: 5,
     borderRadius: 5,
@@ -170,32 +145,13 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   foodItem: {
-    flexDirection: "row",
-    alignItems: "center",
     padding: 15,
-    backgroundColor: "#f9f9f9",
-    marginVertical: 20,
-    borderRadius: 10,
-  },
-  foodDetails: {
-    flex: 1,
-    marginLeft: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
   },
   foodName: {
     fontWeight: "bold",
     fontSize: 16,
-    color: colors.primary,
-  },
-  foodImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  foodImageLarge: {
-    width: 100,
-    height: 100,
-    alignSelf: "center",
-    marginBottom: 20,
   },
   emptyText: {
     textAlign: "center",
@@ -203,5 +159,4 @@ const styles = StyleSheet.create({
     color: "#888",
   },
 });
-
 export default foodstore;

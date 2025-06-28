@@ -1,138 +1,221 @@
-import { DateSelector } from "@/components/DateSelector";
-import { MealCard } from "@/components/MealCard";
 import { colors } from "@/constants/Colors";
-import { useNutritionStore } from "@/store/nutritionStore";
+import { useProgressStore } from "@/store/progressStore";
+import { useUserStore } from "@/store/userStore";
+import { WeightEntry } from "@/types";
 import { useRouter } from "expo-router";
-import { Plus, Search } from "lucide-react-native";
+import { Plus } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
-  FlatList,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 
-export default function FoodScreen() {
+export default function ProgressScreen() {
   const router = useRouter();
-  const { searchFood, searchResults } = useNutritionStore();
+  const { user } = useUserStore();
+  const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } =
+    useProgressStore();
 
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
+  const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("week");
+  const [latestWeight, setLatestWeight] = useState<number | null>(null);
+  const [weightData, setWeightData] = useState<WeightEntry[]>([]);
 
   useEffect(() => {
-    if (searchQuery.length > 2) {
-      searchFood(searchQuery);
-    }
-  }, [searchQuery, searchFood]);
+    const latest = getLatestWeight();
+    setLatestWeight(latest);
 
-  const handleAddFood = (mealType: string) => {
-    router.push(
-      `/food/add?mealType=${mealType}&date=${selectedDate.toISOString()}`
+    const today = new Date();
+    let startDate = new Date();
+
+    if (timeRange === "week") {
+      startDate.setDate(today.getDate() - 7);
+    } else if (timeRange === "month") {
+      startDate.setMonth(today.getMonth() - 1);
+    } else {
+      startDate.setFullYear(today.getFullYear() - 1);
+    }
+
+    const entries = getWeightEntriesByDateRange(
+      startDate.toISOString(),
+      today.toISOString()
+    );
+
+    setWeightData(entries);
+  }, [timeRange, getLatestWeight, getWeightEntriesByDateRange, weightEntries]);
+
+  const renderWeightChange = () => {
+    if (weightData.length < 2) return null;
+
+    const oldestWeight = weightData[0].weight;
+    const newestWeight = weightData[weightData.length - 1].weight;
+    const change = newestWeight - oldestWeight;
+    const isGain = change > 0;
+
+    return (
+      <View style={styles.changeContainer}>
+        <Text style={styles.changeLabel}>
+          {timeRange === "week"
+            ? "This Week"
+            : timeRange === "month"
+            ? "This Month"
+            : "This Year"}
+        </Text>
+        <Text
+          style={[
+            styles.changeValue,
+            { color: isGain ? colors.danger : colors.success },
+          ]}
+        >
+          {isGain ? "+" : ""}
+          {change.toFixed(1)} lbs
+        </Text>
+      </View>
     );
   };
 
-  const renderMealCards = () => (
-    <View style={styles.mealsContainer}>
-      <MealCard
-        title="Breakfast"
-        mealType="breakfast"
-        date={selectedDate.toISOString()}
-      />
-      <MealCard
-        title="Lunch"
-        mealType="lunch"
-        date={selectedDate.toISOString()}
-      />
-      <MealCard
-        title="Dinner"
-        mealType="dinner"
-        date={selectedDate.toISOString()}
-      />
-      <MealCard
-        title="Snacks"
-        mealType="snack"
-        date={selectedDate.toISOString()}
-      />
-    </View>
-  );
-
-  const renderSearchResults = () => (
-    <View style={styles.searchResultsContainer}>
-      <Text style={styles.searchResultsTitle}>
-        {searchResults.length > 0
-          ? `Found ${searchResults.length} results`
-          : "No results found"}
-      </Text>
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
+  const renderWeightChart = () => {
+    if (weightData.length === 0) {
+      return (
+        <View style={styles.emptyChartContainer}>
+          <Text style={styles.emptyChartText}>No weight data available</Text>
           <TouchableOpacity
-            style={styles.searchResultItem}
-            onPress={() => router.push(`/food/details?id=${item.id}`)}
+            style={styles.addWeightButton}
+            onPress={() => router.push("/weight/add")}
           >
-            <View>
-              <Text style={styles.foodName}>{item.name}</Text>
-              <Text style={styles.foodBrand}>{item.brand}</Text>
-            </View>
-            <Text style={styles.foodCalories}>{item.calories} cal</Text>
+            <Text style={styles.addWeightButtonText}>Add Weight</Text>
           </TouchableOpacity>
-        )}
-        contentContainerStyle={styles.searchResultsList}
-      />
-    </View>
-  );
+        </View>
+      );
+    }
+
+    // Simple chart representation
+    const minWeight = Math.min(...weightData.map((d) => d.weight));
+    const maxWeight = Math.max(...weightData.map((d) => d.weight));
+    const range = maxWeight - minWeight || 1; // Prevent division by zero
+
+    return (
+      <View style={styles.chartContainer}>
+        <View style={styles.chartYAxis}>
+          <Text style={styles.chartYLabel}>{maxWeight.toFixed(1)}</Text>
+          <Text style={styles.chartYLabel}>
+            {((maxWeight + minWeight) / 2).toFixed(1)}
+          </Text>
+          <Text style={styles.chartYLabel}>{minWeight.toFixed(1)}</Text>
+        </View>
+
+        <View style={styles.chartContent}>
+          {weightData.map((entry, index) => {
+            const heightPercentage = ((entry.weight - minWeight) / range) * 100;
+            const date = new Date(entry.date);
+            const dateLabel = date.getDate().toString();
+
+            return (
+              <View key={entry.id} style={styles.chartBarContainer}>
+                <View style={styles.chartBarWrapper}>
+                  <View
+                    style={[
+                      styles.chartBar,
+                      { height: `${Math.max(5, heightPercentage)}%` },
+                    ]}
+                  />
+                </View>
+                <Text style={styles.chartXLabel}>{dateLabel}</Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Search
-            size={20}
-            color={colors.text.secondary}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search foods..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onFocus={() => setIsSearching(true)}
-            returnKeyType="search"
-          />
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Weight Progress</Text>
+
+        <View style={styles.currentWeightContainer}>
+          <Text style={styles.currentWeightLabel}>Current Weight</Text>
+          <Text style={styles.currentWeightValue}>
+            {latestWeight ? `${latestWeight} lbs` : "Not set"}
+          </Text>
+
+          {user?.goalWeight && latestWeight && (
+            <Text style={styles.goalText}>
+              {latestWeight > user.goalWeight
+                ? `${(latestWeight - user.goalWeight).toFixed(1)} lbs to goal`
+                : "Goal reached!"}
+            </Text>
+          )}
         </View>
-        {isSearching && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => {
-              setIsSearching(false);
-              setSearchQuery("");
-            }}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        )}
+
+        {renderWeightChange()}
       </View>
 
-      {!isSearching ? (
-        <>
-          <DateSelector date={selectedDate} onDateChange={setSelectedDate} />
-          {renderMealCards()}
-
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => router.push("/food/add")}
+      <View style={styles.timeRangeContainer}>
+        <TouchableOpacity
+          style={[
+            styles.timeRangeButton,
+            timeRange === "week" && styles.activeTimeRangeButton,
+          ]}
+          onPress={() => setTimeRange("week")}
+        >
+          <Text
+            style={[
+              styles.timeRangeText,
+              timeRange === "week" && styles.activeTimeRangeText,
+            ]}
           >
-            <Plus size={24} color="#fff" />
-          </TouchableOpacity>
-        </>
-      ) : (
-        renderSearchResults()
-      )}
-    </View>
+            Week
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.timeRangeButton,
+            timeRange === "month" && styles.activeTimeRangeButton,
+          ]}
+          onPress={() => setTimeRange("month")}
+        >
+          <Text
+            style={[
+              styles.timeRangeText,
+              timeRange === "month" && styles.activeTimeRangeText,
+            ]}
+          >
+            Month
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.timeRangeButton,
+            timeRange === "year" && styles.activeTimeRangeButton,
+          ]}
+          onPress={() => setTimeRange("year")}
+        >
+          <Text
+            style={[
+              styles.timeRangeText,
+              timeRange === "year" && styles.activeTimeRangeText,
+            ]}
+          >
+            Year
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {renderWeightChart()}
+
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => router.push("/weight/add")}
+      >
+        <Plus size={24} color="#fff" />
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
@@ -141,39 +224,136 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background.main,
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+  header: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
   },
-  searchInputContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.background.secondary,
-    borderRadius: 8,
-    paddingHorizontal: 12,
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.text.primary,
+    marginBottom: 16,
   },
-  searchIcon: {
-    marginRight: 8,
+  currentWeightContainer: {
+    marginBottom: 16,
   },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    fontSize: 16,
+  currentWeightLabel: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginBottom: 4,
+  },
+  currentWeightValue: {
+    fontSize: 28,
+    fontWeight: "bold",
     color: colors.text.primary,
   },
-  cancelButton: {
-    marginLeft: 12,
+  goalText: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginTop: 4,
   },
-  cancelButtonText: {
-    color: colors.primary,
+  changeContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  changeLabel: {
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+  changeValue: {
     fontSize: 16,
+    fontWeight: "600",
   },
-  mealsContainer: {
+  timeRangeContainer: {
+    flexDirection: "row",
     padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  timeRangeButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginRight: 8,
+  },
+  activeTimeRangeButton: {
+    backgroundColor: colors.primary,
+  },
+  timeRangeText: {
+    fontSize: 14,
+    color: colors.text.secondary,
+  },
+  activeTimeRangeText: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+  chartContainer: {
+    flexDirection: "row",
+    height: 200,
+    padding: 16,
+    paddingTop: 24,
+  },
+  chartYAxis: {
+    width: 40,
+    height: "100%",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    paddingRight: 8,
+  },
+  chartYLabel: {
+    fontSize: 12,
+    color: colors.text.secondary,
+  },
+  chartContent: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "flex-end",
+    height: "100%",
+    paddingBottom: 20,
+  },
+  chartBarContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  chartBarWrapper: {
+    width: "60%",
+    height: "100%",
+    justifyContent: "flex-end",
+  },
+  chartBar: {
+    width: "100%",
+    backgroundColor: colors.primary,
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4,
+  },
+  chartXLabel: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    marginTop: 4,
+  },
+  emptyChartContainer: {
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  emptyChartText: {
+    fontSize: 16,
+    color: colors.text.secondary,
+    marginBottom: 16,
+  },
+  addWeightButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+  },
+  addWeightButtonText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#fff",
   },
   addButton: {
     position: "absolute",
@@ -190,41 +370,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
-  },
-  searchResultsContainer: {
-    flex: 1,
-  },
-  searchResultsTitle: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    padding: 16,
-    paddingBottom: 8,
-  },
-  searchResultsList: {
-    paddingBottom: 24,
-  },
-  searchResultItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-    backgroundColor: colors.background.card,
-  },
-  foodName: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.text.primary,
-  },
-  foodBrand: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginTop: 2,
-  },
-  foodCalories: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.primary,
   },
 });
