@@ -21,6 +21,9 @@ export default function ExerciseScreen() {
   const router = useRouter();
   const { searchExercise, searchResults } = useExerciseStore();
 
+   const handleBack =() => {
+    router.back()
+  }
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
@@ -117,7 +120,7 @@ export default function ExerciseScreen() {
         renderSearchResults()
       )}
 
-      <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', backgroundColor:colors.secondary,}}>
+      <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', backgroundColor:colors.secondary, margin:2}}>
 
        <MealCard
             title="Breakfast"
@@ -149,7 +152,7 @@ export default function ExerciseScreen() {
 
         <View style={{ flexDirection: 'row', marginTop:20}}>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleBack}>
             
           <MaterialCommunityIcons
             style={{ marginTop: 15 }}

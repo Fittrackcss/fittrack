@@ -5,6 +5,7 @@ import { WeightEntry } from "@/types";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   ScrollView,
   StyleSheet,
@@ -18,6 +19,11 @@ export default function ProgressScreen() {
   const { user } = useUserStore();
   const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } =
     useProgressStore();
+
+
+  const handleBack =() => {
+    router.back()
+  }
 
   const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("week");
   const [latestWeight, setLatestWeight] = useState<number | null>(null);
@@ -132,7 +138,9 @@ export default function ProgressScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+
+    <ScrollView >
       <View style={styles.header}>
         <Text style={styles.title}>Weight Progress</Text>
 
@@ -216,6 +224,28 @@ export default function ProgressScreen() {
         <Plus size={24} color="#fff" />
       </TouchableOpacity>
     </ScrollView>
+
+  <View style={styles.tab}>
+
+        <View style={{ flexDirection: 'row', marginTop:20}}>
+
+          <TouchableOpacity onPress={handleBack}>
+            
+          <MaterialCommunityIcons
+            style={{ marginTop: 15 }}
+            name="chevron-left"
+            size={28}
+            color={"black"}
+          />
+          </TouchableOpacity>
+          <TouchableOpacity>
+
+          <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20, marginTop:13}}>Weight</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+    </View>
   );
 }
 
@@ -228,6 +258,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
+    marginTop: 120
   },
   title: {
     fontSize: 20,
@@ -370,5 +401,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
+  
+  },
+   tab: {
+    position: "absolute",
+    bottom: "auto",
+    marginBottom: 10,
+    left: 0,
+    right: 0,
+    height: 100,
+    backgroundColor: "white",
+
+    // Shadow properties
+    shadowColor: "#7F9497",
+    shadowOffset: {
+      width: 0,
+      height: -3, // Negative value to put shadow above the tab
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 10, // For Android
+
+    // Optional styling
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 16,
   },
 });
