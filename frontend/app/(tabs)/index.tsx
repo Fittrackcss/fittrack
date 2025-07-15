@@ -1,7 +1,6 @@
 import { CalorieCircle } from "@/components/CalorieCircle";
 import { DateSelector } from "@/components/DateSelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
-import { MacroProgressBar } from "@/components/MacroProgressBar";
 import { MealCard } from "@/components/MealCard";
 import { colors } from "@/constants/Colors";
 import { useExerciseStore } from "@/store/exerciseStore";
@@ -27,11 +26,6 @@ export default function DashboardScreen() {
   const { user } = useUserStore();
   const { getDailyNutritionSummary } = useNutritionStore();
   const { getDailyExerciseSummary } = useExerciseStore();
-
-
-   const handleProfile =() => {
-    router.push(`/(tabs)/profile`)
-  }
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [nutritionSummary, setNutritionSummary] = useState({
@@ -87,7 +81,7 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.scrollContent}
       >
         {/* Edit Button */}
-        {/* <TouchableOpacity>
+        <TouchableOpacity>
           <View
             style={{
               justifyContent: "center",
@@ -109,7 +103,7 @@ export default function DashboardScreen() {
               Edit
             </Text>
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
 
         <View style={styles.summaryContainer}>
           <Swiper
@@ -255,9 +249,7 @@ export default function DashboardScreen() {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text style={styles.cardTitle}>Exercise</Text>
-              <MaterialCommunityIcons  onPress={() =>
-              router.push(`/exercise/add?date=${selectedDate.toISOString()}`)
-            } name="plus" size={24} color={"black"} />
+              <MaterialCommunityIcons name="plus" size={24} color={"black"} />
             </View>
             <View style={styles.exerciseStats}>
               <View style={styles.statItem}>
@@ -299,8 +291,7 @@ export default function DashboardScreen() {
       {/* Fixed Tab at the top */}
       <View style={styles.tab}>
         <View style={styles.tabcontent}>
-          <TouchableOpacity onPress={handleProfile}>
-          <View style={styles.imageContainer} >
+          <View style={styles.imageContainer}>
             <ImageBackground
               style={styles.img}
               source={{
@@ -308,7 +299,6 @@ export default function DashboardScreen() {
               }}
             />
           </View>
-          </TouchableOpacity>
           <Text
             style={{
               marginTop: 15,

@@ -17,7 +17,7 @@ export default function RootLayoutNav() {
   useEffect(() => {
     const checkOnboarding = async () => {
       // For now, force show onboarding always will change later
-      setInitialRoute("(tabs)");
+      setInitialRoute("(onboarding)");
     };
     checkOnboarding();
   }, []);
@@ -25,7 +25,7 @@ export default function RootLayoutNav() {
   if (!fontsLoaded || !initialRoute) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }

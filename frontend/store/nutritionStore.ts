@@ -98,11 +98,20 @@ export const useNutritionStore = create<NutritionState>()(
           }),
         }));
       },
+      // getMealEntriesByDate: (date) => {
+      //   const dateStr = new Date(date).toISOString().split("T")[0];
+      //   return get().mealEntries.filter(
+      //     (meal) => new Date(meal.date).toISOString().split("T")[0] === dateStr
+      //   );
+      // }
+      //
+      // In nutritionStore.ts, modify getMealEntriesByDate:
       getMealEntriesByDate: (date) => {
-        const dateStr = new Date(date).toISOString().split("T")[0];
-        return get().mealEntries.filter(
-          (meal) => new Date(meal.date).toISOString().split("T")[0] === dateStr
-        );
+        const targetDate = new Date(date).setHours(0, 0, 0, 0);
+        return get().mealEntries.filter((meal) => {
+          const mealDate = new Date(meal.date).setHours(0, 0, 0, 0);
+          return mealDate === targetDate;
+        });
       },
       getDailyNutritionSummary: (date) => {
         const meals = get().getMealEntriesByDate(date);

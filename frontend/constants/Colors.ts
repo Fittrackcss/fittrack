@@ -5,7 +5,7 @@ export const colors = {
   success: "#34C759", // Fresh green (iOS-style)
   warning: "#FF9500", // Rich warning tone
   danger: "#FF3B30", // Apple-style red for errors
-  gray: '#AAA8AA',
+  gray: "#AAA8AA",
 
   text: {
     primary: "#2C2C2C", // Dark charcoal for high readability on light background
@@ -28,6 +28,9 @@ export const colors = {
     outlineText: "#ff8e0c", // Text on outline buttons
   },
 
+  carbs: "#4CAF50", // Green
+  protein: "#2196F3", // Blue
+  fat: "#FF9800", // Orange
   border: "#ccc", // Lighter border with a soft edge
   divider: "#F0F0F0", // Subtle divider without being harsh
 };

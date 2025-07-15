@@ -3,7 +3,7 @@ import { useNutritionStore } from "@/store/nutritionStore";
 import { Food, MealEntry } from "@/types";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type MealCardProps = {
@@ -14,33 +14,36 @@ type MealCardProps = {
 
 export const MealCard = ({ title, mealType, date }: MealCardProps) => {
   const router = useRouter();
-  const { foods, mealEntries } = useNutritionStore();
+  const { getMealEntriesByDate, foods } = useNutritionStore();
 
-  const todayEntries = mealEntries.filter(
-    (entry) =>
-      entry.mealType === mealType &&
-      new Date(entry.date).toISOString().split("T")[0] ===
-        new Date(date).toISOString().split("T")[0]
-  );
+  // Get and filter entries for this date and meal type
+  const todayEntries = useMemo(() => {
+    return getMealEntriesByDate(date).filter(
+      (entry) => entry.mealType === mealType
+    );
+  }, [date, mealType, getMealEntriesByDate]);
 
-  const mealFoods: Array<{ food: Food; servings: number }> = [];
+  // Calculate meal foods and total calories
+  const { mealFoods, totalCalories } = useMemo(() => {
+    const result: Array<{ food: Food; servings: number }> = [];
+    let calories = 0;
 
-  todayEntries.forEach((entry) => {
-    entry.foods.forEach((foodEntry) => {
-      const food = foods.find((f) => f.id === foodEntry.foodId);
-      if (food) {
-        mealFoods.push({
-          food,
-          servings: foodEntry.servings,
-        });
-      }
+    todayEntries.forEach((entry) => {
+      entry.foods.forEach((foodEntry) => {
+        const food = foods.find((f) => f.id === foodEntry.foodId);
+        if (food) {
+          const foodCalories = (food.calories || 0) * (foodEntry.servings || 0);
+          calories += foodCalories;
+          result.push({
+            food,
+            servings: foodEntry.servings,
+          });
+        }
+      });
     });
-  });
 
-  const totalCalories = mealFoods.reduce(
-    (sum, item) => sum + item.food.calories * item.servings,
-    0
-  );
+    return { mealFoods: result, totalCalories: Math.round(calories) };
+  }, [todayEntries, foods]);
 
   const handleAddFood = () => {
     router.push(`/food/add?mealType=${mealType}&date=${date}`);
@@ -83,9 +86,10 @@ export const MealCard = ({ title, mealType, date }: MealCardProps) => {
   );
 };
 
+// Keep your existing styles unchanged
 const styles = StyleSheet.create({
   container: {
-    width: '45.5%',
+    width: "45.5%",
     backgroundColor: colors.background.card,
     borderRadius: 12,
     padding: 16,
@@ -95,13 +99,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 2,
-    margin:8
+    margin: 8,
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom:0,
+    marginBottom: 0,
   },
   title: {
     fontSize: 20,

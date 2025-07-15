@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TextInput,
   Button,
+  Image,
   FlatList,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -18,7 +19,7 @@ const foodstore = () => {
   const { foods, addFood, removeFood } = useFoodStore();
 
   // Get food data from navigation if coming from search
-  const incomingFood = params.foodData ? JSON.parse(params.foodDatauj) : null;
+  const incomingFood = params.foodData ? JSON.parse(params.foodData) : null;
   const [mealType, setMealType] = useState(params.mealType || "breakfast");
 
   const handleAddFood = () => {
@@ -80,7 +81,9 @@ const foodstore = () => {
       ) : (
         // Food list view
         <View style={styles.listContainer}>
-          <Text style={styles.title}>Your Food Log</Text>
+          <View style={{ height: "100%", backgroundColor: "red" }}>
+            <Text style={styles.title}>Your Food Log</Text>
+          </View>
 
           {foods.length === 0 ? (
             <Text style={styles.emptyText}>No foods logged yet</Text>
@@ -90,6 +93,14 @@ const foodstore = () => {
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <View style={styles.foodItem}>
+                  {item.image && (
+                    <Image
+                      source={{
+                        uri: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}`,
+                      }}
+                      style={{ width: 50, height: 50, marginBottom: 10 }}
+                    />
+                  )}
                   <Text style={styles.foodName}>{item.name}</Text>
                   <Text>Quantity: {item.quantity}</Text>
                   <Text>Meal: {item.mealType}</Text>

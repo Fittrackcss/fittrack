@@ -91,7 +91,19 @@ const foodstore = () => {
       ) : (
         // Food list view
         <View style={styles.listContainer}>
-          <Text style={styles.title}>Your Food Log</Text>
+          <View
+            style={{
+              height: "auto",
+              borderRadius: 10,
+              paddingVertical: 10,
+              paddingHorizontal: 20,
+              backgroundColor: colors.background.secondary,
+              justifyContent: "center",
+              alignItems: "flex-start",
+            }}
+          >
+            <Text style={styles.title}>Your Food Log</Text>
+          </View>
 
           {foods.length === 0 ? (
             <Text style={styles.emptyText}>No foods logged yet</Text>
@@ -151,7 +163,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    marginBottom: 20,
     color: colors.accent,
   },
   inputGroup: {

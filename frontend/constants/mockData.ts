@@ -188,21 +188,21 @@ export const mockWeightEntries = [
   { id: "8", date: "2025-05-27", weight: 176.5 },
 ];
 
-export const mockUser = {
-  id: "1",
-  name: "Alex Johnson",
-  email: "alex@example.com",
-  age: 32,
-  gender: "male",
-  height: 175, // cm
-  weight: 176.5, // lbs
-  goalWeight: 165, // lbs
-  activityLevel: "moderate",
-  goal: "lose" as const, // lose, maintain, gain
-  dailyCalorieGoal: 2200,
-  macroGoals: {
-    protein: 165, // grams
-    carbs: 220, // grams
-    fat: 73, // grams
-  },
-};
+// export const mockUser = {
+//   id: "1",
+//   name: "Stephen",
+//   email: "alex@example.com",
+//   age: 32,
+//   gender: "male",
+//   height: 175, // cm
+//   weight: 176.5, // lbs
+//   goalWeight: 165, // lbs
+//   activityLevel: "moderate",
+//   goal: "lose" as const, // lose, maintain, gain
+//   dailyCalorieGoal: 2200,
+//   macroGoals: {
+//     protein: 165, // grams
+//     carbs: 220, // grams
+//     fat: 73, // grams
+//   },
+// };

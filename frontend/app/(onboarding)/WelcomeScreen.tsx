@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { useRef, useState, useCallback } from "react";
 import {
   Dimensions,
@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useUserStore } from "../../store/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
 import { colors } from "../../constants/Colors";
@@ -23,6 +24,7 @@ const WelcomeScreen = () => {
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
   const swiperRef = useRef(null);
+  const router = useRouter();
 
   // Store state
   const {
@@ -48,7 +50,7 @@ const WelcomeScreen = () => {
   }, [currentStep, formData]);
 
   // Navigation handlers
-  const goToNext = useCallback(() => {
+  const goToNext = useCallback(async () => {
     if (!validateCurrentStep()) return;
 
     const nextIndex = currentIndex + 1;
@@ -56,6 +58,36 @@ const WelcomeScreen = () => {
     // Special navigation case
     if (currentIndex === 1) {
       router.push("/(onboarding)/NextGoals");
+      return;
+    }
+
+    if (currentIndex === onboardingSteps.length - 1) {
+      // Onboarding complete - transfer data to user store
+      const { formData } = useOnboardingStore.getState();
+      const { signup } = useUserStore.getState();
+
+      // Create user from onboarding data
+      await signup({
+        id: "", // Provide a generated or placeholder id if needed
+        email: formData.email || "", // Collect or default email
+        name: formData.name || "User",
+        password: "temporary-password", // You should collect this separately
+        gender: formData.gender || "male",
+        age: 0,
+        height: 0,
+        weight: 0,
+        goalWeight: 0,
+        activityLevel: "",
+        goal: "lose",
+        dailyCalorieGoal: 0,
+        macroGoals: {
+          protein: 0,
+          carbs: 0,
+          fat: 0,
+        },
+      });
+
+      router.replace("/(tabs)/diary");
       return;
     }
 

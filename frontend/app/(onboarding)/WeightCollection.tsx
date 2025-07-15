@@ -1,12 +1,24 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, SafeAreaView } from "react-native";
 import { colors } from "@/constants/Colors";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
 
 const WeightCollection = () => {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [heightFocused, setHeightFocused] = useState(false);
   const [weightFocused, setWeightFocused] = useState(false);
+  const { updateFormData } = useOnboardingStore();
+
+  const handleHeightChange = (text: string) => {
+    setHeight(text);
+    updateFormData({ height: text });
+  };
+
+  const handleWeightChange = (text: string) => {
+    setWeight(text);
+    updateFormData({ weight: text });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,7 +39,7 @@ const WeightCollection = () => {
                 placeholderTextColor={colors.text.muted}
                 keyboardType="numeric"
                 value={height}
-                onChangeText={setHeight}
+                onChangeText={handleHeightChange}
                 selectionColor={colors.primary}
               />
             </View>
@@ -51,7 +63,7 @@ const WeightCollection = () => {
                 placeholderTextColor={colors.text.muted}
                 keyboardType="numeric"
                 value={weight}
-                onChangeText={setWeight}
+                onChangeText={handleWeightChange}
                 selectionColor={colors.primary}
               />
             </View>

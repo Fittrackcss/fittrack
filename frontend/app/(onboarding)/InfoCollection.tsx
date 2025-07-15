@@ -22,6 +22,7 @@ const InfoCollection = () => {
     setCountry,
     getSelectedSex,
     formData,
+    updateFormData,
     incrementIndex,
   } = useOnboardingStore();
   const selectedSex = getSelectedSex();
@@ -62,10 +63,12 @@ const InfoCollection = () => {
 
   const handleAgeChange = (text: string) => {
     setAge(text);
+    updateFormData({ age: text });
   };
 
   const handleCountryChange = (selectedCountry: string) => {
     setCountry(selectedCountry);
+    updateFormData({ country: selectedCountry });
     setShowCountryModal(false);
   };
   const { toggleSelection, getSelections } = useOnboardingStore();

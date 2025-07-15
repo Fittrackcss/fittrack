@@ -2,26 +2,32 @@ import { colors } from "@/constants/Colors";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { TestTube } from "lucide-react-native";
 
 type CalorieCircleProps = {
   consumed: number;
   goal: number;
   size?: number;
+  exerciseBurned?: number;
 };
 
 export const CalorieCircle = ({
   consumed,
   goal,
   size = 200,
+  exerciseBurned = 0,
 }: CalorieCircleProps) => {
-  const percentage = Math.min(100, (consumed / goal) * 100);
-  const remaining = Math.max(0, goal - consumed);
+  // Calculate net calories after accounting for exercise
+  const netCalories = Math.max(0, consumed - exerciseBurned);
+  const percentage = Math.min(100, (netCalories / goal) * 100);
+  const remaining = Math.max(0, goal - netCalories);
   const strokeWidth = size * 0.1;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
-  const exercise = Math.floor(Math.min((remaining - consumed) / consumed));
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
+
+  // Calculate exercise impact
+  const overGoal = Math.max(0, consumed - goal);
+  const exerciseNeeded = goal > 0 ? Math.ceil(overGoal / 5) : 0; // 5 cal/min estimate
 
   return (
     <View>
@@ -30,7 +36,9 @@ export const CalorieCircle = ({
       >
         <Text style={{ fontWeight: "bold", fontSize: 24 }}>Calories</Text>
         <Text style={{ color: colors.text.muted }}>
-          Remaining = Goal - Food + Exercise
+          {remaining > 0
+            ? `${remaining} remaining`
+            : `${Math.abs(remaining)} over`}
         </Text>
       </View>
       <View style={[styles.container, { width: size * 1.7, height: size }]}>
@@ -88,7 +96,13 @@ export const CalorieCircle = ({
                 <Ionicons name="flame" size={24} color={colors.primary} />
                 <Text style={styles.goalLabel}>Exercise</Text>
               </View>
-              <Text style={styles.goalValue}>{exercise}%</Text>
+              <Text style={styles.goalValue}>
+                {exerciseBurned > 0
+                  ? `-${exerciseBurned}`
+                  : exerciseNeeded > 0
+                  ? `${exerciseNeeded} min needed`
+                  : "0"}
+              </Text>
             </View>
           </View>
         </View>
@@ -189,3 +203,4 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
 });
+export default CalorieCircle;
