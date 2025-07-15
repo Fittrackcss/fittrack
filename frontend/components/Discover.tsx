@@ -1,6 +1,7 @@
 import { colors } from "@/constants/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useRouter } from "expo-router";
 
 type DiscoverProps = {
     icon: keyof typeof MaterialCommunityIcons.glyphMap;
@@ -10,6 +11,7 @@ type DiscoverProps = {
 };
 
 const DiscoverCards = () => {
+    const router = useRouter();
     const cards: DiscoverProps[] = [
         {
             icon: "power-sleep",
@@ -49,10 +51,18 @@ const DiscoverCards = () => {
         }
     ];
 
+    const handleCardPress = (title: string) => {
+        if (title === "Recipe") {
+            router.push("/discover/recipes");
+        } else if (title === "Workouts") {
+            router.push("/discover/exercises");
+        }
+    };
+
     return (
         <View style={styles.container}>
             {cards.map((card, index) => (
-                <TouchableOpacity key={index} style={styles.card}>
+                <TouchableOpacity key={index} style={styles.card} onPress={() => handleCardPress(card.title)}>
                     <View style={styles.iconContainer}>
                         <MaterialCommunityIcons 
                             name={card.icon} 

@@ -17,7 +17,7 @@ export default function RootLayoutNav() {
   useEffect(() => {
     const checkOnboarding = async () => {
       // For now, force show onboarding always will change later
-      setInitialRoute("(onboarding)");
+      setInitialRoute("(tabs)");
     };
     checkOnboarding();
   }, []);
@@ -84,12 +84,20 @@ export default function RootLayoutNav() {
           }}
         />
         <Stack.Screen
+          name="exercise/log"
+          options={{
+            title: "Exercise Details",
+          }}
+        />
+        <Stack.Screen
           name="weight/add"
           options={{
             title: "Add Weight",
             presentation: "modal",
           }}
         />
+        <Stack.Screen name="discover/recipes" options={{ headerShown: false }} />
+        <Stack.Screen name="discover/exercises" options={{ headerShown: false }} />
       </Stack>
     </>
   );

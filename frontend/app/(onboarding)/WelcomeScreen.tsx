@@ -71,7 +71,7 @@ const WelcomeScreen = () => {
         id: "", // Provide a generated or placeholder id if needed
         email: formData.email || "", // Collect or default email
         name: formData.name || "User",
-        password: "temporary-password", // You should collect this separately
+        password: formData.password || "temporary-password", // Use password from formData
         gender: formData.gender || "male",
         age: 0,
         height: 0,

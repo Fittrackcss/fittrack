@@ -114,6 +114,7 @@ export const useUserStore = create<UserState>()(
             activityLevel: userData.activityLevel || "",
             dailyCalorieGoal: userData.dailyCalorieGoal || 0,
             macroGoals: userData.macroGoals || { protein: 0, carbs: 0, fat: 0 },
+            password: userData.password,
           };
 
           set({ user: newUser, isAuthenticated: true });

@@ -59,4 +59,5 @@ export type User = {
     carbs: number;
     fat: number;
   };
+  password?: string; // Add password as optional
 };

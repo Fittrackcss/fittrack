@@ -10,11 +10,13 @@ import {
 import { colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
 
 const CreateAccount = ({ currentIndex, onboardingSteps }) => {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { formData, updateFormData } = useOnboardingStore();
+  const [email, setEmail] = useState(formData.email || "");
+  const [password, setPassword] = useState(formData.password || "");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
@@ -23,6 +25,8 @@ const CreateAccount = ({ currentIndex, onboardingSteps }) => {
     if (!email || !password) {
       return;
     }
+    // Save to onboarding store
+    updateFormData({ email, password });
     // Proceed with navigation logic
     if (currentIndex + 1 < onboardingSteps.length) {
       router.push(`/(onboarding)/${onboardingSteps[currentIndex + 1].id}`);
@@ -57,7 +61,10 @@ const CreateAccount = ({ currentIndex, onboardingSteps }) => {
               keyboardType="email-address"
               autoCapitalize="none"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => {
+                setEmail(text);
+                updateFormData({ email: text });
+              }}
               selectionColor={colors.primary}
             />
           </View>
@@ -76,7 +83,10 @@ const CreateAccount = ({ currentIndex, onboardingSteps }) => {
               placeholderTextColor={colors.text.muted}
               secureTextEntry={true}
               value={password}
-              onChangeText={setPassword}
+              onChangeText={(text) => {
+                setPassword(text);
+                updateFormData({ password: text });
+              }}
               selectionColor={colors.primary}
             />
           </View>
