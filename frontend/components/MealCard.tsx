@@ -4,7 +4,7 @@ import { Food, MealEntry } from "@/types";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React, { useMemo } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Image } from "react-native";
 
 type MealCardProps = {
   title: string;
@@ -15,6 +15,14 @@ type MealCardProps = {
 export const MealCard = ({ title, mealType, date }: MealCardProps) => {
   const router = useRouter();
   const { getMealEntriesByDate, foods } = useNutritionStore();
+
+  // Add image URLs for each meal type
+  const mealImages: { [key: string]: string } = {
+    breakfast: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80',
+    lunch: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80',
+    dinner: 'https://plus.unsplash.com/premium_photo-1683134512986-5d0b728753e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTN8fGRpbm5lcnxlbnwwfHwwfHx8MA%3D%3D', // salad
+    snack: 'https://media.istockphoto.com/id/2161423472/photo/healthy-snack-at-work-hand-reaching-for-nuts-on-desk.webp?a=1&b=1&s=612x612&w=0&k=20&c=HBEEbqC5Jaw2-FOdqS0OghcV3Qkj7WaE6lxH5MMbB6Q=', // biscuit
+  };
 
   // Get and filter entries for this date and meal type
   const todayEntries = useMemo(() => {
@@ -50,37 +58,36 @@ export const MealCard = ({ title, mealType, date }: MealCardProps) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.calories}>{totalCalories} cal</Text>
+    <View style={styles.modernCard}>
+      <Image source={{ uri: mealImages[mealType] || mealImages.breakfast }} style={styles.mealImageModern} />
+      <View style={styles.headerRowModern}>
+        <Text style={styles.cardTitleModern}>{title}</Text>
+        <Text style={styles.caloriesModern}>{totalCalories} cal</Text>
       </View>
-
       {mealFoods.length > 0 ? (
-        <View style={styles.foodList}>
+        <View style={styles.foodListModern}>
           {mealFoods.map((item, index) => (
-            <View key={`${item.food.id}-${index}`} style={styles.foodItem}>
-              <View style={styles.foodInfo}>
-                <Text style={styles.foodName}>{item.food.name}</Text>
-                <Text style={styles.foodServing}>
+            <View key={`${item.food.id}-${index}`} style={styles.foodItemModern}>
+              <View style={styles.foodInfoModern}>
+                <Text style={styles.foodNameModern}>{item.food.name}</Text>
+                <Text style={styles.foodServingModern}>
                   {item.servings} {item.servings === 1 ? "serving" : "servings"}
                 </Text>
               </View>
-              <Text style={styles.foodCalories}>
+              <Text style={styles.foodCaloriesModern}>
                 {Math.round(item.food.calories * item.servings)} cal
               </Text>
             </View>
           ))}
         </View>
       ) : (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>No foods added yet</Text>
+        <View style={styles.emptyStateModern}>
+          <Text style={styles.emptyTextModern}>No foods added yet</Text>
         </View>
       )}
-
-      <TouchableOpacity style={styles.addButton} onPress={handleAddFood}>
-        <Plus size={20} color={colors.primary} />
-        <Text style={styles.addButtonText}>Add Food</Text>
+      <TouchableOpacity style={styles.addButtonModern} onPress={handleAddFood}>
+        <Plus size={18} color="#fff" />
+        <Text style={styles.addButtonTextModern}>Add Food</Text>
       </TouchableOpacity>
     </View>
   );
@@ -88,78 +95,110 @@ export const MealCard = ({ title, mealType, date }: MealCardProps) => {
 
 // Keep your existing styles unchanged
 const styles = StyleSheet.create({
-  container: {
-    width: "45.5%",
-    backgroundColor: colors.background.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
-    margin: 8,
+  modernCard: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 22,
+    marginBottom: 18,
+    shadowColor: '#7F9497',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
+    overflow: 'hidden',
+    alignItems: 'center',
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 0,
+  mealImageModern: {
+    width: '100%',
+    height: 120,
+    borderTopLeftRadius: 22,
+    borderTopRightRadius: 22,
+    marginBottom: -24,
+    resizeMode: 'cover',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.text.primary,
+  headerRowModern: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 18,
+    paddingTop: 36,
+    marginBottom: 4,
+    zIndex: 2,
   },
-  calories: {
-    fontSize: 16,
-    fontWeight: "600",
+  cardTitleModern: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.primary,
+    letterSpacing: 1,
+  },
+  caloriesModern: {
+    fontSize: 15,
+    fontWeight: '600',
     color: colors.primary,
   },
-  foodList: {
+  foodListModern: {
     marginBottom: 10,
+    paddingHorizontal: 18,
+    width: '100%',
   },
-  foodItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+  foodItemModern: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
   },
-  foodInfo: {
+  foodInfoModern: {
     flex: 1,
   },
-  foodName: {
+  foodNameModern: {
     fontSize: 14,
     color: colors.text.primary,
+    fontWeight: '500',
   },
-  foodServing: {
+  foodServingModern: {
     fontSize: 12,
     color: colors.text.secondary,
     marginTop: 2,
   },
-  foodCalories: {
+  foodCaloriesModern: {
     fontSize: 14,
     color: colors.text.secondary,
+    fontWeight: '500',
   },
-  emptyState: {
-    paddingVertical: 8,
-    alignItems: "center",
+  emptyStateModern: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  emptyText: {
+  emptyTextModern: {
     fontSize: 14,
     color: colors.text.light,
+    textAlign: 'center',
   },
-  addButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
+  addButtonModern: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.accent,
+    borderRadius: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 22,
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 10,
+    shadowColor: '#7F9497',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  addButtonText: {
+  addButtonTextModern: {
     fontSize: 15,
-    fontWeight: "500",
-    color: colors.primary,
-    marginLeft: 4,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginLeft: 8,
+    letterSpacing: 0.5,
   },
 });

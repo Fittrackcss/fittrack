@@ -13,160 +13,100 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Animated,
+  Easing,
+  Image,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MealCard } from "@/components/MealCard";
+import { LinearGradient } from "expo-linear-gradient";
+
+const mealIcons: { [key: string]: any } = {
+  breakfast: require("@/assets/images/food.jpg"),
+  lunch: require("@/assets/images/food.jpg"),
+  dinner: require("@/assets/images/food.jpg"),
+  snack: require("@/assets/images/food.jpg"),
+};
 
 export default function ExerciseScreen() {
   const router = useRouter();
   const { searchExercise, searchResults } = useExerciseStore();
-
-   const handleBack =() => {
-    router.back()
-  }
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false);
-
-  useEffect(() => {
-    if (searchQuery.length > 2) {
-      searchExercise(searchQuery);
-    }
-  }, [searchQuery, searchExercise]);
 
   const renderExerciseCard = () => (
-    <View style={styles.exerciseContainer}>
-      <ExerciseCard date={selectedDate.toISOString()} />
+    <View style={styles.sectionCard}>
+      <Text style={styles.sectionHeader}>Today's Exercise</Text>
+      <View style={styles.exerciseGradientCard}>
+        <ExerciseCard date={selectedDate.toISOString()} />
+        {/* Example: Progress ring or calories summary */}
+        {/* <View style={styles.exerciseSummary}>
+          <MaterialCommunityIcons name="fire" size={10} color={colors.accent} />
+          <Text style={styles.exerciseSummaryText}>320 kcal burned</Text>
+        </View> */}
+      </View>
     </View>
   );
 
-  const renderSearchResults = () => (
-    <View style={styles.searchResultsContainer}>
-      <Text style={styles.searchResultsTitle}>
-        {searchResults.length > 0
-          ? `Found ${searchResults.length} results`
-          : "No results found"}
-      </Text>
-      <FlatList
-        data={searchResults}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.searchResultItem}
-            onPress={() => router.push(`/exercise/detail?id=${item.id}`)}
-          >
-            <View>
-              <Text style={styles.exerciseName}>{item.name}</Text>
-              <Text style={styles.exerciseCategory}>{item.category}</Text>
-            </View>
-            <Text style={styles.exerciseCalories}>
-              {item.caloriesBurnedPerMinute} cal/min
-            </Text>
-          </TouchableOpacity>
-        )}
-        contentContainerStyle={styles.searchResultsList}
-      />
-    </View>
-  );
+  // Daily summary mock
+  const dailySummary = {
+    mealsLogged: 2,
+    totalMeals: 4,
+    workoutsLogged: 1,
+    totalWorkouts: 1,
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-
-      <View style={styles.searchContainer}>
-        <View style={styles.searchInputContainer}>
-          <Search
-            size={20}
-            color={colors.text.secondary}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search exercises..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onFocus={() => setIsSearching(true)}
-            returnKeyType="search"
-          />
+      {/* Modern fixed header */}
+      <View style={styles.headerBar}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.headerTitle}>Diary</Text>
+          <Text style={styles.headerDate}>
+            {selectedDate.toLocaleDateString(undefined, {
+              weekday: "long",
+              month: "short",
+              day: "numeric",
+            })}
+          </Text>
         </View>
-        {isSearching && (
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => {
-              setIsSearching(false);
-              setSearchQuery("");
-            }}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={styles.profileIcon}>
+          <MaterialCommunityIcons name="account-circle" size={36} color={colors.primary} />
+        </TouchableOpacity>
       </View>
 
-      {!isSearching ? (
-        <>
-          <DateSelector date={selectedDate} onDateChange={setSelectedDate} />
-          {renderExerciseCard()}
+      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+        {/* Daily summary card */}
+        <View style={styles.summaryCard}>
+          <Text style={styles.summaryText}>
+            You’ve logged {dailySummary.mealsLogged}/{dailySummary.totalMeals} meals and {dailySummary.workoutsLogged}/{dailySummary.totalWorkouts} workout today!
+          </Text>
+        </View>
 
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() =>
-              router.push(`/exercise/add?date=${selectedDate.toISOString()}`)
-            }
-          >
-            <Plus size={24} color="#fff" />
-          </TouchableOpacity>
-        </>
-      ) : (
-        renderSearchResults()
-      )}
-
-      <View style={{flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', backgroundColor:colors.secondary, margin:2}}>
-
-       <MealCard
-            title="Breakfast"
-            mealType="breakfast"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Lunch"
-            mealType="lunch"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Dinner"
-            mealType="dinner"
-            date={selectedDate.toISOString()}
-          />
-          <MealCard
-            title="Snacks"
-            mealType="snack"
-            date={selectedDate.toISOString()}
-          />
-      </View>
-
-      
-
-{/* Tab at the top */}
+        <DateSelector date={selectedDate} onDateChange={setSelectedDate} />
+        {renderExerciseCard()}
+        {/* Section divider */}
+        <View style={styles.sectionDivider} />
+        {/* Meal cards section */}
+        <View style={styles.mealSectionContainer}>
+          <Text style={styles.sectionHeader}>Meals</Text>
+          <View style={styles.mealCardsList}>
+            {[
+              { title: "Breakfast", mealType: "breakfast" },
+              { title: "Lunch", mealType: "lunch" },
+              { title: "Dinner", mealType: "dinner" },
+              { title: "Snacks", mealType: "snack" },
+            ].map((meal) => (
+              <View key={meal.mealType} style={styles.mealCardWrapper}>
+                <MealCard
+                  title={meal.title}
+                  mealType={meal.mealType as any}
+                  date={selectedDate.toISOString()}
+                />
+              </View>
+            ))}
+          </View>
+        </View>
       </ScrollView>
-      <View style={styles.tab}>
-
-        <View style={{ flexDirection: 'row', marginTop:20}}>
-
-          <TouchableOpacity onPress={handleBack}>
-            
-          <MaterialCommunityIcons
-            style={{ marginTop: 15 }}
-            name="chevron-left"
-            size={28}
-            color={"black"}
-          />
-          </TouchableOpacity>
-          <TouchableOpacity>
-
-          <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20, marginTop:13}}>Diary</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>
   );
 }
@@ -175,47 +115,75 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
-   
   },
-   tab: {
-    position: "absolute",
-    bottom: "auto",
-    marginBottom: 10,
-    left: 0,
-    right: 0,
-    height: 100,
-    backgroundColor: "white",
-
-    // Shadow properties
+  headerBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 30,
+    paddingBottom: 16,
+    paddingHorizontal: 20,
+    backgroundColor: colors.background.card,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
     shadowColor: "#7F9497",
-    shadowOffset: {
-      width: 0,
-      height: -3, // Negative value to put shadow above the tab
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10, // For Android
-
-    // Optional styling
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 16,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    zIndex: 10,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: colors.primary,
+    letterSpacing: 1,
+  },
+  headerDate: {
+    fontSize: 16,
+    color: colors.text.secondary,
+    marginTop: 2,
+  },
+  profileIcon: {
+    marginLeft: 12,
+    backgroundColor: colors.background.secondary,
+    borderRadius: 20,
+    padding: 2,
+  },
+  summaryCard: {
+    backgroundColor: colors.background.card,
+    borderRadius: 16,
+    margin: 20,
+    marginTop: 24,
+    padding: 18,
+    alignItems: "center",
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  summaryText: {
+    fontSize: 16,
+    color: colors.text.primary,
+    textAlign: "center",
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-        marginTop:125
+    padding: 12,
+    marginHorizontal: 20,
+    marginBottom: 8,
+    
+    borderRadius: 32,
+   
   },
   searchInputContainer: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: colors.background.secondary,
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    backgroundColor: "transparent",
+    borderRadius: 32,
+    paddingHorizontal: 8,
   },
   searchIcon: {
     marginRight: 8,
@@ -225,6 +193,12 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
     color: colors.text.primary,
+    backgroundColor: '#fff',
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: colors.accent,
+    paddingHorizontal: 16,
+   
   },
   cancelButton: {
     marginLeft: 12,
@@ -233,45 +207,169 @@ const styles = StyleSheet.create({
     color: colors.accent,
     fontSize: 16,
   },
-  exerciseContainer: {
-    padding: 16,
+  sectionDivider: {
+    height: 1,
+    backgroundColor: colors.divider,
+    marginVertical: 24,
+    marginHorizontal: 20,
+    borderRadius: 1,
   },
-  addButton: {
+  sectionHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.primary,
+    marginLeft: 20,
+    marginBottom: 12,
+    marginTop: 12,
+  },
+  sectionCard: {
+    marginHorizontal: 20,
+    marginTop: 24,
+    marginBottom: 8,
+  },
+  exerciseGradientCard: {
+    backgroundColor: colors.background.secondary,
+    borderRadius: 16,
+    padding: 18,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  exerciseSummary: {
+    alignItems: "center",
+    marginLeft: 16,
+  },
+  exerciseSummaryText: {
+    fontSize: 14,
+    color: colors.text.primary,
+    marginTop: 4,
+  },
+  mealSectionContainer: {
+    backgroundColor: colors.background.card,
+    borderRadius: 24,
+    marginHorizontal: 16,
+    marginTop: 8,
+    marginBottom: 32,
+    paddingVertical: 18,
+    paddingHorizontal: 8,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  mealCardsList: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+  },
+  mealCardWrapper: {
+    width: "95%",
+    marginBottom: 16,
+    alignItems: "center",
+  },
+  mealCard: {
+    backgroundColor: colors.background.secondary,
+    borderRadius: 16,
+    alignItems: "center",
+    padding: 18,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  mealIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  mealTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: colors.primary,
+    marginBottom: 4,
+  },
+  mealMacros: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginBottom: 8,
+  },
+  addFoodButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.accent,
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    marginTop: 4,
+  },
+  addFoodText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 14,
+    marginLeft: 6,
+  },
+  fab: {
     position: "absolute",
-    bottom: 24,
-    right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    bottom: 32,
+    right: 32,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: colors.accent,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 20,
   },
   searchResultsContainer: {
     flex: 1,
+    padding: 16,
+    backgroundColor: colors.background.card,
+    borderRadius: 16,
+    margin: 20,
+    marginTop: 24,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   searchResultsTitle: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    padding: 16,
-    paddingBottom: 8,
+    fontSize: 18,
+    fontWeight: "bold",
+    color: colors.primary,
+    marginBottom: 12,
+    textAlign: "center",
   },
   searchResultsList: {
     paddingBottom: 24,
   },
   searchResultItem: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-    backgroundColor: colors.background.card,
+    justifyContent: "space-between",
+    padding: 14,
+    borderRadius: 10,
+    backgroundColor: colors.background.secondary,
+    marginBottom: 10,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 1,
   },
   exerciseName: {
     fontSize: 16,
@@ -289,4 +387,25 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.accent,
   },
+  searchButton: {
+    marginLeft: 8,
+    borderRadius: 24,
+    overflow: 'hidden',
+    shadowColor: '#7F9497',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  searchButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 24,
+    minWidth: 40,
+    minHeight: 40,
+  },
+  // ... keep other styles as needed ...
 });

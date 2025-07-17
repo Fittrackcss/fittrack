@@ -4,7 +4,48 @@ import { Exercise } from "@/types";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
+// Animated circular progress ring
+const AnimatedCircle = Animated.createAnimatedComponent(View);
+const AnimatedProgressRing = ({ percent, calories }: { percent: number; calories: number }) => {
+  const strokeWidth = 3;
+  const size = 64;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const progress = circumference * (1 - percent);
+  return (
+    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+      <AnimatedCircle
+        style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: strokeWidth,
+          borderColor: colors.background.secondary,
+        }}
+      />
+      <AnimatedCircle
+        style={{
+          position: 'absolute',
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          borderWidth: strokeWidth,
+          borderColor: colors.accent,
+          borderRightColor: 'transparent',
+          borderBottomColor: 'transparent',
+          transform: [{ rotate: `${percent * 360}deg` }],
+        }}
+      />
+      <Text style={styles.progressCalories}>{Math.round(calories)}</Text>
+      <Text style={styles.progressLabel}>kcal</Text>
+    </View>
+  );
+};
 
 type ExerciseCardProps = {
   date: string;
@@ -37,17 +78,27 @@ export const ExerciseCard = ({ date }: ExerciseCardProps) => {
     0
   );
 
+  // For demo, assume 500 kcal is the daily goal
+  const percent = Math.min(totalCaloriesBurned / 500, 1);
+
   const handleAddExercise = () => {
     router.push(`/exercise/add?date=${date}`);
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Exercise</Text>
-        <Text style={styles.calories}>{totalCaloriesBurned} cal</Text>
+    <LinearGradient
+      colors={[colors.accent, colors.background.secondary, colors.background.card]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.modernCard}
+    >
+      <View style={styles.cardHeaderRow}>
+        <View>
+          <Text style={styles.cardTitle}>Exercise</Text>
+          <Text style={styles.cardSubtitle}>Keep moving, stay healthy!</Text>
+        </View>
+        <AnimatedProgressRing percent={percent} calories={totalCaloriesBurned} />
       </View>
-
       {exerciseItems.length > 0 ? (
         <View style={styles.exerciseList}>
           {exerciseItems.map((item, index) => (
@@ -64,53 +115,67 @@ export const ExerciseCard = ({ date }: ExerciseCardProps) => {
               <Text style={styles.exerciseCalories}>
                 {Math.round(
                   item.exercise.caloriesBurnedPerMinute * item.duration
-                )}{" "}
-                cal
+                )} cal
               </Text>
             </View>
           ))}
         </View>
       ) : (
-        <View style={styles.emptyState}>
-          <Text style={styles.emptyText}>No exercises added yet</Text>
+        <View style={styles.emptyStateModern}>
+          <MaterialCommunityIcons name="run-fast" size={36} color={colors.text.secondary} style={{ marginBottom: 8 }} />
+          <Text style={styles.emptyTextModern}>No exercises added yet</Text>
         </View>
       )}
-
-      <TouchableOpacity style={styles.addButton} onPress={handleAddExercise}>
-        <Plus size={16} color={colors.primary} />
-        <Text style={styles.addButtonText}>Add Exercise</Text>
+      <TouchableOpacity style={styles.addButtonModern} onPress={handleAddExercise}>
+        <Plus size={18} color="#fff" />
+        <Text style={styles.addButtonTextModern}>Add Exercise</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background.card,
-    borderRadius: 12,
-    padding: 16,
+  modernCard: {
+    borderRadius: 20,
+    padding: 20,
     marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
   },
-  header: {
+  cardHeaderRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    justifyContent: "space-between",
+    marginBottom: 10,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text.primary,
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: 'white',
+    letterSpacing: 1,
   },
-  calories: {
-    fontSize: 16,
-    fontWeight: "600",
+  cardSubtitle: {
+    fontSize: 13,
+    color: colors.text.secondary,
+    marginTop: 2,
+    marginBottom: 2,
+    marginRight: 15
+  },
+  progressCalories: {
+    fontSize: 18,
+    fontWeight: "bold",
     color: colors.accent,
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  progressLabel: {
+    fontSize: 12,
+    color: colors.text.secondary,
+    marginTop: -2,
+    textAlign: 'center',
   },
   exerciseList: {
     marginBottom: 12,
@@ -118,6 +183,7 @@ const styles = StyleSheet.create({
   exerciseItem: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 8,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
@@ -126,36 +192,51 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   exerciseName: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text.primary,
+    fontWeight: "600",
   },
   exerciseDuration: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.text.secondary,
     marginTop: 2,
   },
   exerciseCalories: {
-    fontSize: 14,
+    fontSize: 15,
     color: colors.text.secondary,
+    fontWeight: "500",
   },
-  emptyState: {
-    paddingVertical: 16,
+  emptyStateModern: {
+    paddingVertical: 24,
     alignItems: "center",
+    justifyContent: "center",
   },
-  emptyText: {
-    fontSize: 14,
+  emptyTextModern: {
+    fontSize: 15,
     color: colors.text.light,
+    textAlign: "center",
   },
-  addButton: {
+  addButtonModern: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 8,
+    backgroundColor: colors.accent,
+    borderRadius: 24,
+    paddingVertical: 10,
+    paddingHorizontal: 22,
+    alignSelf: "center",
+    marginTop: 8,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  addButtonText: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: colors.accent,
-    marginLeft: 4,
+  addButtonTextModern: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#fff",
+    marginLeft: 8,
+    letterSpacing: 0.5,
   },
 });

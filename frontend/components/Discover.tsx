@@ -56,6 +56,14 @@ const DiscoverCards = () => {
             router.push("/discover/recipes");
         } else if (title === "Workouts") {
             router.push("/discover/exercises");
+        } else if (title === "Sleep") {
+            router.push("/discover/sleep");
+        } else if (title === "Sync up") {
+            router.push("/discover/sync");
+        } else if (title === "Friends") {
+            router.push("/discover/friends");
+        } else if (title === "Community") {
+            router.push("/discover/community");
         }
     };
 

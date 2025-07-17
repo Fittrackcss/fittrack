@@ -7,7 +7,7 @@ import { useExerciseStore } from "@/store/exerciseStore";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Swiper from "react-native-swiper";
 import {
   ScrollView,
@@ -16,6 +16,7 @@ import {
   ImageBackground,
   Text,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DiscoverCards from "@/components/Discover";
@@ -38,6 +39,24 @@ export default function DashboardScreen() {
     totalDuration: 0,
     totalCaloriesBurned: 0,
   });
+
+  // Animated notification bell
+  const bellAnim = useRef(new Animated.Value(1)).current;
+  const handleBellPress = () => {
+    Animated.sequence([
+      Animated.timing(bellAnim, {
+        toValue: 1.2,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+      Animated.timing(bellAnim, {
+        toValue: 1,
+        duration: 120,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    // Add notification logic here
+  };
 
   useEffect(() => {
     if (selectedDate) {
@@ -76,12 +95,29 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Modern fixed header, similar to diary, but with 'FitTrack' */}
+      <View style={styles.headerBar}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.headerTitle}>FitTrack</Text>
+         
+        </View>
+        <View style={styles.headerIcons}>
+          <Animated.View style={{ transform: [{ scale: bellAnim }] }}>
+            <TouchableOpacity style={styles.iconButton} onPress={handleBellPress}>
+              <MaterialCommunityIcons name="bell-outline" size={28} color={colors.primary} />
+            </TouchableOpacity>
+          </Animated.View>
+          <TouchableOpacity style={styles.profileIcon} onPress={() => router.push('/profile')}>
+            <MaterialCommunityIcons name="account-circle" size={36} color={colors.primary} />
+          </TouchableOpacity>
+        </View>
+      </View>
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
         {/* Edit Button */}
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <View
             style={{
               justifyContent: "center",
@@ -103,7 +139,7 @@ export default function DashboardScreen() {
               Edit
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={styles.summaryContainer}>
           <Swiper
@@ -292,12 +328,7 @@ export default function DashboardScreen() {
       <View style={styles.tab}>
         <View style={styles.tabcontent}>
           <View style={styles.imageContainer}>
-            <ImageBackground
-              style={styles.img}
-              source={{
-                uri: "https://img.freepik.com/free-photo/low-angle-view-unrecognizable-muscular-build-man-preparing-lifting-barbell-health-club_637285-2497.jpg?",
-              }}
-            />
+            
           </View>
           <Text
             style={{
@@ -356,8 +387,8 @@ const styles = StyleSheet.create({
     alignContent: "center",
   },
   scrollContent: {
-    marginTop: 130,
-    paddingBottom: 100,
+    marginTop: 0,
+    paddingBottom: 0,
     // Equal to tab height to prevent content from being hidden
   },
   tab: {
@@ -369,16 +400,7 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: "white",
 
-    // Shadow properties
-    shadowColor: "#7F9497",
-    shadowOffset: {
-      width: 0,
-      height: -3, // Negative value to put shadow above the tab
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10, // For Android
-
+    
     // Optional styling
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -566,5 +588,48 @@ const styles = StyleSheet.create({
   },
   macroText: {
     flexDirection: "column",
+  },
+  headerBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingTop: 45,
+    paddingBottom: 4,
+    paddingHorizontal: 20,
+    backgroundColor: colors.background.card,
+    borderBottomLeftRadius: 24,
+    borderBottomRightRadius: 24,
+    shadowColor: "#7F9497",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 4,
+    zIndex: 10,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: colors.primary,
+    letterSpacing: 1,
+  },
+  headerDate: {
+    fontSize: 16,
+    color: colors.text.secondary,
+    marginTop: 2,
+  },
+  headerIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  iconButton: {
+    marginRight: 4,
+    padding: 2,
+    borderRadius: 16,
+  },
+  profileIcon: {
+    marginLeft: 8,
+    backgroundColor: colors.background.secondary,
+    borderRadius: 20,
+    padding: 2,
   },
 });

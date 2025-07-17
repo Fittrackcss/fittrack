@@ -98,6 +98,10 @@ export default function RootLayoutNav() {
         />
         <Stack.Screen name="discover/recipes" options={{ headerShown: false }} />
         <Stack.Screen name="discover/exercises" options={{ headerShown: false }} />
+        <Stack.Screen name="discover/sleep" options={{ title: "Sleep" }} />
+        <Stack.Screen name="discover/sync" options={{ title: "Sync Up" }} />
+        <Stack.Screen name="discover/community" options={{ title: "Community" }} />
+        <Stack.Screen name="discover/friends" options={{ title: "Friends" }} />
       </Stack>
     </>
   );
