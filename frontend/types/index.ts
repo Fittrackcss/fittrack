@@ -54,6 +54,10 @@ export type User = {
   activityLevel: string;
   goal: "lose" | "maintain" | "gain";
   dailyCalorieGoal: number;
+  weeklyWorkouts: number;
+  dailySteps: number;
+  weightGoal: string;
+  profilePhoto?: string;
   macroGoals: {
     protein: number;
     carbs: number;

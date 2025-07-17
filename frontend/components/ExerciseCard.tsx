@@ -213,15 +213,15 @@ const styles = StyleSheet.create({
   },
   emptyTextModern: {
     fontSize: 15,
-    color: colors.text.light,
+    color: colors.primary,
     textAlign: "center",
   },
   addButtonModern: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors.accent,
-    borderRadius: 24,
+    backgroundColor: colors.primary,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 22,
     alignSelf: "center",

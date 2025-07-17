@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function ProgressScreen() {
   const router = useRouter();
@@ -139,111 +140,106 @@ export default function ProgressScreen() {
 
   return (
     <View style={styles.container}>
+      {/* Modern gradient header */}
+      <LinearGradient
+        colors={[colors.primary, colors.accent]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradientHeader}
+      >
+        <View style={styles.headerRow}>
+        
+          <Text style={styles.gradientHeaderTitle}>Progress</Text>
+        </View>
+      </LinearGradient>
 
-    <ScrollView >
-      <View style={styles.header}>
-        <Text style={styles.title}>Weight Progress</Text>
-
-        <View style={styles.currentWeightContainer}>
-          <Text style={styles.currentWeightLabel}>Current Weight</Text>
-          <Text style={styles.currentWeightValue}>
-            {latestWeight ? `${latestWeight} lbs` : "Not set"}
-          </Text>
-
-          {user?.goalWeight && latestWeight && (
-            <Text style={styles.goalText}>
-              {latestWeight > user.goalWeight
-                ? `${(latestWeight - user.goalWeight).toFixed(1)} lbs to goal`
-                : "Goal reached!"}
-            </Text>
-          )}
+      <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
+        <View style={{marginBottom: 40}}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Weight Progress</Text>
+            <View style={styles.currentWeightContainer}>
+              <Text style={styles.currentWeightLabel}>Current Weight</Text>
+              <Text style={styles.currentWeightValue}>
+                {latestWeight ? `${latestWeight} lbs` : "Not set"}
+              </Text>
+              {user?.goalWeight && latestWeight && (
+                <Text style={styles.goalText}>
+                  {latestWeight > user.goalWeight
+                    ? `${(latestWeight - user.goalWeight).toFixed(1)} lbs to goal`
+                    : "Goal reached!"}
+                </Text>
+              )}
+            </View>
+            {renderWeightChange()}
+          </View>
         </View>
 
-        {renderWeightChange()}
-      </View>
-
-      <View style={styles.timeRangeContainer}>
-        <TouchableOpacity
-          style={[
-            styles.timeRangeButton,
-            timeRange === "week" && styles.activeTimeRangeButton,
-          ]}
-          onPress={() => setTimeRange("week")}
-        >
-          <Text
-            style={[
-              styles.timeRangeText,
-              timeRange === "week" && styles.activeTimeRangeText,
-            ]}
-          >
-            Week
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.timeRangeButton,
-            timeRange === "month" && styles.activeTimeRangeButton,
-          ]}
-          onPress={() => setTimeRange("month")}
-        >
-          <Text
-            style={[
-              styles.timeRangeText,
-              timeRange === "month" && styles.activeTimeRangeText,
-            ]}
-          >
-            Month
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.timeRangeButton,
-            timeRange === "year" && styles.activeTimeRangeButton,
-          ]}
-          onPress={() => setTimeRange("year")}
-        >
-          <Text
-            style={[
-              styles.timeRangeText,
-              timeRange === "year" && styles.activeTimeRangeText,
-            ]}
-          >
-            Year
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      {renderWeightChart()}
+        <View style={styles.card}>
+          <View style={styles.timeRangeContainerModern}>
+            <TouchableOpacity
+              style={[
+                styles.timeRangeButtonModern,
+                timeRange === "week" && styles.activeTimeRangeButtonModern,
+              ]}
+              onPress={() => setTimeRange("week")}
+            >
+              <Text
+                style={[
+                  styles.timeRangeTextModern,
+                  timeRange === "week" && styles.activeTimeRangeTextModern,
+                ]}
+              >
+                Week
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.timeRangeButtonModern,
+                timeRange === "month" && styles.activeTimeRangeButtonModern,
+              ]}
+              onPress={() => setTimeRange("month")}
+            >
+              <Text
+                style={[
+                  styles.timeRangeTextModern,
+                  timeRange === "month" && styles.activeTimeRangeTextModern,
+                ]}
+              >
+                Month
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.timeRangeButtonModern,
+                timeRange === "year" && styles.activeTimeRangeButtonModern,
+              ]}
+              onPress={() => setTimeRange("year")}
+            >
+              <Text
+                style={[
+                  styles.timeRangeTextModern,
+                  timeRange === "year" && styles.activeTimeRangeTextModern,
+                ]}
+              >
+                Year
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.chartCard}>{renderWeightChart()}</View>
+        </View>
+      </ScrollView>
 
       <TouchableOpacity
-        style={styles.addButton}
+        style={styles.addButtonModern}
         onPress={() => router.push("/weight/add")}
       >
-        <Plus size={24} color="#fff" />
+        <LinearGradient
+          colors={[colors.primary, colors.accent]}
+          style={styles.addButtonGradient}
+        >
+          <Plus size={24} color="#fff" />
+        </LinearGradient>
       </TouchableOpacity>
-    </ScrollView>
-
-  <View style={styles.tab}>
-
-        <View style={{ flexDirection: 'row', marginTop:20}}>
-
-          <TouchableOpacity onPress={handleBack}>
-            
-          <MaterialCommunityIcons
-            style={{ marginTop: 15 }}
-            name="chevron-left"
-            size={28}
-            color={"black"}
-          />
-          </TouchableOpacity>
-          <TouchableOpacity>
-
-          <Text style={{fontWeight:'bold', fontSize:24, marginLeft:20, marginTop:13}}>Weight</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
 
     </View>
   );
@@ -403,28 +399,99 @@ const styles = StyleSheet.create({
     elevation: 4,
   
   },
-   tab: {
-    position: "absolute",
-    bottom: "auto",
-    marginBottom: 10,
-    left: 0,
-    right: 0,
-    height: 100,
-    backgroundColor: "white",
-
-    // Shadow properties
-    shadowColor: "#7F9497",
-    shadowOffset: {
-      width: 0,
-      height: -3, // Negative value to put shadow above the tab
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 10, // For Android
-
-    // Optional styling
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 16,
+   
+  gradientHeader: {
+    paddingTop: 30,
+    paddingBottom: 24,
+    paddingHorizontal: 24,
+    
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  gradientHeaderTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    letterSpacing: 1,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    marginHorizontal: 16,
+    marginTop: 24,
+    padding: 0,
+    shadowColor: '#7F9497',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  chartCard: {
+    backgroundColor: '#f8fafd',
+    borderRadius: 16,
+    padding: 8,
+    marginTop: 12,
+    shadowColor: '#7F9497',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  timeRangeContainerModern: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 8,
+    marginBottom: 0,
+    gap: 8,
+  },
+  timeRangeButtonModern: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: '#f0f2f5',
+    marginHorizontal: 2,
+  },
+  activeTimeRangeButtonModern: {
+    backgroundColor: colors.primary,
+  },
+  timeRangeTextModern: {
+    fontSize: 15,
+    color: colors.text.secondary,
+    fontWeight: '500',
+  },
+  activeTimeRangeTextModern: {
+    color: '#fff',
+    fontWeight: '700',
+  },
+  addButtonModern: {
+    position: 'absolute',
+    bottom: 36,
+    right: 28,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 10,
+  },
+  addButtonGradient: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

@@ -123,8 +123,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingHorizontal: 20,
     backgroundColor: colors.background.card,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    
     shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,

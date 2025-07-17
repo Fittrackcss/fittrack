@@ -21,12 +21,17 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DiscoverCards from "@/components/Discover";
 import { Bold } from "lucide-react-native";
+import { useProgressStore } from "@/store/progressStore";
+import { WeightEntry } from "@/types";
 
 export default function DashboardScreen() {
   const router = useRouter();
   const { user } = useUserStore();
   const { getDailyNutritionSummary } = useNutritionStore();
   const { getDailyExerciseSummary } = useExerciseStore();
+  const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } = useProgressStore();
+  const [weightData, setWeightData] = useState<WeightEntry[]>([]);
+  const [weightRange, setWeightRange] = useState<'week' | 'month' | 'year'>('week');
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [nutritionSummary, setNutritionSummary] = useState({
@@ -66,6 +71,57 @@ export default function DashboardScreen() {
       setExerciseSummary(exercise);
     }
   }, [selectedDate, getDailyNutritionSummary, getDailyExerciseSummary]);
+
+  useEffect(() => {
+    const today = new Date();
+    let startDate = new Date();
+    if (weightRange === 'week') {
+      startDate.setDate(today.getDate() - 7);
+    } else if (weightRange === 'month') {
+      startDate.setMonth(today.getMonth() - 1);
+    } else {
+      startDate.setFullYear(today.getFullYear() - 1);
+    }
+    const entries = getWeightEntriesByDateRange(startDate.toISOString(), today.toISOString());
+    setWeightData(entries);
+  }, [weightRange, weightEntries, getWeightEntriesByDateRange]);
+
+  const renderWeightChart = () => {
+    if (weightData.length === 0) {
+      return (
+        <View style={{ height: 180, justifyContent: 'center', alignItems: 'center', marginVertical: 16 }}>
+          <Text style={{ color: colors.text.secondary }}>No weight data available</Text>
+        </View>
+      );
+    }
+    const minWeight = Math.min(...weightData.map((d) => d.weight));
+    const maxWeight = Math.max(...weightData.map((d) => d.weight));
+    const range = maxWeight - minWeight || 1;
+    return (
+      <View style={{ flexDirection: 'row', height: 180, padding: 8, marginVertical: 16 }}>
+        <View style={{ width: 40, justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 8 }}>
+          <Text style={{ fontSize: 12, color: colors.text.secondary }}>{maxWeight.toFixed(1)}</Text>
+          <Text style={{ fontSize: 12, color: colors.text.secondary }}>{((maxWeight + minWeight) / 2).toFixed(1)}</Text>
+          <Text style={{ fontSize: 12, color: colors.text.secondary }}>{minWeight.toFixed(1)}</Text>
+        </View>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end', height: '100%', paddingBottom: 20 }}>
+          {weightData.map((entry, index) => {
+            const heightPercentage = ((entry.weight - minWeight) / range) * 100;
+            const date = new Date(entry.date);
+            const dateLabel = date.getDate().toString();
+            return (
+              <View key={entry.id} style={{ flex: 1, alignItems: 'center' }}>
+                <View style={{ width: '60%', height: '100%', justifyContent: 'flex-end' }}>
+                  <View style={{ width: '100%', height: `${Math.max(5, heightPercentage)}%`, backgroundColor: colors.primary, borderTopLeftRadius: 4, borderTopRightRadius: 4 }} />
+                </View>
+                <Text style={{ fontSize: 12, color: colors.text.secondary, marginTop: 4 }}>{dateLabel}</Text>
+              </View>
+            );
+          })}
+        </View>
+      </View>
+    );
+  };
 
   const netCalories =
     nutritionSummary.calories - exerciseSummary.totalCaloriesBurned;
@@ -246,6 +302,7 @@ export default function DashboardScreen() {
           <View style={styles.spacer} />
         </View>
 
+        {/* Original dashboard content restored */}
         <View style={styles.containerText}>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Choose your next habit</Text>
@@ -260,11 +317,10 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* Step and Exercise*/}
-
+        {/* Step and Exercise */}
         <View style={styles.containerCard}>
           {/* Steps Card */}
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/sync')}>
             <Text style={styles.cardTitle}>Steps</Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialCommunityIcons name="run" size={30} color={"blue"} />
@@ -280,7 +336,7 @@ export default function DashboardScreen() {
           </TouchableOpacity>
 
           {/* Exercise Card */}
-          <TouchableOpacity style={styles.card}>
+          <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/exercises')}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
@@ -308,48 +364,38 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Discover Cards */}
+        <Text style={{ fontWeight: "bold", fontSize: 23, margin: 20 }}>
+          {" "}
+          Weight Progress
+        </Text>
 
-        <View style={{ backgroundColor: colors.secondary }}>
-          <Text style={{ fontWeight: "bold", fontSize: 23, margin: 20 }}>
-            {" "}
-            Discover
-          </Text>
-
-          <DiscoverCards />
+        {/* Weight Progress Chart - just before DiscoverCards, with modern shadow */}
+        <View style={{ marginHorizontal: 20, marginTop: 24, backgroundColor: '#fff', borderRadius: 18, shadowColor: '#7F9497', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 8, padding: 16 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+            <Text style={{ fontWeight: 'bold', fontSize: 18, color: colors.primary, marginRight: 16 }}></Text>
+            <TouchableOpacity onPress={() => setWeightRange('week')} style={{ marginRight: 30 }}>
+              <Text style={{ color: weightRange === 'week' ? colors.primary : colors.text.secondary, fontWeight: weightRange === 'week' ? 'bold' : 'normal' }}>Week</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setWeightRange('month')} style={{ marginRight: 30 }}>
+              <Text style={{ color: weightRange === 'month' ? colors.primary : colors.text.secondary, fontWeight: weightRange === 'month' ? 'bold' : 'normal' }}>Month</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setWeightRange('year')}>
+              <Text style={{ color: weightRange === 'year' ? colors.primary : colors.text.secondary, fontWeight: weightRange === 'year' ? 'bold' : 'normal' }}>Year</Text>
+            </TouchableOpacity>
+          </View>
+          {renderWeightChart()}
         </View>
 
-        {/* <ExerciseCard date={selectedDate.toISOString()} /> */}
+        {/* Discover Cards */}
+        <Text style={{ fontWeight: "bold", fontSize: 23, margin: 20 }}>
+          {" "}
+          Discover
+        </Text>
+        <DiscoverCards />
 
         <View style={styles.spacer} />
       </ScrollView>
 
-      {/* Fixed Tab at the top */}
-      <View style={styles.tab}>
-        <View style={styles.tabcontent}>
-          <View style={styles.imageContainer}>
-            
-          </View>
-          <Text
-            style={{
-              marginTop: 15,
-              color: colors.primary,
-              fontWeight: "bold",
-              fontSize: 25,
-            }}
-          >
-            Fittrack
-          </Text>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              style={{ marginTop: 15 }}
-              name="bell-outline"
-              size={28}
-              color={"black"}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>
   );
 }
@@ -364,8 +410,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginTop: 10,
-    borderRadius: 50, // Half of your image height/width to make it perfectly circular
-    overflow: "hidden", // This ensures the image respects the border radius
+    borderRadius: 50, 
+    overflow: "hidden", 
     width: 40,
     height: 40,
   },
@@ -381,7 +427,7 @@ const styles = StyleSheet.create({
   },
   tabcontent: {
     display: "flex",
-    marginTop: 20,
+    marginTop: 30,
     flexDirection: "row",
     justifyContent: "space-between",
     alignContent: "center",
@@ -393,8 +439,8 @@ const styles = StyleSheet.create({
   },
   tab: {
     position: "absolute",
-    bottom: "auto",
-    marginBottom: 10,
+    bottom: 0,
+    marginBottom: 0,
     left: 0,
     right: 0,
     height: 100,
@@ -596,8 +642,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingHorizontal: 20,
     backgroundColor: colors.background.card,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    
     shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
