@@ -17,16 +17,37 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function GoalsScreen() {
   const router = useRouter();
   const { user, updateUser } = useUserStore();
-  
-  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(user?.dailyCalorieGoal?.toString() || "2000");
-  const [weeklyWorkouts, setWeeklyWorkouts] = useState(user?.weeklyWorkouts?.toString() || "3");
-  const [dailySteps, setDailySteps] = useState(user?.dailySteps?.toString() || "10000");
+
+  const [dailyCalorieGoal, setDailyCalorieGoal] = useState(
+    user?.dailyCalorieGoal?.toString() || "2000"
+  );
+  const [weeklyWorkouts, setWeeklyWorkouts] = useState(
+    user?.weeklyWorkouts?.toString() || "3"
+  );
+  const [dailySteps, setDailySteps] = useState(
+    user?.dailySteps?.toString() || "10000"
+  );
   const [weightGoal, setWeightGoal] = useState(user?.weightGoal || "lose");
 
   const weightGoals = [
-    { key: "lose", label: "Lose Weight", icon: "trending-down" as const, color: "#FF6B6B" },
-    { key: "maintain", label: "Maintain Weight", icon: "minus" as const, color: "#4ECDC4" },
-    { key: "gain", label: "Gain Weight", icon: "trending-up" as const, color: "#95E1D3" },
+    {
+      key: "lose",
+      label: "Lose Weight",
+      icon: "trending-down" as const,
+      color: "#FF6B6B",
+    },
+    {
+      key: "maintain",
+      label: "Maintain Weight",
+      icon: "minus" as const,
+      color: "#4ECDC4",
+    },
+    {
+      key: "gain",
+      label: "Gain Weight",
+      icon: "trending-up" as const,
+      color: "#95E1D3",
+    },
   ];
 
   const handleSaveGoals = () => {
@@ -53,8 +74,8 @@ export default function GoalsScreen() {
         colors={[colors.primary, colors.accent]}
         style={styles.header}
       >
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => router.back()}
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
@@ -67,32 +88,40 @@ export default function GoalsScreen() {
         {/* Weight Goal Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Weight Goal</Text>
-          <Text style={styles.sectionSubtitle}>What's your primary weight goal?</Text>
-          
+          <Text style={styles.sectionSubtitle}>
+            What's your primary weight goal?
+          </Text>
+
           {weightGoals.map((goal) => (
             <TouchableOpacity
               key={goal.key}
               style={[
                 styles.goalCard,
-                weightGoal === goal.key && styles.selectedGoalCard
+                weightGoal === goal.key && styles.selectedGoalCard,
               ]}
               onPress={() => setWeightGoal(goal.key)}
             >
-              <MaterialCommunityIcons 
-                name={goal.icon} 
-                size={24} 
-                color={weightGoal === goal.key ? "#fff" : goal.color} 
+              <MaterialCommunityIcons
+                name={goal.icon}
+                size={24}
+                color={weightGoal === goal.key ? "#fff" : goal.color}
               />
               <View style={styles.goalContent}>
-                <Text style={[
-                  styles.goalTitle,
-                  weightGoal === goal.key && styles.selectedGoalTitle
-                ]}>
+                <Text
+                  style={[
+                    styles.goalTitle,
+                    weightGoal === goal.key && styles.selectedGoalTitle,
+                  ]}
+                >
                   {goal.label}
                 </Text>
               </View>
               {weightGoal === goal.key && (
-                <MaterialCommunityIcons name="check-circle" size={24} color="#fff" />
+                <MaterialCommunityIcons
+                  name="check-circle"
+                  size={24}
+                  color="#fff"
+                />
               )}
             </TouchableOpacity>
           ))}
@@ -101,11 +130,15 @@ export default function GoalsScreen() {
         {/* Daily Targets Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Daily Targets</Text>
-          
+
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Daily Calorie Goal</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="fire" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="fire"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={dailyCalorieGoal}
@@ -121,7 +154,11 @@ export default function GoalsScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Daily Steps Goal</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="walk" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="walk"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={dailySteps}
@@ -138,11 +175,15 @@ export default function GoalsScreen() {
         {/* Weekly Targets Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Weekly Targets</Text>
-          
+
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Weekly Workouts</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="dumbbell" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="dumbbell"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={weeklyWorkouts}
@@ -159,32 +200,58 @@ export default function GoalsScreen() {
         {/* Progress Tracking Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Progress Tracking</Text>
-          
+
           <TouchableOpacity style={styles.trackingCard}>
-            <MaterialCommunityIcons name="chart-line" size={24} color={colors.primary} />
+            <MaterialCommunityIcons
+              name="chart-line"
+              size={24}
+              color={colors.primary}
+            />
             <View style={styles.trackingText}>
               <Text style={styles.trackingTitle}>Weight Progress</Text>
-              <Text style={styles.trackingSubtitle}>Track your weight changes over time</Text>
+              <Text style={styles.trackingSubtitle}>
+                Track your weight changes over time
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.trackingCard}>
-            <MaterialCommunityIcons name="calendar-check" size={24} color="#4ECDC4" />
+            <MaterialCommunityIcons
+              name="calendar-check"
+              size={24}
+              color="#4ECDC4"
+            />
             <View style={styles.trackingText}>
               <Text style={styles.trackingTitle}>Workout Streak</Text>
-              <Text style={styles.trackingSubtitle}>Track your consecutive workout days</Text>
+              <Text style={styles.trackingSubtitle}>
+                Track your consecutive workout days
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.trackingCard}>
             <MaterialCommunityIcons name="target" size={24} color="#95E1D3" />
             <View style={styles.trackingText}>
               <Text style={styles.trackingTitle}>Goal Achievement</Text>
-              <Text style={styles.trackingSubtitle}>Monitor your progress towards goals</Text>
+              <Text style={styles.trackingSubtitle}>
+                Monitor your progress towards goals
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
         </View>
 
@@ -202,9 +269,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.main,
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 20,
+    paddingTop: 25,
+    paddingBottom: 15,
     paddingHorizontal: 20,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -344,4 +412,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-}); 
+});

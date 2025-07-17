@@ -96,75 +96,75 @@ export default function RootLayoutNav() {
             presentation: "modal",
           }}
         />
-        <Stack.Screen 
-          name="discover/recipes" 
-          options={{ 
+        <Stack.Screen
+          name="discover/recipes"
+          options={{
             title: "Recipes",
-            headerShown: true 
-          }} 
+            headerShown: true,
+          }}
         />
-        <Stack.Screen 
-          name="discover/exercises" 
-          options={{ 
+        <Stack.Screen
+          name="discover/exercises"
+          options={{
             title: "Exercises",
-            headerShown: true 
-          }} 
+            headerShown: true,
+          }}
         />
-        <Stack.Screen 
-          name="discover/sleep" 
-          options={{ 
+        <Stack.Screen
+          name="discover/sleep"
+          options={{
             title: "Sleep",
-            headerShown: true 
-          }} 
+            headerShown: false,
+          }}
         />
-        <Stack.Screen 
-          name="discover/sync" 
-          options={{ 
+        <Stack.Screen
+          name="discover/sync"
+          options={{
             title: "Sync Up",
-            headerShown: true 
-          }} 
+            headerShown: false,
+          }}
         />
-        <Stack.Screen 
-          name="discover/friends" 
-          options={{ 
+        <Stack.Screen
+          name="discover/friends"
+          options={{
             title: "Friends",
-            headerShown: true 
-          }} 
+            headerShown: true,
+          }}
         />
-        <Stack.Screen 
-          name="discover/community" 
-          options={{ 
+        <Stack.Screen
+          name="discover/community"
+          options={{
             title: "Community",
-            headerShown: true 
-          }} 
+            headerShown: true,
+          }}
         />
-        <Stack.Screen 
-          name="discover/learn-more" 
-          options={{ 
+        <Stack.Screen
+          name="discover/learn-more"
+          options={{
             title: "Learn More",
-            headerShown: false 
-          }} 
+            headerShown: false,
+          }}
         />
-        <Stack.Screen 
-          name="settings/account" 
-          options={{ 
+        <Stack.Screen
+          name="settings/account"
+          options={{
             title: "Account Settings",
-            headerShown: true 
-          }} 
+            headerShown: false,
+          }}
         />
-        <Stack.Screen 
-          name="settings/health" 
-          options={{ 
+        <Stack.Screen
+          name="settings/health"
+          options={{
             title: "Health Profile",
-            headerShown: true 
-          }} 
+            headerShown: false,
+          }}
         />
-        <Stack.Screen 
-          name="settings/goals" 
-          options={{ 
+        <Stack.Screen
+          name="settings/goals"
+          options={{
             title: "Goals & Targets",
-            headerShown: true 
-          }} 
+            headerShown: false,
+          }}
         />
       </Stack>
     </>

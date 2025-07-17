@@ -17,19 +17,43 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function HealthProfileScreen() {
   const router = useRouter();
   const { user, updateUser } = useUserStore();
-  
+
   const [weight, setWeight] = useState(user?.weight?.toString() || "");
-  const [goalWeight, setGoalWeight] = useState(user?.goalWeight?.toString() || "");
+  const [goalWeight, setGoalWeight] = useState(
+    user?.goalWeight?.toString() || ""
+  );
   const [height, setHeight] = useState(user?.height?.toString() || "");
   const [age, setAge] = useState(user?.age?.toString() || "");
-  const [activityLevel, setActivityLevel] = useState(user?.activityLevel || "moderate");
+  const [activityLevel, setActivityLevel] = useState(
+    user?.activityLevel || "moderate"
+  );
 
   const activityLevels = [
-    { key: "sedentary", label: "Sedentary", description: "Little to no exercise" },
-    { key: "light", label: "Lightly Active", description: "Light exercise 1-3 days/week" },
-    { key: "moderate", label: "Moderately Active", description: "Moderate exercise 3-5 days/week" },
-    { key: "active", label: "Very Active", description: "Hard exercise 6-7 days/week" },
-    { key: "very_active", label: "Extremely Active", description: "Very hard exercise, physical job" },
+    {
+      key: "sedentary",
+      label: "Sedentary",
+      description: "Little to no exercise",
+    },
+    {
+      key: "light",
+      label: "Lightly Active",
+      description: "Light exercise 1-3 days/week",
+    },
+    {
+      key: "moderate",
+      label: "Moderately Active",
+      description: "Moderate exercise 3-5 days/week",
+    },
+    {
+      key: "active",
+      label: "Very Active",
+      description: "Hard exercise 6-7 days/week",
+    },
+    {
+      key: "very_active",
+      label: "Extremely Active",
+      description: "Very hard exercise, physical job",
+    },
   ];
 
   const handleSaveHealth = () => {
@@ -57,8 +81,8 @@ export default function HealthProfileScreen() {
         colors={[colors.primary, colors.accent]}
         style={styles.header}
       >
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => router.back()}
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
@@ -71,11 +95,15 @@ export default function HealthProfileScreen() {
         {/* Basic Metrics Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Basic Metrics</Text>
-          
+
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Current Weight (kg)</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="scale" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="scale"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={weight}
@@ -90,7 +118,11 @@ export default function HealthProfileScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Goal Weight (kg)</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="target" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="target"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={goalWeight}
@@ -105,7 +137,11 @@ export default function HealthProfileScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Height (cm)</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="human-male-height" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="human-male-height"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={height}
@@ -120,7 +156,11 @@ export default function HealthProfileScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Age</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="calendar" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="calendar"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={age}
@@ -136,33 +176,44 @@ export default function HealthProfileScreen() {
         {/* Activity Level Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Activity Level</Text>
-          <Text style={styles.sectionSubtitle}>Select your typical activity level</Text>
-          
+          <Text style={styles.sectionSubtitle}>
+            Select your typical activity level
+          </Text>
+
           {activityLevels.map((level) => (
             <TouchableOpacity
               key={level.key}
               style={[
                 styles.activityCard,
-                activityLevel === level.key && styles.selectedActivityCard
+                activityLevel === level.key && styles.selectedActivityCard,
               ]}
               onPress={() => setActivityLevel(level.key)}
             >
               <View style={styles.activityContent}>
-                <Text style={[
-                  styles.activityTitle,
-                  activityLevel === level.key && styles.selectedActivityTitle
-                ]}>
+                <Text
+                  style={[
+                    styles.activityTitle,
+                    activityLevel === level.key && styles.selectedActivityTitle,
+                  ]}
+                >
                   {level.label}
                 </Text>
-                <Text style={[
-                  styles.activityDescription,
-                  activityLevel === level.key && styles.selectedActivityDescription
-                ]}>
+                <Text
+                  style={[
+                    styles.activityDescription,
+                    activityLevel === level.key &&
+                      styles.selectedActivityDescription,
+                  ]}
+                >
                   {level.description}
                 </Text>
               </View>
               {activityLevel === level.key && (
-                <MaterialCommunityIcons name="check-circle" size={24} color={colors.primary} />
+                <MaterialCommunityIcons
+                  name="check-circle"
+                  size={24}
+                  color={colors.primary}
+                />
               )}
             </TouchableOpacity>
           ))}
@@ -171,32 +222,54 @@ export default function HealthProfileScreen() {
         {/* Health Goals Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Health Goals</Text>
-          
+
           <TouchableOpacity style={styles.goalCard}>
             <MaterialCommunityIcons name="heart" size={24} color="#FF6B6B" />
             <View style={styles.goalText}>
               <Text style={styles.goalTitle}>Weight Management</Text>
-              <Text style={styles.goalSubtitle}>Track your weight progress</Text>
+              <Text style={styles.goalSubtitle}>
+                Track your weight progress
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.goalCard}>
             <MaterialCommunityIcons name="run" size={24} color="#4ECDC4" />
             <View style={styles.goalText}>
               <Text style={styles.goalTitle}>Fitness Goals</Text>
-              <Text style={styles.goalSubtitle}>Set exercise and strength targets</Text>
+              <Text style={styles.goalSubtitle}>
+                Set exercise and strength targets
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.goalCard}>
-            <MaterialCommunityIcons name="food-apple" size={24} color="#95E1D3" />
+            <MaterialCommunityIcons
+              name="food-apple"
+              size={24}
+              color="#95E1D3"
+            />
             <View style={styles.goalText}>
               <Text style={styles.goalTitle}>Nutrition Goals</Text>
-              <Text style={styles.goalSubtitle}>Set calorie and macro targets</Text>
+              <Text style={styles.goalSubtitle}>
+                Set calorie and macro targets
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
         </View>
 
@@ -214,9 +287,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.main,
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 20,
+    paddingTop: 25,
+    paddingBottom: 15,
     paddingHorizontal: 20,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -358,4 +432,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-}); 
+});

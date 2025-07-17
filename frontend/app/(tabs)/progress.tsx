@@ -5,7 +5,7 @@ import { WeightEntry } from "@/types";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   ScrollView,
   StyleSheet,
@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function ProgressScreen() {
   const router = useRouter();
@@ -21,10 +21,9 @@ export default function ProgressScreen() {
   const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } =
     useProgressStore();
 
-
-  const handleBack =() => {
-    router.back()
-  }
+  const handleBack = () => {
+    router.back();
+  };
 
   const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("week");
   const [latestWeight, setLatestWeight] = useState<number | null>(null);
@@ -139,7 +138,7 @@ export default function ProgressScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Modern gradient header */}
       <LinearGradient
         colors={[colors.primary, colors.accent]}
@@ -148,13 +147,12 @@ export default function ProgressScreen() {
         style={styles.gradientHeader}
       >
         <View style={styles.headerRow}>
-        
           <Text style={styles.gradientHeaderTitle}>Progress</Text>
         </View>
       </LinearGradient>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
-        <View style={{marginBottom: 40}}>
+        <View style={{ marginBottom: 40 }}>
           <View style={styles.header}>
             <Text style={styles.title}>Weight Progress</Text>
             <View style={styles.currentWeightContainer}>
@@ -165,7 +163,9 @@ export default function ProgressScreen() {
               {user?.goalWeight && latestWeight && (
                 <Text style={styles.goalText}>
                   {latestWeight > user.goalWeight
-                    ? `${(latestWeight - user.goalWeight).toFixed(1)} lbs to goal`
+                    ? `${(latestWeight - user.goalWeight).toFixed(
+                        1
+                      )} lbs to goal`
                     : "Goal reached!"}
                 </Text>
               )}
@@ -240,8 +240,7 @@ export default function ProgressScreen() {
           <Plus size={24} color="#fff" />
         </LinearGradient>
       </TouchableOpacity>
-
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -249,12 +248,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background.main,
+    paddingHorizontal: 10,
   },
   header: {
-    padding: 16,
+    padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
-    marginTop: 120
+    marginTop: 70,
   },
   title: {
     fontSize: 20,
@@ -397,57 +397,57 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
-  
   },
-   
+
   gradientHeader: {
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 24,
     paddingHorizontal: 24,
-    
+    borderRadius: 20,
+
     elevation: 6,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
     shadowRadius: 12,
   },
   headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 5,
   },
   gradientHeaderTitle: {
     fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
+    fontWeight: "bold",
+    color: "#fff",
     letterSpacing: 1,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 20,
     marginHorizontal: 16,
     marginTop: 24,
     padding: 0,
-    shadowColor: '#7F9497',
+    shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
   },
   chartCard: {
-    backgroundColor: '#f8fafd',
+    backgroundColor: "#f8fafd",
     borderRadius: 16,
     padding: 8,
     marginTop: 12,
-    shadowColor: '#7F9497',
+    shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 8,
     elevation: 2,
   },
   timeRangeContainerModern: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 8,
     marginBottom: 0,
     gap: 8,
@@ -456,7 +456,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: '#f0f2f5',
+    backgroundColor: "#f0f2f5",
     marginHorizontal: 2,
   },
   activeTimeRangeButtonModern: {
@@ -465,22 +465,22 @@ const styles = StyleSheet.create({
   timeRangeTextModern: {
     fontSize: 15,
     color: colors.text.secondary,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   activeTimeRangeTextModern: {
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
   },
   addButtonModern: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 36,
     right: 28,
     width: 64,
     height: 64,
     borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.18,
     shadowRadius: 8,
@@ -491,7 +491,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

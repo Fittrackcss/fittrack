@@ -17,7 +17,7 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function AccountSettingsScreen() {
   const router = useRouter();
   const { user, updateUser } = useUserStore();
-  
+
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -69,8 +69,8 @@ export default function AccountSettingsScreen() {
         colors={[colors.primary, colors.accent]}
         style={styles.header}
       >
-        <TouchableOpacity 
-          style={styles.backButton} 
+        <TouchableOpacity
+          style={styles.backButton}
           onPress={() => router.back()}
         >
           <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
@@ -83,11 +83,15 @@ export default function AccountSettingsScreen() {
         {/* Profile Information Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Profile Information</Text>
-          
+
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Full Name</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="account" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="account"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={name}
@@ -101,7 +105,11 @@ export default function AccountSettingsScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Email Address</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="email" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="email"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={email}
@@ -114,7 +122,10 @@ export default function AccountSettingsScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={handleSaveProfile}
+          >
             <Text style={styles.saveButtonText}>Save Changes</Text>
           </TouchableOpacity>
         </View>
@@ -122,11 +133,15 @@ export default function AccountSettingsScreen() {
         {/* Password Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Change Password</Text>
-          
+
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Current Password</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="lock" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="lock"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={currentPassword}
@@ -141,7 +156,11 @@ export default function AccountSettingsScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>New Password</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="lock-plus" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="lock-plus"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={newPassword}
@@ -156,7 +175,11 @@ export default function AccountSettingsScreen() {
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Confirm New Password</Text>
             <View style={styles.inputContainer}>
-              <MaterialCommunityIcons name="lock-check" size={20} color={colors.text.secondary} />
+              <MaterialCommunityIcons
+                name="lock-check"
+                size={20}
+                color={colors.text.secondary}
+              />
               <TextInput
                 style={styles.textInput}
                 value={confirmPassword}
@@ -168,7 +191,10 @@ export default function AccountSettingsScreen() {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.changePasswordButton} onPress={handleChangePassword}>
+          <TouchableOpacity
+            style={styles.changePasswordButton}
+            onPress={handleChangePassword}
+          >
             <Text style={styles.changePasswordButtonText}>Change Password</Text>
           </TouchableOpacity>
         </View>
@@ -176,23 +202,43 @@ export default function AccountSettingsScreen() {
         {/* Account Actions */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account Actions</Text>
-          
+
           <TouchableOpacity style={styles.actionCard}>
-            <MaterialCommunityIcons name="download" size={24} color={colors.primary} />
+            <MaterialCommunityIcons
+              name="download"
+              size={24}
+              color={colors.primary}
+            />
             <View style={styles.actionText}>
               <Text style={styles.actionTitle}>Export Data</Text>
-              <Text style={styles.actionSubtitle}>Download your fitness data</Text>
+              <Text style={styles.actionSubtitle}>
+                Download your fitness data
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionCard}>
-            <MaterialCommunityIcons name="delete" size={24} color={colors.danger} />
+            <MaterialCommunityIcons
+              name="delete"
+              size={24}
+              color={colors.danger}
+            />
             <View style={styles.actionText}>
               <Text style={styles.actionTitle}>Delete Account</Text>
-              <Text style={styles.actionSubtitle}>Permanently delete your account</Text>
+              <Text style={styles.actionSubtitle}>
+                Permanently delete your account
+              </Text>
             </View>
-            <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+            <MaterialCommunityIcons
+              name="chevron-right"
+              size={24}
+              color={colors.text.light}
+            />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -206,9 +252,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.main,
   },
   header: {
-    paddingTop: 60,
-    paddingBottom: 20,
+    paddingTop: 25,
+    paddingBottom: 15,
     paddingHorizontal: 20,
+    borderRadius: 20,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
@@ -328,4 +375,4 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginTop: 2,
   },
-}); 
+});
