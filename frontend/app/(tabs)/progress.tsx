@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function ProgressScreen() {
   const router = useRouter();
@@ -139,16 +140,19 @@ export default function ProgressScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Modern gradient header */}
+      {/* Header matching Account Settings */}
       <LinearGradient
         colors={[colors.primary, colors.accent]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.gradientHeader}
+        style={styles.accountHeader}
       >
-        <View style={styles.headerRow}>
-          <Text style={styles.gradientHeaderTitle}>Progress</Text>
-        </View>
+        <TouchableOpacity
+          style={styles.accountBackButton}
+          onPress={handleBack}
+        >
+          <MaterialCommunityIcons name="arrow-left" size={24} color="#fff" />
+        </TouchableOpacity>
+        <Text style={styles.accountHeaderTitle}>Progress</Text>
+        <View style={styles.accountPlaceholder} />
       </LinearGradient>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
@@ -254,7 +258,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.divider,
-    marginTop: 70,
+    marginTop: 20,
   },
   title: {
     fontSize: 20,
@@ -403,7 +407,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 24,
     paddingHorizontal: 24,
-    borderRadius: 20,
+    borderRadius: 15,
 
     elevation: 6,
     shadowColor: "#000",
@@ -493,5 +497,30 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     alignItems: "center",
     justifyContent: "center",
+  },
+  accountHeader: {
+    paddingTop: 25,
+    paddingBottom: 15,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  accountBackButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  accountHeaderTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+  },
+  accountPlaceholder: {
+    width: 40,
   },
 });

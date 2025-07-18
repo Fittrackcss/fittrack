@@ -114,14 +114,14 @@ export default function RootLayoutNav() {
           name="discover/sleep"
           options={{
             title: "Sleep",
-            headerShown: false,
+            headerShown: true,
           }}
         />
         <Stack.Screen
           name="discover/sync"
           options={{
             title: "Sync Up",
-            headerShown: false,
+            headerShown: true,
           }}
         />
         <Stack.Screen

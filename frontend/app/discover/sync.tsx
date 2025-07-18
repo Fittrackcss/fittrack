@@ -41,7 +41,7 @@ const syncOptions = [
 const router = useRouter();
 const DiscoverSync = () => (
   <SafeAreaView style={styles.container}>
-    <LinearGradient
+    {/* <LinearGradient
       colors={[colors.primary, colors.accent]}
       style={styles.newheader}
     >
@@ -50,7 +50,7 @@ const DiscoverSync = () => (
       </TouchableOpacity>
       <Text style={styles.headerTitle}>Goals & Targets</Text>
       <View style={styles.placeholder} />
-    </LinearGradient>
+    </LinearGradient> */}
 
     <View style={{ flex: 1, paddingHorizontal: 20, marginTop: 20 }}>
       <Text style={styles.header}>Sync Up</Text>

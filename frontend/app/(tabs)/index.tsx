@@ -23,6 +23,8 @@ import DiscoverCards from "@/components/Discover";
 import { Bold } from "lucide-react-native";
 import { useProgressStore } from "@/store/progressStore";
 import { WeightEntry } from "@/types";
+import NotificationDrawer from "@/components/ui/NotificationDrawer";
+import { dummyNotifications } from "@/components/ui/NotificationDrawer";
 
 export default function DashboardScreen() {
   const router = useRouter();
@@ -32,6 +34,8 @@ export default function DashboardScreen() {
   const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } = useProgressStore();
   const [weightData, setWeightData] = useState<WeightEntry[]>([]);
   const [weightRange, setWeightRange] = useState<'week' | 'month' | 'year'>('week');
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [notificationsViewed, setNotificationsViewed] = useState(false);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [nutritionSummary, setNutritionSummary] = useState({
@@ -60,7 +64,8 @@ export default function DashboardScreen() {
         useNativeDriver: true,
       }),
     ]).start();
-    // Add notification logic here
+    setDrawerVisible(true);
+    setNotificationsViewed(true);
   };
 
   useEffect(() => {
@@ -155,12 +160,17 @@ export default function DashboardScreen() {
       <View style={styles.headerBar}>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>FitTrack</Text>
-         
         </View>
         <View style={styles.headerIcons}>
-          <Animated.View style={{ transform: [{ scale: bellAnim }] }}>
+          <Animated.View style={{ transform: [{ scale: bellAnim }], position: 'relative' }}>
             <TouchableOpacity style={styles.iconButton} onPress={handleBellPress}>
               <MaterialCommunityIcons name="bell-outline" size={28} color={colors.primary} />
+              {/* Notification count badge */}
+              {(!notificationsViewed && dummyNotifications.length > 0) ? (
+                <View style={styles.notificationBadge}>
+                  <Text style={styles.notificationBadgeText}>{dummyNotifications.length}</Text>
+                </View>
+              ) : null}
             </TouchableOpacity>
           </Animated.View>
           <TouchableOpacity style={styles.profileIcon} onPress={() => router.push('/profile')}>
@@ -168,6 +178,8 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </View>
       </View>
+      {/* Notification Drawer */}
+      <NotificationDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
@@ -676,5 +688,23 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background.secondary,
     borderRadius: 20,
     padding: 2,
+  },
+  notificationBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: colors.danger,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 20,
+    paddingHorizontal: 4,
+  },
+  notificationBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });

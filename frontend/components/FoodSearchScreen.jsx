@@ -181,7 +181,7 @@ const FoodSearchScreen = () => {
         />
         <Button title="Search" onPress={handleSearch} />
       </View>
-
+      <View style={styles.divider} />
       {loading ? (
         <ActivityIndicator size="large" style={{ marginTop: 100 }} />
       ) : (
@@ -190,62 +190,40 @@ const FoodSearchScreen = () => {
           data={foods}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={styles.item}>
-              <View style={styles.infoContainer}>
-                <Text style={styles.label}>{item.name}</Text>
-
+            <TouchableOpacity
+              style={styles.foodCard}
+              activeOpacity={0.92}
+              onPress={() => handleAdd(item)}
+            >
+              {item.image ? (
+                <Image
+                  style={styles.foodImage}
+                  source={{ uri: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}` }}
+                />
+              ) : (
+                <View style={styles.foodImagePlaceholder}>
+                  <Text style={styles.details}>No image</Text>
+                </View>
+              )}
+              <View style={styles.foodInfoSection}>
+                <Text style={styles.foodName}>{item.name}</Text>
                 {item.nutrition?.nutrients ? (
-                  <View style={styles.nutritionContainer}>
-                    <Text style={styles.nutritionText}>
-                      Calories: {item.nutrition.nutrients[0]?.amount}{" "}
-                      {item.nutrition.nutrients[0]?.unit}
-                    </Text>
-                    <Text style={styles.nutritionText}>
-                      Protein: {item.nutrition.nutrients[1]?.amount}g
-                    </Text>
-                    <Text style={styles.nutritionText}>
-                      Carbs: {item.nutrition.nutrients[2]?.amount}g
-                    </Text>
-                    <Text style={styles.nutritionText}>
-                      Fat: {item.nutrition.nutrients[3]?.amount}g
-                    </Text>
+                  <View style={styles.nutritionRow}>
+                    <Text style={styles.nutritionLabel}>Calories: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[0]?.amount} {item.nutrition.nutrients[0]?.unit}</Text></Text>
+                    <Text style={styles.nutritionLabel}>Protein: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[1]?.amount}g</Text></Text>
+                    <Text style={styles.nutritionLabel}>Carbs: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[2]?.amount}g</Text></Text>
+                    <Text style={styles.nutritionLabel}>Fat: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[3]?.amount}g</Text></Text>
                   </View>
                 ) : (
-                  <Text style={styles.details}>
-                    Nutrition data not available
-                  </Text>
+                  <Text style={styles.details}>Nutrition data not available</Text>
                 )}
               </View>
-              <View>
-                {item.image ? (
-                  <Image
-                    style={styles.image}
-                    source={{
-                      uri: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}`,
-                    }}
-                  />
-                ) : (
-                  <Text style={styles.details}>No image</Text>
-                )}
-
-                <TouchableOpacity
-                  style={{
-                    // height: 30,
-                    width: 50,
-                    padding: 7,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignSelf: "flex-end",
-                    borderRadius: 10,
-                    marginTop: 10,
-                    backgroundColor: colors.primary,
-                  }}
-                  onPress={() => handleAdd(item)}
-                >
-                  <Text>Add</Text>
-                </TouchableOpacity>
+              <View style={styles.addButtonContainer}>
+                <View style={styles.addButtonModern}>
+                  <Text style={styles.addButtonTextModern}>Add</Text>
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           )}
           ListEmptyComponent={
             !loading && (
@@ -323,6 +301,90 @@ const styles = StyleSheet.create({
     marginTop: 40,
     fontSize: 16,
     color: "#888",
+  },
+  divider: {
+    height: 1,
+    backgroundColor: colors.divider,
+    marginBottom: 12,
+    marginTop: 4,
+  },
+  foodCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.background.card,
+    borderRadius: 18,
+    marginBottom: 16,
+    padding: 14,
+    shadowColor: '#7F9497',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 8,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.03)',
+    transition: 'box-shadow 0.2s',
+  },
+  foodImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 16,
+    marginRight: 18,
+    backgroundColor: '#f0f0f0',
+  },
+  foodImagePlaceholder: {
+    width: 90,
+    height: 90,
+    borderRadius: 16,
+    marginRight: 18,
+    backgroundColor: '#f0f0f0',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  foodInfoSection: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  foodName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginBottom: 6,
+  },
+  nutritionRow: {
+    marginBottom: 8,
+  },
+  nutritionLabel: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginBottom: 2,
+  },
+  nutritionValue: {
+    fontWeight: '600',
+    color: colors.text.primary,
+  },
+  addButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    marginLeft: 12,
+  },
+  addButtonModern: {
+    backgroundColor: colors.primary,
+    borderRadius: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.10,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  addButtonTextModern: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
   },
 });
 
