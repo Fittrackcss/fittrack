@@ -107,7 +107,7 @@ export default function RootLayoutNav() {
           name="discover/exercises"
           options={{
             title: "Exercises",
-            headerShown: true,
+            headerShown: false,
           }}
         />
         <Stack.Screen
