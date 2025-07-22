@@ -1,4 +1,4 @@
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useRouter } from "expo-router";
@@ -12,6 +12,9 @@ type DiscoverProps = {
 
 const DiscoverCards = () => {
     const router = useRouter();
+    const { colors } = useTheme();
+    const styles = makeStyles(colors);
+
     const cards: DiscoverProps[] = [
         {
             icon: "power-sleep",
@@ -75,7 +78,7 @@ const DiscoverCards = () => {
                         <MaterialCommunityIcons 
                             name={card.icon} 
                             size={24} 
-                            color={card.color || "#000"} 
+                            color={card.color || colors.primary} 
                         />
                     </View>
                     <View style={styles.textContainer}>
@@ -88,54 +91,50 @@ const DiscoverCards = () => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        padding: 16,
-        flexDirection:'row',
-        flexWrap: 'wrap',
-         justifyContent: 'space-between',
-        
-    },
-    card: {
-        justifyContent: 'center',
-        alignContent:'center',
-        width: '48.5%',
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 12,
-        shadowColor: '#7F9497',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
-        elevation: 6,
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    iconContainer: {
-        backgroundColor: colors.secondary,
-        borderRadius: 50,
-        width: 50,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 16,
-    },
-    textContainer: {
-        flex: 1,
-    },
-    cardTitle: {
-        textAlign: 'center',
-        fontSize: 16,
-        fontWeight: 'bold',
-        marginBottom: 4,
-        color: '#1C1C1C',
-    },
-    cardSubtitle: {
-        fontSize: 13,
-        color: colors.gray,
-         textAlign: 'center',
-    },
-});
+function makeStyles(colors: any) {
+    return StyleSheet.create({
+        container: {
+            padding: 16,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+        },
+        card: {
+            justifyContent: 'center',
+            alignContent: 'center',
+            width: '48.5%',
+            backgroundColor: colors.background.card,
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 12,
+            flexDirection: 'column',
+            alignItems: 'center',
+        },
+        iconContainer: {
+            backgroundColor: colors.secondary,
+            borderRadius: 50,
+            width: 50,
+            height: 50,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: 16,
+        },
+        textContainer: {
+            flex: 1,
+        },
+        cardTitle: {
+            textAlign: 'center',
+            fontSize: 16,
+            fontWeight: 'bold',
+            marginBottom: 4,
+            color: colors.text.primary,
+        },
+        cardSubtitle: {
+            fontSize: 13,
+            color: colors.gray,
+            textAlign: 'center',
+        },
+    });
+}
 
 export default DiscoverCards;

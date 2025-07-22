@@ -153,7 +153,7 @@ function makeStyles(colors: any) {
     addWeightButtonText: {
       fontSize: 14,
       fontWeight: "600",
-      color: "#fff",
+      color: colors.text.light,
     },
     addButton: {
       position: "absolute",
@@ -165,11 +165,6 @@ function makeStyles(colors: any) {
       backgroundColor: colors.primary,
       alignItems: "center",
       justifyContent: "center",
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 4,
     },
 
     gradientHeader: {
@@ -177,12 +172,6 @@ function makeStyles(colors: any) {
       paddingBottom: 24,
       paddingHorizontal: 24,
       borderRadius: 15,
-
-      elevation: 6,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.12,
-      shadowRadius: 12,
     },
     headerRow: {
       flexDirection: "row",
@@ -196,27 +185,19 @@ function makeStyles(colors: any) {
       letterSpacing: 1,
     },
     card: {
-      backgroundColor: "#fff",
+      backgroundColor: colors.background.card,
       borderRadius: 20,
       marginHorizontal: 16,
       marginTop: 24,
       padding: 0,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 8,
-      elevation: 4,
+      
     },
     chartCard: {
-      backgroundColor: "#f8fafd",
+      backgroundColor: colors.background.secondary,
       borderRadius: 16,
       padding: 8,
       marginTop: 12,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 2,
+     
     },
     timeRangeContainerModern: {
       flexDirection: "row",
@@ -253,11 +234,6 @@ function makeStyles(colors: any) {
       borderRadius: 32,
       alignItems: "center",
       justifyContent: "center",
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.18,
-      shadowRadius: 8,
-      elevation: 8,
       zIndex: 10,
     },
     addButtonGradient: {
@@ -268,7 +244,7 @@ function makeStyles(colors: any) {
       justifyContent: "center",
     },
     accountHeader: {
-      paddingTop: 25,
+      paddingTop: 15,
       paddingBottom: 15,
       paddingHorizontal: 20,
       borderRadius: 20,

@@ -4,11 +4,9 @@ import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Example API: https://wger.de/api/v2/exercise/?language=2&limit=12
-const EXERCISE_API = "https://wger.de/api/v2/exercise/?language=2&limit=12";
 
-const WGER_API_KEY = "80bc903807f18feaa01a20bebca23440b3b412dd";
 
-const RAPIDAPI_KEY = "1da1935727msh9875fdefa3e542p16676djsn53ef7394e79a";
+const RAPIDAPI_KEY = "1da1935727msh98758fdefa3e542p16676djsn53ef7394e79a";
 const RAPIDAPI_HOST = "exercisedb.p.rapidapi.com";
 
 const fetchExercises = async (query : string ) => {
@@ -38,7 +36,7 @@ type Exercise = {
   gifUrl?: string;
 };
 
-function makeStyles(colors) {
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,

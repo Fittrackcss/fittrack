@@ -27,7 +27,7 @@ import NotificationDrawer from "@/components/ui/NotificationDrawer";
 import { dummyNotifications } from "@/components/ui/NotificationDrawer";
 
 
-function makeStyles(colors) {
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -110,16 +110,7 @@ function makeStyles(colors) {
       alignItems: "flex-start",
       padding: 10,
       borderRadius: 15,
-      backgroundColor: "#fff",
-      // Shadow properties
-      shadowColor: "#7F9497",
-      shadowOffset: {
-        width: 0,
-        height: -1, // Negative value to put shadow above the tab
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 5,
+      backgroundColor: colors.background.card, // theme support
     },
     textContainer: {
       marginBottom: 15,
@@ -140,13 +131,13 @@ function makeStyles(colors) {
       width: "50%",
     },
     button: {
-      backgroundColor: colors.secondary,
+      backgroundColor: colors.secondary, // theme support
       padding: 8,
       borderRadius: 15,
       alignItems: "center",
     },
     buttonText: {
-      color: colors.primary,
+      color: colors.primary, // theme support
       fontSize: 14,
       fontWeight: "semibold",
     },
@@ -159,26 +150,22 @@ function makeStyles(colors) {
       flexDirection: "row",
     },
     card: {
-      backgroundColor: "#fff",
+      backgroundColor: colors.background.card, // theme support
       borderRadius: 12,
       width: "50%",
       display: "flex",
       padding: 16,
       marginBottom: 12,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 3,
     },
     cardTitle: {
       fontSize: 18,
       fontWeight: "bold",
       marginBottom: 8,
+      color: colors.primary, // theme support
     },
     cardSubtitle: {
       fontSize: 14,
-      color: "#666",
+      color: colors.text.secondary, // theme support
     },
     exerciseStats: {
       flexDirection: "column",
@@ -201,13 +188,6 @@ function makeStyles(colors) {
       borderRadius: 12,
       padding: 20,
       width: "100%",
-      shadowColor: "#7F9497",
-      shadowOffset: {
-        width: 0,
-        height: -2,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
       elevation: 6,
     },
     macroShadowContainer: {
@@ -270,12 +250,6 @@ function makeStyles(colors) {
       paddingBottom: 4,
       paddingHorizontal: 20,
       backgroundColor: colors.background.card,
-
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 4,
       zIndex: 10,
     },
     headerTitle: {
@@ -418,7 +392,15 @@ export default function DashboardScreen() {
             return (
               <View key={entry.id} style={{ flex: 1, alignItems: 'center' }}>
                 <View style={{ width: '60%', height: '100%', justifyContent: 'flex-end' }}>
-                  <View style={{ width: '100%', height: `${Math.max(5, heightPercentage)}%`, backgroundColor: colors.primary, borderTopLeftRadius: 4, borderTopRightRadius: 4 }} />
+                  <View
+                    style={{
+                      width: '100%',
+                      height: `${Math.max(5, heightPercentage)}%`,
+                      backgroundColor: colors.primary,
+                      borderTopLeftRadius: 4,
+                      borderTopRightRadius: 4,
+                    }}
+                  />
                 </View>
                 <Text style={{ fontSize: 12, color: colors.text.secondary, marginTop: 4 }}>{dateLabel}</Text>
               </View>
@@ -553,7 +535,11 @@ export default function DashboardScreen() {
               </View>
 
               <View
-                style={[styles.shadowContainer, styles.macroShadowContainer]}
+                style={[
+                  styles.shadowContainer,
+                  styles.macroShadowContainer,
+                  { backgroundColor: colors.background.card }, // <-- theme support
+                ]}
               >
                 <View style={styles.macroContainer}>
                   {/* Circular Macro Display */}
@@ -566,6 +552,7 @@ export default function DashboardScreen() {
                           borderRightColor: macros.carbs.color,
                           borderBottomColor: macros.fat.color,
                           borderLeftColor: "transparent",
+                          backgroundColor: colors.background.main, // <-- theme support
                           transform: [
                             {
                               rotate: `${calculateAngle(
@@ -577,8 +564,11 @@ export default function DashboardScreen() {
                         },
                       ]}
                     >
-                      <View style={styles.innerCircle}>
-                        <Text style={styles.macroTitle}>Macros</Text>
+                      <View style={[
+                        styles.innerCircle,
+                        { backgroundColor: colors.background.card } // <-- theme support
+                      ]}>
+                        <Text style={[styles.macroTitle, { color: colors.text.primary }]}>Macros</Text>
                       </View>
                     </View>
                   </View>
@@ -620,10 +610,8 @@ export default function DashboardScreen() {
         {/* Original dashboard content restored */}
         <View style={styles.containerText}>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>Choose your next habit</Text>
-            <Text style={styles.subtitle}>
-              Big goals start with small habits.
-            </Text>
+            <Text style={[styles.title, { color: colors.text.primary }]}>Choose your next habit</Text>
+            <Text style={[styles.subtitle, { color: colors.text.secondary }]}>Big goals start with small habits.</Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button}>
@@ -638,14 +626,14 @@ export default function DashboardScreen() {
           <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/sync')}>
             <Text style={styles.cardTitle}>Steps</Text>
             <View style={{ flexDirection: "row" }}>
-              <MaterialCommunityIcons name="run" size={30} color={"blue"} />
+              <MaterialCommunityIcons name="run" size={30} color={colors.primary} />
               <View style={{ marginLeft: 4, width: "50%" }}>
                 <Text style={styles.cardSubtitle}>Connect to track steps.</Text>
               </View>
               <MaterialCommunityIcons
                 name="chevron-right"
                 size={30}
-                color={"black"}
+                color={colors.text.primary}
               />
             </View>
           </TouchableOpacity>
@@ -656,7 +644,7 @@ export default function DashboardScreen() {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text style={styles.cardTitle}>Exercise</Text>
-              <MaterialCommunityIcons name="plus" size={24} color={"black"} />
+              <MaterialCommunityIcons name="plus" size={24} color={colors.primary} />
             </View>
             <View style={styles.exerciseStats}>
               <View style={styles.statItem}>
@@ -679,13 +667,27 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </View>
 
-        <Text style={{ fontWeight: "bold", fontSize: 23, margin: 20 }}>
-          {" "}
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 23,
+            margin: 20,
+            color: colors.text.primary,
+          }}
+        >
           Weight Progress
         </Text>
 
         {/* Weight Progress Chart - just before DiscoverCards, with modern shadow */}
-        <View style={{ marginHorizontal: 20, marginTop: 24, backgroundColor: '#fff', borderRadius: 18, shadowColor: '#7F9497', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.12, shadowRadius: 12, elevation: 8, padding: 16 }}>
+        <View
+          style={{
+            marginHorizontal: 20,
+            marginTop: 24,
+            backgroundColor: colors.background.card,
+            borderRadius: 18,
+            padding: 16,
+          }}
+        >
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
             <Text style={{ fontWeight: 'bold', fontSize: 18, color: colors.primary, marginRight: 16 }}></Text>
             <TouchableOpacity onPress={() => setWeightRange('week')} style={{ marginRight: 30 }}>
@@ -702,8 +704,14 @@ export default function DashboardScreen() {
         </View>
 
         {/* Discover Cards */}
-        <Text style={{ fontWeight: "bold", fontSize: 23, margin: 20 }}>
-          {" "}
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 23,
+            margin: 20,
+            color: colors.text.primary,
+          }}
+        >
           Discover
         </Text>
         <DiscoverCards />

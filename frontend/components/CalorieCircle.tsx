@@ -1,4 +1,4 @@
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,6 +16,9 @@ export const CalorieCircle = ({
   size = 200,
   exerciseBurned = 0,
 }: CalorieCircleProps) => {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
+
   // Calculate net calories after accounting for exercise
   const netCalories = Math.max(0, consumed - exerciseBurned);
   const percentage = Math.min(100, (netCalories / goal) * 100);
@@ -34,7 +37,7 @@ export const CalorieCircle = ({
       <View
         style={{ flexDirection: "column", display: "flex", marginBottom: 20 }}
       >
-        <Text style={{ fontWeight: "bold", fontSize: 24 }}>Calories</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 24, color: colors.text.primary }}>Calories</Text>
         <Text style={{ color: colors.text.muted }}>
           {remaining > 0
             ? `${remaining} remaining`
@@ -111,96 +114,92 @@ export const CalorieCircle = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    padding: 10,
-    borderRadius: 15,
-    shadowColor: "#7F9497",
-    shadowOffset: {
-      width: 0,
-      height: 2,
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: 10,
+      borderRadius: 15,
+      elevation: 5,
+      backgroundColor: colors.background.card,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    backgroundColor: "#fff",
-  },
-  inside: {
-    backgroundColor: "white",
-    width: "90%",
-    height: "90%",
-    borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  backgroundCircle: {
-    width: "45%",
-    height: "80%",
-    borderRadius: 999,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    position: "relative",
-  },
-  progressCircleContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  progressCircle: {
-    position: "absolute",
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "transparent",
-  },
-  textContainer: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  remainingText: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: colors.text.primary,
-  },
-  remainingLabel: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginTop: -4,
-  },
-  divider: {
-    width: 30,
-    height: 1,
-    backgroundColor: colors.divider,
-    marginVertical: 8,
-  },
-  goalContainer: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    gap: 5,
-  },
-  goalLabel: {
-    fontSize: 13,
-    color: colors.text.secondary,
-    marginLeft: 10,
-  },
-  goalValue: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.text.muted,
-    textAlign: "left",
-  },
-  holder: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "flex-start",
-  },
-});
+    inside: {
+      backgroundColor: colors.background.card,
+      width: "90%",
+      height: "90%",
+      borderRadius: 999,
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+    },
+    backgroundCircle: {
+      width: "45%",
+      height: "80%",
+      borderRadius: 999,
+      backgroundColor: colors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+    },
+    progressCircleContainer: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    progressCircle: {
+      position: "absolute",
+      borderLeftColor: "transparent",
+      borderRightColor: "transparent",
+      borderBottomColor: "transparent",
+    },
+    textContainer: {
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    remainingText: {
+      fontSize: 32,
+      fontWeight: "bold",
+      color: colors.text.primary,
+    },
+    remainingLabel: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      marginTop: -4,
+    },
+    divider: {
+      width: 30,
+      height: 1,
+      backgroundColor: colors.divider,
+      marginVertical: 8,
+    },
+    goalContainer: {
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: 5,
+    },
+    goalLabel: {
+      fontSize: 13,
+      color: colors.text.secondary,
+      marginLeft: 10,
+    },
+    goalValue: {
+      fontSize: 12,
+      fontWeight: "600",
+      color: colors.text.muted,
+      textAlign: "left",
+    },
+    holder: {
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "flex-start",
+    },
+  });
+}
+
 export default CalorieCircle;
