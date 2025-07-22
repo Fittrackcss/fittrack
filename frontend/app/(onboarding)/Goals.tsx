@@ -1,5 +1,6 @@
 import CustomModal from "@/components/ui/CustomModal";
-import { colors } from "@/constants/Colors";
+// import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -27,21 +28,24 @@ const GoalItem = React.memo(
     item,
     isChecked,
     onToggle,
+    colors,
   }: {
     item: { id: string; name: string };
     isChecked: boolean;
     onToggle: (id: string) => void;
+    colors: any;
   }) => (
     <View
       style={[
         styles.item,
+        { backgroundColor: colors.secondary },
         isChecked && {
           borderWidth: 1.5,
           borderColor: colors.primary,
         },
       ]}
     >
-      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={[styles.itemName, { color: colors.text.secondary }]}>{item.name}</Text>
       <TouchableOpacity
         onPress={() => onToggle(item.id)}
         style={{
@@ -53,24 +57,18 @@ const GoalItem = React.memo(
         <View
           style={[
             styles.checked,
-            isChecked && {
-              backgroundColor: "white",
+            {
+              backgroundColor: isChecked ? colors.background.card : colors.background.main,
+              borderColor: colors.primary,
             },
           ]}
         >
           {isChecked && (
-            <Text
-              style={{
-                color: "black",
-                fontWeight: "bold",
-              }}
-            >
-              <MaterialCommunityIcons
-                name="checkbox-marked"
-                size={20}
-                color={colors.primary}
-              />
-            </Text>
+            <MaterialCommunityIcons
+              name="checkbox-marked"
+              size={20}
+              color={colors.primary}
+            />
           )}
         </View>
       </TouchableOpacity>
@@ -82,6 +80,7 @@ const Goals = () => {
   const { toggleSelection, getSelections } = useOnboardingStore();
   const selectedGoals = getSelections("goals-screen");
   const [showModal, setShowModal] = useState(false);
+  const { colors } = useTheme();
 
   const handleToggle = (id: string) => {
     if (!selectedGoals.includes(id) && selectedGoals.length >= 3) {
@@ -92,7 +91,7 @@ const Goals = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background.main }]}>
       <FlatList
         data={data}
         showsVerticalScrollIndicator={false}
@@ -101,6 +100,7 @@ const Goals = () => {
             item={item}
             isChecked={selectedGoals.includes(item.id)}
             onToggle={handleToggle}
+            colors={colors}
           />
         )}
       />
@@ -120,14 +120,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
     height: 70,
     width: "100%",
-    backgroundColor: colors.secondary,
     marginBottom: 10,
     padding: 20,
     borderRadius: 15,
@@ -137,15 +135,12 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 4,
     borderWidth: 2,
-    backgroundColor: "white",
-    borderColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
   },
   itemName: {
     flex: 1,
     fontSize: 16,
-    color: colors.text.secondary,
     fontWeight: "700",
   },
 });

@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { onboardingSteps } from "../../constants/finishScreens";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "../../constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -13,26 +13,27 @@ const FinishScreens = () => {
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const router = useRouter();
+  const { colors } = useTheme();
 
   const renderItem = ({ item }: { item: (typeof onboardingSteps)[0] }) => {
     return (
       <View style={[styles.slide, { width }]}>
-        <Text style={styles.title}>{item.header}</Text>
+        <Text style={[styles.title, { color: colors.text.primary }]}>{item.header}</Text>
         {item.customComponent ? (
           <item.customComponent 
             currentIndex={currentIndex}
             onboardingSteps={onboardingSteps}
           />
         ) : (
-          !item.componentExists && <Text style={styles.sub}></Text>
+          !item.componentExists && <Text style={[styles.sub, { color: colors.text.muted }]}></Text>
         )}
 
         {item.footerExists && (
           <View style={styles.footer}>
-            <TouchableOpacity onPress={handlePrev} style={styles.circleButton}>
+            <TouchableOpacity onPress={handlePrev} style={[styles.circleButton, { backgroundColor: colors.button.secondary }]}>
               <Ionicons name="arrow-back" size={24} color={colors.primary} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
+            <TouchableOpacity onPress={handleNext} style={[styles.nextButton, { backgroundColor: colors.primary }]}>
               <Text style={styles.nextText}>
                 {currentIndex + 1 === onboardingSteps.length ? "Finish" : "Next"}
               </Text>
@@ -68,7 +69,7 @@ const FinishScreens = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.main }]}>
       <FlatList
         ref={flatListRef}
         data={onboardingSteps}
@@ -106,7 +107,6 @@ const FinishScreens = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   slide: {
     flex: 1,
@@ -118,11 +118,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "600",
-    color: colors.text.primary,
   },
   sub: {
     fontSize: 13,
-    color: colors.text.muted,
     marginTop: 5,
   },
   paginationItem: {
@@ -134,7 +132,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   paginationItemActive: {
-    backgroundColor: colors.primary,
   },
   paginationWrapper: {
     flexDirection: "row",
@@ -155,14 +152,12 @@ const styles = StyleSheet.create({
     width: 50,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.button.secondary,
     borderRadius: 50,
     padding: 10,
   },
   nextButton: {
     flex: 1,
     marginLeft: 20,
-    backgroundColor: colors.primary,
     paddingVertical: 14,
     borderRadius: 30,
     alignItems: "center",

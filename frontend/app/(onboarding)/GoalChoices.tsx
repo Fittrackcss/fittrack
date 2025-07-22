@@ -1,5 +1,5 @@
 import CustomModal from "@/components/ui/CustomModal";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
 import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -24,21 +24,24 @@ const GoalItem = React.memo(
     item,
     isChecked,
     onToggle,
+    colors,
   }: {
     item: { id: string; name: string };
     isChecked: boolean;
     onToggle: (id: string) => void;
+    colors: any;
   }) => (
     <View
       style={[
         styles.item,
+        { backgroundColor: colors.secondary },
         isChecked && {
           borderWidth: 1.5,
           borderColor: colors.primary,
         },
       ]}
     >
-      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={[styles.itemName, { color: colors.text.secondary }]}>{item.name}</Text>
       <TouchableOpacity
         onPress={() => onToggle(item.id)}
         style={{
@@ -48,16 +51,17 @@ const GoalItem = React.memo(
         }}
       >
         <View
-          style={[styles.checked, isChecked && { backgroundColor: "white" }]}
+          style={[
+            styles.checked,
+            { backgroundColor: isChecked ? colors.background.card : colors.background.main, borderColor: colors.accent },
+          ]}
         >
           {isChecked && (
-            <Text style={{ color: "white", fontWeight: "bold" }}>
-              <MaterialCommunityIcons
-                name="checkbox-marked-circle"
-                size={20}
-                color={colors.primary}
-              />
-            </Text>
+            <MaterialCommunityIcons
+              name="checkbox-marked-circle"
+              size={20}
+              color={colors.primary}
+            />
           )}
         </View>
       </TouchableOpacity>
@@ -68,15 +72,16 @@ const GoalItem = React.memo(
 const GoalChoices = () => {
   const { toggleSelection, getSelections } = useOnboardingStore();
   const selected = getSelections("goal-choices-screen");
+  const { colors } = useTheme();
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background.main }}>
       <View style={styles.header}>
-        <Text style={styles.headerText}>Goals</Text>
-        <Text style={styles.headerDesc}>Select your primary fitness goal</Text>
-        <Text style={styles.sub}>Select one</Text>
+        <Text style={[styles.headerText, { color: colors.text.secondary }]}>Goals</Text>
+        <Text style={[styles.headerDesc, { color: colors.text.primary }]}>Select your primary fitness goal</Text>
+        <Text style={[styles.sub, { color: colors.text.muted }]}>Select one</Text>
       </View>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background.main }]}>
         <FlatList
           data={data}
           renderItem={({ item }) => (
@@ -86,6 +91,7 @@ const GoalChoices = () => {
               onToggle={(id) =>
                 toggleSelection("goal-choices-screen", id, "single")
               }
+              colors={colors}
             />
           )}
         />
@@ -113,14 +119,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 0.9,
     padding: 20,
-    backgroundColor: "#fff",
   },
   item: {
     flexDirection: "row",
     alignItems: "center",
     height: 70,
     width: "100%",
-    backgroundColor: colors.secondary,
     marginBottom: 10,
     padding: 20,
     borderRadius: 10,
@@ -130,15 +134,12 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 20,
     borderWidth: 2,
-    backgroundColor: "white",
-    borderColor: colors.accent,
     justifyContent: "center",
     alignItems: "center",
   },
   itemName: {
     flex: 1,
     fontSize: 16,
-    color: colors.text.secondary,
     fontWeight: "700",
   },
   header: {
@@ -152,15 +153,12 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 30,
     fontWeight: "600",
-    color: colors.text.secondary,
   },
   headerDesc: {
     fontSize: 20,
     fontWeight: "700",
-    color: colors.text.primary,
   },
   sub: {
     fontSize: 15,
-    color: colors.text.muted,
   },
 });

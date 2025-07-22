@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 
@@ -33,7 +33,172 @@ const trendingTopics: Topic[] = [
   { id: "3", topic: 'Motivation Monday' },
 ];
 
+function makeStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main,
+      padding: 20,
+    },
+    header: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: colors.primary,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    subheader: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      marginBottom: 20,
+      textAlign: "center",
+    },
+    joinButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+      borderRadius: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignSelf: 'center',
+      marginBottom: 24,
+      shadowColor: '#7F9497',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    joinButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginLeft: 8,
+    },
+    sectionTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.text.primary,
+      marginBottom: 16,
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 40,
+    },
+    loadingText: {
+      marginTop: 12,
+      fontSize: 16,
+      color: colors.text.secondary,
+    },
+    trendingSection: {
+      marginBottom: 24,
+    },
+    trendingTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text.primary,
+      marginBottom: 12,
+    },
+    trendingList: {
+      marginBottom: 8,
+    },
+    topicItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.background.card,
+      borderRadius: 20,
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      marginRight: 12,
+      shadowColor: '#7F9497',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    topicText: {
+      fontSize: 14,
+      color: colors.text.primary,
+      fontWeight: '500',
+    },
+    healthTipCard: {
+      backgroundColor: '#fff',
+      borderRadius: 16,
+      padding: 20,
+      marginBottom: 16,
+      shadowColor: '#7F9497',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 3,
+    },
+    tipHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 12,
+    },
+    tipHeaderText: {
+      marginLeft: 12,
+      flex: 1,
+    },
+    tipTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text.primary,
+      marginBottom: 2,
+    },
+    tipCategory: {
+      fontSize: 12,
+      color: colors.primary,
+      fontWeight: '600',
+      textTransform: 'uppercase',
+    },
+    tipDescription: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      lineHeight: 20,
+      marginBottom: 16,
+    },
+    tipAction: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      alignSelf: 'flex-start',
+    },
+    tipActionText: {
+      fontSize: 14,
+      color: colors.primary,
+      fontWeight: 600,
+      marginRight: 4,
+    },
+    discussButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.accent,
+      borderRadius: 12,
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      alignSelf: 'center',
+      marginTop: 16,
+      marginBottom: 20,
+      shadowColor: '#7F9497',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    discussButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginLeft: 8,
+    },
+  });
+}
+
 const DiscoverCommunity = () => {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const [healthTips, setHealthTips] = useState<HealthTip[]>(mockHealthTips);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -160,166 +325,5 @@ const DiscoverCommunity = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-    padding: 20
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: colors.primary,
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subheader: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  joinButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignSelf: 'center',
-    marginBottom: 24,
-    shadowColor: '#7F9497',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  joinButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: 16,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
-  loadingText: {
-    marginTop: 12,
-    fontSize: 16,
-    color: colors.text.secondary,
-  },
-  trendingSection: {
-    marginBottom: 24,
-  },
-  trendingTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: 12,
-  },
-  trendingList: {
-    marginBottom: 8,
-  },
-  topicItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.background.card,
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    marginRight: 12,
-    shadowColor: '#7F9497',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  topicText: {
-    fontSize: 14,
-    color: colors.text.primary,
-    fontWeight: '500',
-  },
-  healthTipCard: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 16,
-    shadowColor: '#7F9497',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  tipHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  tipHeaderText: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  tipTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: 2,
-  },
-  tipCategory: {
-    fontSize: 12,
-    color: colors.primary,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-  },
-  tipDescription: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    lineHeight: 20,
-    marginBottom: 16,
-  },
-  tipAction: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-  },
-  tipActionText: {
-    fontSize: 14,
-    color: colors.primary,
-    fontWeight: 600,
-    marginRight: 4,
-  },
-  discussButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.accent,
-    borderRadius: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    alignSelf: 'center',
-    marginTop: 16,
-    marginBottom: 20,
-    shadowColor: '#7F9497',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  discussButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-});
 
 export default DiscoverCommunity; 

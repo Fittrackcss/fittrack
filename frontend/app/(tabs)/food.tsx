@@ -12,13 +12,14 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useFoodStore } from "@/store/foodStore";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 
 const foodstore = () => {
   const router = useRouter();
   const params = useLocalSearchParams();
   const [quantity, setQuantity] = useState("1");
   const { foods, addFood, removeFood } = useFoodStore();
+  const { colors } = useTheme();
 
   // Get food data from navigation if coming from search
   const incomingFood = params.foodData ? JSON.parse(params.foodData) : null;
@@ -44,11 +45,11 @@ const foodstore = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.main }]}>
       {incomingFood ? (
         // Add new food view
         <View style={styles.addContainer}>
-          <Text style={styles.title}>Add {incomingFood.name}</Text>
+          <Text style={[styles.title, { color: colors.accent }]}>Add {incomingFood.name}</Text>
 
           {incomingFood.image && (
             <Image
@@ -102,7 +103,7 @@ const foodstore = () => {
               alignItems: "flex-start",
             }}
           >
-            <Text style={styles.title}>Your Food Log</Text>
+            <Text style={[styles.title, { color: colors.accent }]}>Your Food Log</Text>
           </View>
 
           {foods.length === 0 ? (
@@ -112,7 +113,7 @@ const foodstore = () => {
               data={foods}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
-                <View style={styles.foodItem}>
+                <View style={[styles.foodItem, { backgroundColor: colors.background.card }]}>
                   {item.image && (
                     <Image
                       source={{ uri: item.image }}
@@ -121,7 +122,7 @@ const foodstore = () => {
                     />
                   )}
                   <View style={styles.foodDetails}>
-                    <Text style={styles.foodName}>{item.name}</Text>
+                    <Text style={[styles.foodName, { color: colors.primary }]}>{item.name}</Text>
                     <Text style={{ color: colors.text.muted }}>
                       Quantity: {item.quantity}
                     </Text>
@@ -152,7 +153,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#fff",
   },
   addContainer: {
     marginBottom: 20,
@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: colors.accent,
   },
   inputGroup: {
     marginBottom: 15,
@@ -184,7 +183,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 15,
-    backgroundColor: "#f9f9f9",
     marginVertical: 20,
     borderRadius: 10,
   },
@@ -195,7 +193,6 @@ const styles = StyleSheet.create({
   foodName: {
     fontWeight: "bold",
     fontSize: 16,
-    color: colors.primary,
   },
   foodImage: {
     width: 50,

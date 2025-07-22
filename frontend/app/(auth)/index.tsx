@@ -1,11 +1,55 @@
 import { Button } from "../../components/ui/Button";
-import { colors } from "@/constants/Colors";
 import { useUserStore } from "@/store/userStore";
 import { Redirect, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useTheme } from "@/constants/ThemeContext";
+
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 24,
+      justifyContent: "space-between",
+      backgroundColor: colors.background.main,
+    },
+    logoContainer: {
+      alignItems: "center",
+      marginTop: 60,
+    },
+    logoText: {
+      fontSize: 36,
+      fontWeight: "bold",
+      color: colors.primary,
+    },
+    contentContainer: {
+      alignItems: "center",
+    },
+    title: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: colors.text.primary,
+      textAlign: "center",
+      marginBottom: 16,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      textAlign: "center",
+      lineHeight: 24,
+    },
+    buttonContainer: {
+      marginBottom: 40,
+    },
+    button: {
+      marginBottom: 16,
+    },
+  });
+}
 
 export default function WelcomeScreen() {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const router = useRouter();
   const { isAuthenticated } = useUserStore();
 
@@ -43,42 +87,3 @@ export default function WelcomeScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    justifyContent: "space-between",
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginTop: 60,
-  },
-  logoText: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: colors.primary,
-  },
-  contentContainer: {
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: colors.text.primary,
-    textAlign: "center",
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    textAlign: "center",
-    lineHeight: 24,
-  },
-  buttonContainer: {
-    marginBottom: 40,
-  },
-  button: {
-    marginBottom: 16,
-  },
-});

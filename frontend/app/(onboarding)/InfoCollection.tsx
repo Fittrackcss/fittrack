@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
@@ -27,6 +27,7 @@ const InfoCollection = () => {
   } = useOnboardingStore();
   const selectedSex = getSelectedSex();
   const [showCountryModal, setShowCountryModal] = useState(false);
+  const { colors } = useTheme();
 
   const countries = [
     "United States",
@@ -75,10 +76,10 @@ const InfoCollection = () => {
   const selected = getSelections("info-collection-screen");
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.main }]}>
       <View style={styles.section}>
-        <Text style={styles.sub}>Tell us a little bit about yourself</Text>
-        <Text style={styles.label}>
+        <Text style={[styles.sub, { color: colors.text.primary }]}>Tell us a little bit about yourself</Text>
+        <Text style={[styles.label, { color: colors.text.primary }]}>
           Please select which sex we should use to calculate your calorie needs:
         </Text>
 
@@ -86,44 +87,49 @@ const InfoCollection = () => {
           <TouchableOpacity
             style={[
               styles.sexOption,
-              selectedSex === "male" && styles.sexOptionSelected,
+              { backgroundColor: colors.background.secondary, borderColor: colors.border },
+              selectedSex === "male" && { borderColor: colors.primary, borderWidth: 2 },
             ]}
             onPress={() => handleSexSelection("male")}
           >
-            <View style={styles.radio}>
-              {selectedSex === "male" && <View style={styles.radioSelected} />}
+            <View style={[styles.radio, { borderColor: colors.primary }]}>
+              {selectedSex === "male" && <View style={[styles.radioSelected, { backgroundColor: colors.primary }]} />}
             </View>
-            <Text style={styles.optionText}>Male</Text>
+            <Text style={[styles.optionText, { color: colors.text.primary }]}>Male</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[
               styles.sexOption,
-              selectedSex === "female" && styles.sexOptionSelected,
+              { backgroundColor: colors.background.secondary, borderColor: colors.border },
+              selectedSex === "female" && { borderColor: colors.primary, borderWidth: 2 },
             ]}
             onPress={() => handleSexSelection("female")}
           >
-            <View style={styles.radio}>
+            <View style={[styles.radio, { borderColor: colors.primary }]}>
               {selectedSex === "female" && (
-                <View style={styles.radioSelected} />
+                <View style={[styles.radioSelected, { backgroundColor: colors.primary }]} />
               )}
             </View>
-            <Text style={styles.optionText}>Female</Text>
+            <Text style={[styles.optionText, { color: colors.text.primary }]}>Female</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.hintContainer}>
-          <View style={styles.hintIcon}>
-            <Text style={styles.hintIconText}>i</Text>
+          <View style={[styles.hintIcon, { backgroundColor: colors.text.muted }]}>
+            <Text style={[styles.hintIconText, { color: colors.background.main }]}>i</Text>
           </View>
-          <Text style={styles.hint}>Which one should I choose?</Text>
+          <Text style={[styles.hint, { color: colors.text.muted }]}>Which one should I choose?</Text>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>How old are you?</Text>
+        <Text style={[styles.label, { color: colors.text.primary }]}>How old are you?</Text>
         <TextInput
-          style={styles.input}
+          style={[
+            styles.input,
+            { backgroundColor: colors.background.main, color: colors.text.primary, borderColor: colors.border, borderWidth: 2, }
+          ]}
           value={formData.age || ""}
           onChangeText={handleAgeChange}
           keyboardType="numeric"
@@ -133,21 +139,24 @@ const InfoCollection = () => {
           selectionColor={`${colors.primary}50`}
         />
 
-        <Text style={styles.hint}>
+        <Text style={[styles.hint, { color: colors.text.muted }]}>
           We need sex at birth and age to calculate an accurate goal for you.
         </Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Where do you live?</Text>
+        <Text style={[styles.label, { color: colors.text.primary }]}>Where do you live?</Text>
         <TouchableOpacity
-          style={styles.countryInput}
+          style={[
+            styles.countryInput,
+            { backgroundColor: colors.background.main, color: colors.text.primary, borderColor: colors.border, borderWidth: 2 }
+          ]}
           onPress={() => setShowCountryModal(true)}
         >
           <Text
             style={[
               styles.countryText,
-              !formData.country && { color: colors.text.muted },
+              { color: formData.country ? colors.text.primary : colors.text.muted },
             ]}
           >
             {formData.country || "Select country"}
@@ -167,9 +176,9 @@ const InfoCollection = () => {
         onRequestClose={() => setShowCountryModal(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+          <View style={[styles.modalContent, { backgroundColor: colors.background.main }]}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Country</Text>
+              <Text style={[styles.modalTitle, { color: colors.text.primary }]}>Select Country</Text>
               <Pressable onPress={() => setShowCountryModal(false)}>
                 <MaterialCommunityIcons
                   name="close"
@@ -185,11 +194,11 @@ const InfoCollection = () => {
                   style={[
                     styles.countryModalItem,
                     formData.country === countryName &&
-                      styles.countryModalItemSelected,
+                      [styles.countryModalItemSelected, { backgroundColor: colors.background.main }],
                   ]}
                   onPress={() => handleCountryChange(countryName)}
                 >
-                  <Text style={styles.countryModalItemText}>{countryName}</Text>
+                  <Text style={[styles.countryModalItemText, { color: colors.text.primary }]}>{countryName}</Text>
                   {formData.country === countryName && (
                     <MaterialCommunityIcons
                       name="check"
@@ -213,14 +222,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignContent: "center",
     // paddingTop: 50,
-    backgroundColor: colors.background.main,
   },
   backButton: {
     width: 40,
     height: 40,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: colors.button.secondary,
     borderRadius: 20,
     marginBottom: 20,
   },
@@ -229,13 +236,11 @@ const styles = StyleSheet.create({
   },
   sub: {
     fontSize: 20,
-    color: colors.text.primary,
     marginBottom: 20,
   },
   label: {
     fontSize: 15,
     marginBottom: 5,
-    color: colors.text.primary,
     fontWeight: "600",
   },
   sexOptionsContainer: {
@@ -249,20 +254,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     borderRadius: 10,
-    backgroundColor: colors.background.secondary,
-    borderWidth: 1,
-    borderColor: colors.border,
   },
   sexOptionSelected: {
-    borderWidth: 2,
-    borderColor: colors.primary,
   },
   radio: {
     width: 20,
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: colors.primary,
     marginRight: 10,
     padding: 1.5,
     alignItems: "center",
@@ -271,11 +270,9 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    backgroundColor: colors.primary,
   },
   optionText: {
     fontSize: 16,
-    color: colors.text.primary,
     fontWeight: "500",
   },
   hintContainer: {
@@ -287,47 +284,35 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: colors.text.muted,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 8,
   },
   hintIconText: {
-    color: colors.background.main,
     fontSize: 12,
     fontWeight: "bold",
   },
   hint: {
     fontSize: 12,
-    color: colors.text.muted,
   },
   input: {
     height: 50,
-    borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: 10,
     padding: 10,
     fontSize: 16,
     marginBottom: 10,
-    backgroundColor: colors.background.main,
-    color: colors.text.primary,
   },
   countryInput: {
     height: 50,
-    borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: 10,
     padding: 10,
     fontSize: 16,
-    backgroundColor: colors.background.main,
-    color: colors.text.primary,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   countryText: {
     fontSize: 16,
-    color: colors.text.primary,
   },
   modalContainer: {
     flex: 1,
@@ -335,7 +320,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    backgroundColor: colors.background.main,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     maxHeight: "60%",
@@ -345,13 +329,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colors.text.primary,
   },
   modalScrollView: {
     paddingHorizontal: 16,
@@ -359,17 +340,14 @@ const styles = StyleSheet.create({
   countryModalItem: {
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   countryModalItemSelected: {
-    backgroundColor: colors.background.main,
   },
   countryModalItemText: {
     fontSize: 16,
-    color: colors.text.primary,
   },
 });
 

@@ -1,4 +1,4 @@
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useProgressStore } from "@/store/progressStore";
 import { useUserStore } from "@/store/userStore";
 import { WeightEntry } from "@/types";
@@ -16,7 +16,288 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main,
+      paddingHorizontal: 10,
+    },
+    header: {
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+      marginTop: 20,
+    },
+    title: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: colors.text.primary,
+      marginBottom: 16,
+    },
+    currentWeightContainer: {
+      marginBottom: 16,
+    },
+    currentWeightLabel: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      marginBottom: 4,
+    },
+    currentWeightValue: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: colors.text.primary,
+    },
+    goalText: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      marginTop: 4,
+    },
+    changeContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    changeLabel: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    },
+    changeValue: {
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    timeRangeContainer: {
+      flexDirection: "row",
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+    },
+    timeRangeButton: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      borderRadius: 20,
+      marginRight: 8,
+    },
+    activeTimeRangeButton: {
+      backgroundColor: colors.primary,
+    },
+    timeRangeText: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    },
+    activeTimeRangeText: {
+      color: "#fff",
+      fontWeight: "600",
+    },
+    chartContainer: {
+      flexDirection: "row",
+      height: 200,
+      padding: 16,
+      paddingTop: 24,
+    },
+    chartYAxis: {
+      width: 40,
+      height: "100%",
+      justifyContent: "space-between",
+      alignItems: "flex-end",
+      paddingRight: 8,
+    },
+    chartYLabel: {
+      fontSize: 12,
+      color: colors.text.secondary,
+    },
+    chartContent: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "flex-end",
+      height: "100%",
+      paddingBottom: 20,
+    },
+    chartBarContainer: {
+      flex: 1,
+      alignItems: "center",
+    },
+    chartBarWrapper: {
+      width: "60%",
+      height: "100%",
+      justifyContent: "flex-end",
+    },
+    chartBar: {
+      width: "100%",
+      backgroundColor: colors.primary,
+      borderTopLeftRadius: 4,
+      borderTopRightRadius: 4,
+    },
+    chartXLabel: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      marginTop: 4,
+    },
+    emptyChartContainer: {
+      height: 200,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 16,
+    },
+    emptyChartText: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      marginBottom: 16,
+    },
+    addWeightButton: {
+      paddingVertical: 8,
+      paddingHorizontal: 16,
+      backgroundColor: colors.primary,
+      borderRadius: 8,
+    },
+    addWeightButtonText: {
+      fontSize: 14,
+      fontWeight: "600",
+      color: "#fff",
+    },
+    addButton: {
+      position: "absolute",
+      bottom: 24,
+      right: 24,
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: colors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
+      elevation: 4,
+    },
+
+    gradientHeader: {
+      paddingTop: 10,
+      paddingBottom: 24,
+      paddingHorizontal: 24,
+      borderRadius: 15,
+
+      elevation: 6,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.12,
+      shadowRadius: 12,
+    },
+    headerRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 5,
+    },
+    gradientHeaderTitle: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: "#fff",
+      letterSpacing: 1,
+    },
+    card: {
+      backgroundColor: "#fff",
+      borderRadius: 20,
+      marginHorizontal: 16,
+      marginTop: 24,
+      padding: 0,
+      shadowColor: "#7F9497",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    chartCard: {
+      backgroundColor: "#f8fafd",
+      borderRadius: 16,
+      padding: 8,
+      marginTop: 12,
+      shadowColor: "#7F9497",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    timeRangeContainerModern: {
+      flexDirection: "row",
+      justifyContent: "center",
+      marginTop: 8,
+      marginBottom: 0,
+      gap: 8,
+    },
+    timeRangeButtonModern: {
+      paddingVertical: 8,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+      backgroundColor: "#f0f2f5",
+      marginHorizontal: 2,
+    },
+    activeTimeRangeButtonModern: {
+      backgroundColor: colors.primary,
+    },
+    timeRangeTextModern: {
+      fontSize: 15,
+      color: colors.text.secondary,
+      fontWeight: "500",
+    },
+    activeTimeRangeTextModern: {
+      color: "#fff",
+      fontWeight: "700",
+    },
+    addButtonModern: {
+      position: "absolute",
+      bottom: 36,
+      right: 28,
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.18,
+      shadowRadius: 8,
+      elevation: 8,
+      zIndex: 10,
+    },
+    addButtonGradient: {
+      width: 64,
+      height: 64,
+      borderRadius: 32,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    accountHeader: {
+      paddingTop: 25,
+      paddingBottom: 15,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    accountBackButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    accountHeaderTitle: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#fff",
+    },
+    accountPlaceholder: {
+      width: 40,
+    },
+  });
+}
+
 export default function ProgressScreen() {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const router = useRouter();
   const { user } = useUserStore();
   const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } =
@@ -247,280 +528,3 @@ export default function ProgressScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-    paddingHorizontal: 10,
-  },
-  header: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: colors.text.primary,
-    marginBottom: 16,
-  },
-  currentWeightContainer: {
-    marginBottom: 16,
-  },
-  currentWeightLabel: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginBottom: 4,
-  },
-  currentWeightValue: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: colors.text.primary,
-  },
-  goalText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginTop: 4,
-  },
-  changeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  changeLabel: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  changeValue: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  timeRangeContainer: {
-    flexDirection: "row",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-  },
-  timeRangeButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    marginRight: 8,
-  },
-  activeTimeRangeButton: {
-    backgroundColor: colors.primary,
-  },
-  timeRangeText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  activeTimeRangeText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  chartContainer: {
-    flexDirection: "row",
-    height: 200,
-    padding: 16,
-    paddingTop: 24,
-  },
-  chartYAxis: {
-    width: 40,
-    height: "100%",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    paddingRight: 8,
-  },
-  chartYLabel: {
-    fontSize: 12,
-    color: colors.text.secondary,
-  },
-  chartContent: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-end",
-    height: "100%",
-    paddingBottom: 20,
-  },
-  chartBarContainer: {
-    flex: 1,
-    alignItems: "center",
-  },
-  chartBarWrapper: {
-    width: "60%",
-    height: "100%",
-    justifyContent: "flex-end",
-  },
-  chartBar: {
-    width: "100%",
-    backgroundColor: colors.primary,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-  },
-  chartXLabel: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    marginTop: 4,
-  },
-  emptyChartContainer: {
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  emptyChartText: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    marginBottom: 16,
-  },
-  addWeightButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-  },
-  addWeightButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: "#fff",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 24,
-    right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-
-  gradientHeader: {
-    paddingTop: 10,
-    paddingBottom: 24,
-    paddingHorizontal: 24,
-    borderRadius: 15,
-
-    elevation: 6,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-  },
-  headerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 5,
-  },
-  gradientHeaderTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#fff",
-    letterSpacing: 1,
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 20,
-    marginHorizontal: 16,
-    marginTop: 24,
-    padding: 0,
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  chartCard: {
-    backgroundColor: "#f8fafd",
-    borderRadius: 16,
-    padding: 8,
-    marginTop: 12,
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  timeRangeContainerModern: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 8,
-    marginBottom: 0,
-    gap: 8,
-  },
-  timeRangeButtonModern: {
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    backgroundColor: "#f0f2f5",
-    marginHorizontal: 2,
-  },
-  activeTimeRangeButtonModern: {
-    backgroundColor: colors.primary,
-  },
-  timeRangeTextModern: {
-    fontSize: 15,
-    color: colors.text.secondary,
-    fontWeight: "500",
-  },
-  activeTimeRangeTextModern: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-  addButtonModern: {
-    position: "absolute",
-    bottom: 36,
-    right: 28,
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.18,
-    shadowRadius: 8,
-    elevation: 8,
-    zIndex: 10,
-  },
-  addButtonGradient: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  accountHeader: {
-    paddingTop: 25,
-    paddingBottom: 15,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  accountBackButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  accountHeaderTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  accountPlaceholder: {
-    width: 40,
-  },
-});

@@ -2,7 +2,7 @@ import { CalorieCircle } from "@/components/CalorieCircle";
 import { DateSelector } from "@/components/DateSelector";
 import { ExerciseCard } from "@/components/ExerciseCard";
 import { MealCard } from "@/components/MealCard";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useNutritionStore } from "@/store/nutritionStore";
 import { useUserStore } from "@/store/userStore";
@@ -26,7 +26,308 @@ import { WeightEntry } from "@/types";
 import NotificationDrawer from "@/components/ui/NotificationDrawer";
 import { dummyNotifications } from "@/components/ui/NotificationDrawer";
 
+
+function makeStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main, // ✅ Now colors is in scope
+    },
+    scrollView: {
+      flex: 1,
+    },
+    imageContainer: {
+      marginTop: 10,
+      borderRadius: 50,
+      overflow: "hidden",
+      width: 40,
+      height: 40,
+    },
+    heading: {
+      color: colors.primary,
+      fontSize: 25,
+      fontWeight: "900",
+    },
+    img: {
+      height: 50,
+      width: 50,
+      borderRadius: 800,
+    },
+    tabcontent: {
+      display: "flex",
+      marginTop: 30,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignContent: "center",
+    },
+    scrollContent: {
+      marginTop: 0,
+      paddingBottom: 0,
+      // Equal to tab height to prevent content from being hidden
+    },
+    tab: {
+      position: "absolute",
+      bottom: 0,
+      marginBottom: 0,
+      left: 0,
+      right: 0,
+      height: 100,
+      backgroundColor: "white",
+
+
+      // Optional styling
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+      padding: 16,
+    },
+    summaryContainer: {
+      alignItems: "center",
+    },
+    macrosContainer: {
+      width: "100%",
+    },
+    mealsContainer: {
+      padding: 16,
+    },
+    spacer: {
+      height: 40,
+    },
+    wrapper: {
+      height: 400,
+    },
+    slide: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 16,
+    },
+    containerText: {
+      width: "95%",
+      height: "auto",
+      marginRight: 10,
+      marginLeft: 10,
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
+      padding: 10,
+      borderRadius: 15,
+      backgroundColor: "#fff",
+      // Shadow properties
+      shadowColor: "#7F9497",
+      shadowOffset: {
+        width: 0,
+        height: -1, // Negative value to put shadow above the tab
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+    textContainer: {
+      marginBottom: 15,
+      alignItems: "center",
+    },
+    title: {
+      fontSize: 22,
+      fontWeight: "bold",
+      marginBottom: 10,
+      textAlign: "left",
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.gray,
+      textAlign: "left",
+    },
+    buttonContainer: {
+      width: "50%",
+    },
+    button: {
+      backgroundColor: colors.secondary,
+      padding: 8,
+      borderRadius: 15,
+      alignItems: "center",
+    },
+    buttonText: {
+      color: colors.primary,
+      fontSize: 14,
+      fontWeight: "semibold",
+    },
+
+    containerCard: {
+      width: "100%",
+      padding: 16,
+      display: "flex",
+      gap: 10,
+      flexDirection: "row",
+    },
+    card: {
+      backgroundColor: "#fff",
+      borderRadius: 12,
+      width: "50%",
+      display: "flex",
+      padding: 16,
+      marginBottom: 12,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    cardTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 8,
+    },
+    cardSubtitle: {
+      fontSize: 14,
+      color: "#666",
+    },
+    exerciseStats: {
+      flexDirection: "column",
+      marginTop: 8,
+    },
+    statItem: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginRight: 20,
+    },
+    statIcon: {
+      marginRight: 10,
+    },
+    statValue: {
+      fontSize: 14,
+      color: "#333",
+    },
+    shadowContainer: {
+      backgroundColor: "white",
+      borderRadius: 12,
+      padding: 20,
+      width: "100%",
+      shadowColor: "#7F9497",
+      shadowOffset: {
+        width: 0,
+        height: -2,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 6,
+    },
+    macroShadowContainer: {
+      maxWidth: "100%",
+    },
+    macroContainer: {
+      flexDirection: "row",
+      paddingHorizontal: 10,
+      justifyContent: "space-between",
+      alignContent: "center",
+    },
+    circleContainer: {
+      width: 150,
+      height: 150,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    circle: {
+      width: 140,
+      height: 140,
+      borderRadius: 75,
+      borderWidth: 10,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    innerCircle: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      backgroundColor: "#fff",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    macroTitle: {
+      fontWeight: "bold",
+      fontSize: 16,
+      color: colors.primary,
+    },
+    macroValues: {
+      marginLeft: 20,
+    },
+    macroRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginVertical: 8,
+    },
+    macroDot: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      marginRight: 8,
+    },
+    macroText: {
+      flexDirection: "column",
+    },
+    headerBar: {
+      flexDirection: "row",
+      alignItems: "center",
+      paddingTop: 45,
+      paddingBottom: 4,
+      paddingHorizontal: 20,
+      backgroundColor: colors.background.card,
+
+      shadowColor: "#7F9497",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 4,
+      zIndex: 10,
+    },
+    headerTitle: {
+      fontSize: 32,
+      fontWeight: "bold",
+      color: colors.primary,
+      letterSpacing: 1,
+    },
+    headerDate: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      marginTop: 2,
+    },
+    headerIcons: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+    },
+    iconButton: {
+      marginRight: 4,
+      padding: 2,
+      borderRadius: 16,
+    },
+    profileIcon: {
+      marginLeft: 8,
+      backgroundColor: colors.background.secondary,
+      borderRadius: 20,
+      padding: 2,
+    },
+    notificationBadge: {
+      position: 'absolute',
+      top: -4,
+      right: -4,
+      minWidth: 18,
+      height: 18,
+      borderRadius: 9,
+      backgroundColor: colors.danger,
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 20,
+      paddingHorizontal: 4,
+    },
+    notificationBadgeText: {
+      color: '#fff',
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+  });
+}
+
 export default function DashboardScreen() {
+  const { colors } = useTheme();
   const router = useRouter();
   const { user } = useUserStore();
   const { getDailyNutritionSummary } = useNutritionStore();
@@ -153,6 +454,8 @@ export default function DashboardScreen() {
       color: "#4CD964",
     },
   };
+
+  const styles = makeStyles(colors);
 
   return (
     <View style={styles.container}>
@@ -411,300 +714,3 @@ export default function DashboardScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  imageContainer: {
-    marginTop: 10,
-    borderRadius: 50, 
-    overflow: "hidden", 
-    width: 40,
-    height: 40,
-  },
-  heading: {
-    color: colors.primary,
-    fontSize: 25,
-    fontWeight: "900",
-  },
-  img: {
-    height: 50,
-    width: 50,
-    borderRadius: 800,
-  },
-  tabcontent: {
-    display: "flex",
-    marginTop: 30,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignContent: "center",
-  },
-  scrollContent: {
-    marginTop: 0,
-    paddingBottom: 0,
-    // Equal to tab height to prevent content from being hidden
-  },
-  tab: {
-    position: "absolute",
-    bottom: 0,
-    marginBottom: 0,
-    left: 0,
-    right: 0,
-    height: 100,
-    backgroundColor: "white",
-
-    
-    // Optional styling
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 16,
-  },
-  summaryContainer: {
-    alignItems: "center",
-  },
-  macrosContainer: {
-    width: "100%",
-  },
-  mealsContainer: {
-    padding: 16,
-  },
-  spacer: {
-    height: 40,
-  },
-  wrapper: {
-    height: 400,
-  },
-  slide: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  containerText: {
-    width: "95%",
-    height: "auto",
-    marginRight: 10,
-    marginLeft: 10,
-    justifyContent: "flex-start",
-    alignItems: "flex-start",
-    padding: 10,
-    borderRadius: 15,
-    backgroundColor: "#fff",
-    // Shadow properties
-    shadowColor: "#7F9497",
-    shadowOffset: {
-      width: 0,
-      height: -1, // Negative value to put shadow above the tab
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  textContainer: {
-    marginBottom: 15,
-    alignItems: "center",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "left",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.gray,
-    textAlign: "left",
-  },
-  buttonContainer: {
-    width: "50%",
-  },
-  button: {
-    backgroundColor: colors.secondary,
-    padding: 8,
-    borderRadius: 15,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: "semibold",
-  },
-
-  containerCard: {
-    width: "100%",
-    padding: 16,
-    display: "flex",
-    gap: 10,
-    flexDirection: "row",
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    width: "50%",
-    display: "flex",
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    color: "#666",
-  },
-  exerciseStats: {
-    flexDirection: "column",
-    marginTop: 8,
-  },
-  statItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 20,
-  },
-  statIcon: {
-    marginRight: 10,
-  },
-  statValue: {
-    fontSize: 14,
-    color: "#333",
-  },
-  shadowContainer: {
-    backgroundColor: "white",
-    borderRadius: 12,
-    padding: 20,
-    width: "100%",
-    shadowColor: "#7F9497",
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 6,
-  },
-  macroShadowContainer: {
-    maxWidth: "100%",
-  },
-  macroContainer: {
-    flexDirection: "row",
-    paddingHorizontal: 10,
-    justifyContent: "space-between",
-    alignContent: "center",
-  },
-  circleContainer: {
-    width: 150,
-    height: 150,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  circle: {
-    width: 140,
-    height: 140,
-    borderRadius: 75,
-    borderWidth: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  innerCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  macroTitle: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: colors.primary,
-  },
-  macroValues: {
-    marginLeft: 20,
-  },
-  macroRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 8,
-  },
-  macroDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 8,
-  },
-  macroText: {
-    flexDirection: "column",
-  },
-  headerBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 45,
-    paddingBottom: 4,
-    paddingHorizontal: 20,
-    backgroundColor: colors.background.card,
-    
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-    zIndex: 10,
-  },
-  headerTitle: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: colors.primary,
-    letterSpacing: 1,
-  },
-  headerDate: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    marginTop: 2,
-  },
-  headerIcons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  iconButton: {
-    marginRight: 4,
-    padding: 2,
-    borderRadius: 16,
-  },
-  profileIcon: {
-    marginLeft: 8,
-    backgroundColor: colors.background.secondary,
-    borderRadius: 20,
-    padding: 2,
-  },
-  notificationBadge: {
-    position: 'absolute',
-    top: -4,
-    right: -4,
-    minWidth: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: colors.danger,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 20,
-    paddingHorizontal: 4,
-  },
-  notificationBadgeText: {
-    color: '#fff',
-    fontSize: 12,
-    fontWeight: 'bold',
-  },
-});

@@ -7,12 +7,126 @@ import {
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import { colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
+import { useTheme } from "@/constants/ThemeContext";
+
+function makeStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main,
+      paddingTop: 40,
+    },
+    content: {
+      flex: 1,
+    },
+    title: {
+      fontSize: 21,
+      fontWeight: "bold",
+      color: colors.text.primary,
+      marginBottom: 30,
+    },
+    inputContainer: {
+      marginBottom: 24,
+    },
+    label: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text.primary,
+      marginBottom: 8,
+    },
+    inputWrapper: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 8,
+      paddingHorizontal: 16,
+      height: 60,
+      justifyContent: "center",
+    },
+    input: {
+      fontSize: 16,
+      color: colors.text.primary,
+    },
+    inputActive: {
+      borderWidth: 2,
+      borderColor: colors.primary,
+    },
+    passwordHint: {
+      fontSize: 14,
+      color: colors.text.muted,
+      marginTop: 8,
+    },
+    termsContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginTop: 24,
+      marginBottom: 32,
+    },
+    checkbox: {
+      width: 24,
+      height: 24,
+      borderRadius: 4,
+      borderWidth: 2,
+      borderColor: colors.primary,
+      marginRight: 12,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    checkboxChecked: {
+      backgroundColor: colors.primary,
+    },
+    checkmark: {
+      color: "#fff",
+      fontWeight: "bold",
+    },
+    termsText: {
+      flex: 1,
+      fontSize: 14,
+      color: colors.text.primary,
+    },
+    termsLink: {
+      color: colors.primary,
+      fontWeight: "600",
+    },
+    footer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      backgroundColor: "transparent",
+    },
+    circleButton: {
+      height: 50,
+      width: 50,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: colors.button.secondary,
+      borderRadius: 50,
+      padding: 10,
+    },
+    nextButton: {
+      flex: 1,
+      marginLeft: 20,
+      backgroundColor: colors.primary,
+      paddingVertical: 14,
+      borderRadius: 30,
+      alignItems: "center",
+    },
+    nextText: {
+      color: "#fff",
+      fontSize: 16,
+      fontWeight: "600",
+    },
+    nextButtonDisabled: {
+      backgroundColor: colors.button.secondary,
+    },
+  });
+}
 
 const CreateAccount = ({ currentIndex, onboardingSteps }) => {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const router = useRouter();
   const { formData, updateFormData } = useOnboardingStore();
   const [email, setEmail] = useState(formData.email || "");
@@ -133,115 +247,5 @@ const CreateAccount = ({ currentIndex, onboardingSteps }) => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-    paddingTop: 40,
-  },
-  content: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 21,
-    fontWeight: "bold",
-    color: colors.text.primary,
-    marginBottom: 30,
-  },
-  inputContainer: {
-    marginBottom: 24,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text.primary,
-    marginBottom: 8,
-  },
-  inputWrapper: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    height: 60,
-    justifyContent: "center",
-  },
-  input: {
-    fontSize: 16,
-    color: colors.text.primary,
-  },
-  inputActive: {
-    borderWidth: 2,
-    borderColor: colors.primary,
-  },
-  passwordHint: {
-    fontSize: 14,
-    color: colors.text.muted,
-    marginTop: 8,
-  },
-  termsContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 24,
-    marginBottom: 32,
-  },
-  checkbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: colors.primary,
-    marginRight: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  checkboxChecked: {
-    backgroundColor: colors.primary,
-  },
-  checkmark: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  termsText: {
-    flex: 1,
-    fontSize: 14,
-    color: colors.text.primary,
-  },
-  termsLink: {
-    color: colors.primary,
-    fontWeight: "600",
-  },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "transparent",
-  },
-  circleButton: {
-    height: 50,
-    width: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.button.secondary,
-    borderRadius: 50,
-    padding: 10,
-  },
-  nextButton: {
-    flex: 1,
-    marginLeft: 20,
-    backgroundColor: colors.primary,
-    paddingVertical: 14,
-    borderRadius: 30,
-    alignItems: "center",
-  },
-  nextText: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  nextButtonDisabled: {
-    backgroundColor: colors.button.secondary,
-  },
-});
 
 export default CreateAccount;

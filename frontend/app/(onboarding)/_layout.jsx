@@ -1,7 +1,9 @@
 import { Stack } from "expo-router";
-import { colors } from "../../constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
+import React from "react";
 
-const layout = () => {
+const Layout = () => {
+  const { colors } = useTheme();
   return (
     <Stack
       screenOptions={{
@@ -49,4 +51,4 @@ const layout = () => {
   );
 };
 
-export default layout;
+export default Layout;

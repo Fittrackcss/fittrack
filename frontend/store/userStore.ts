@@ -81,15 +81,18 @@ export const useUserStore = create<UserState>()(
 
       login: async (email, password) => {
         // In a real app, you would verify credentials with your backend
-        // For now, we'll just check if credentials exist
+        // For now, we'll just check if credentials exist and match
         if (email && password) {
           // Get any existing user data from storage
           const storedData = await AsyncStorage.getItem("user-storage");
           const parsedData = storedData ? JSON.parse(storedData) : null;
+          const storedUser = parsedData?.state?.user;
 
-          if (parsedData?.state?.user?.email === email) {
-            // User exists - log them in
-            set({ user: parsedData.state.user, isAuthenticated: true });
+          if (
+            storedUser?.email === email &&
+            storedUser?.password === password
+          ) {
+            set({ user: storedUser, isAuthenticated: true });
             return true;
           }
         }
@@ -104,7 +107,7 @@ export const useUserStore = create<UserState>()(
           const newUser: User = {
             id: Math.random().toString(36).substring(7),
             name: userData.name || "",
-            email: userData.email,
+            email: userData.email || "",
             weight: userData.weight || 0,
             height: userData.height || 0,
             goalWeight: userData.goalWeight || 0,

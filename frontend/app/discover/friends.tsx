@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Modal, TextInput, Alert, Linking, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { Ionicons } from '@expo/vector-icons';
 import * as Contacts from 'expo-contacts'; // Make sure expo-contacts is installed
 
@@ -11,7 +11,165 @@ const suggestedFriends = [
   { id: '3', name: 'Chris Smith', avatar: 'https://randomuser.me/api/portraits/men/65.jpg' },
 ];
 
+function makeStyles(colors:any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main,
+      padding: 20,
+    },
+    header: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: colors.primary,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    subheader: {
+      fontSize: 16,
+      color: colors.text.secondary,
+      marginBottom: 20,
+      textAlign: "center",
+    },
+    inviteButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 18,
+      alignSelf: 'center',
+      marginBottom: 18,
+    },
+    inviteButtonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16,
+      marginLeft: 8,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: colors.text.primary,
+      marginBottom: 8,
+      marginTop: 8,
+    },
+    friendItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: colors.background.card,
+      borderRadius: 10,
+      padding: 12,
+      marginBottom: 10,
+      shadowColor: '#7F9497',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    avatar: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      marginRight: 12,
+    },
+    friendName: {
+      flex: 1,
+      fontSize: 16,
+      color: colors.text.primary,
+    },
+    addButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 6,
+      padding: 6,
+    },
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.3)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalContent: {
+      backgroundColor: '#fff',
+      borderRadius: 16,
+      padding: 24,
+      width: '85%',
+      shadowColor: '#7F9497',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.12,
+      shadowRadius: 8,
+      elevation: 6,
+      alignItems: 'stretch',
+    },
+    modalTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: colors.primary,
+      marginBottom: 18,
+      textAlign: 'center',
+    },
+    modalOption: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 12,
+      paddingHorizontal: 8,
+      borderRadius: 8,
+      backgroundColor: colors.background.secondary,
+      marginBottom: 10,
+    },
+    modalOptionText: {
+      fontSize: 16,
+      color: colors.text.primary,
+      fontWeight: '500',
+    },
+    divider: {
+      height: 1,
+      backgroundColor: colors.background.card,
+      marginVertical: 14,
+    },
+    modalLabel: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      marginBottom: 6,
+      marginLeft: 2,
+    },
+    emailRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 12,
+    },
+    emailInput: {
+      flex: 1,
+      borderWidth: 1,
+      borderColor: colors.background.card,
+      borderRadius: 8,
+      padding: 10,
+      fontSize: 16,
+      marginRight: 8,
+      backgroundColor: colors.background.secondary,
+    },
+    sendButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 8,
+      padding: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    closeButton: {
+      marginTop: 8,
+      alignSelf: 'center',
+    },
+    closeButtonText: {
+      color: colors.danger,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+  });
+}
+
 const DiscoverFriends = () => {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const [modalVisible, setModalVisible] = useState(false);
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
@@ -121,159 +279,5 @@ const DiscoverFriends = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-    padding: 20,
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: colors.primary,
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  subheader: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  inviteButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    alignSelf: 'center',
-    marginBottom: 18,
-  },
-  inviteButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: colors.text.primary,
-    marginBottom: 8,
-    marginTop: 8,
-  },
-  friendItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.background.card,
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 10,
-    shadowColor: '#7F9497',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 12,
-  },
-  friendName: {
-    flex: 1,
-    fontSize: 16,
-    color: colors.text.primary,
-  },
-  addButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 6,
-    padding: 6,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 24,
-    width: '85%',
-    shadowColor: '#7F9497',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 6,
-    alignItems: 'stretch',
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: colors.primary,
-    marginBottom: 18,
-    textAlign: 'center',
-  },
-  modalOption: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    backgroundColor: colors.background.secondary,
-    marginBottom: 10,
-  },
-  modalOptionText: {
-    fontSize: 16,
-    color: colors.text.primary,
-    fontWeight: '500',
-  },
-  divider: {
-    height: 1,
-    backgroundColor: colors.background.card,
-    marginVertical: 14,
-  },
-  modalLabel: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginBottom: 6,
-    marginLeft: 2,
-  },
-  emailRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  emailInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: colors.background.card,
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 16,
-    marginRight: 8,
-    backgroundColor: colors.background.secondary,
-  },
-  sendButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeButton: {
-    marginTop: 8,
-    alignSelf: 'center',
-  },
-  closeButtonText: {
-    color: colors.danger,
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default DiscoverFriends; 

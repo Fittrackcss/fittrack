@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { colors } from "@/constants/Colors";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -11,8 +10,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useTheme } from "@/constants/ThemeContext";
+
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background.main },
+    contentContainer: { padding: 24 },
+    formContainer: { marginTop: 20 },
+    title: { fontSize: 28, fontWeight: "bold", color: colors.text.primary, marginBottom: 8 },
+    subtitle: { fontSize: 16, color: colors.text.secondary, marginBottom: 32 },
+    errorText: { fontSize: 14, color: colors.danger, marginBottom: 16, padding: 12, backgroundColor: "#FFF1F2", borderRadius: 8 },
+    sectionTitle: { fontSize: 18, fontWeight: "600", color: colors.text.primary, marginTop: 16, marginBottom: 16 },
+    signupButton: { marginTop: 24 },
+    footerContainer: { flexDirection: "row", justifyContent: "center", marginTop: 24, marginBottom: 24 },
+    footerText: { fontSize: 14, color: colors.text.secondary },
+    loginText: { fontSize: 14, fontWeight: "600", color: colors.primary, marginLeft: 4 },
+  });
+}
 
 export default function SignupScreen() {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const router = useRouter();
   const { signup } = useUserStore();
 
@@ -52,6 +70,16 @@ export default function SignupScreen() {
         goalWeight: 0,
         activityLevel: "moderate",
         goal: "maintain",
+        id: "",
+        dailyCalorieGoal: 0,
+        weeklyWorkouts: 0,
+        dailySteps: 0,
+        weightGoal: "",
+        macroGoals: {
+          protein: 0,
+          carbs: 0,
+          fat: 0
+        }
       });
 
       if (success) {
@@ -156,60 +184,3 @@ export default function SignupScreen() {
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    padding: 24,
-  },
-  formContainer: {
-    marginTop: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: colors.text.primary,
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.text.secondary,
-    marginBottom: 32,
-  },
-  errorText: {
-    fontSize: 14,
-    color: colors.danger,
-    marginBottom: 16,
-    padding: 12,
-    backgroundColor: "#FFF1F2",
-    borderRadius: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: colors.text.primary,
-    marginTop: 16,
-    marginBottom: 16,
-  },
-  signupButton: {
-    marginTop: 24,
-  },
-  footerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 24,
-    marginBottom: 24,
-  },
-  footerText: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  loginText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.primary,
-    marginLeft: 4,
-  },
-});

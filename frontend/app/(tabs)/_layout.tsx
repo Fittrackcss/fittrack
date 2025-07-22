@@ -1,4 +1,5 @@
 
+import { useTheme } from "@/constants/ThemeContext";
 import { Tabs } from "expo-router";
 import React from "react";
 import {
@@ -8,9 +9,10 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
-import { colors } from "../../constants/Colors";
 
 export default function TabLayout() {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   return (
     <Tabs
       screenOptions={{
@@ -76,36 +78,38 @@ export default function TabLayout() {
   );
 }
 
-const styles = StyleSheet.create({
-  tabBar: {
-    height: 80,
-    paddingTop: 8,
-    paddingBottom: 12,
-    borderTopWidth: 0,
-    elevation: 8,
-    shadowColor: "#000",
-    borderRadius: 15,
-    shadowOpacity: 1.5,
-    shadowRadius: 8,
-    backgroundColor: "white",
-  },
-  tabBarLabel: {
-    fontSize: 12,
-    fontWeight: "500",
-    marginBottom: 4,
-  },
-  progressTab: {
-    backgroundColor: colors.primary,
-    width: 70,
-    height: 70,
-    borderRadius: 100,
-    justifyContent: "center",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowRadius: 8,
-    shadowOpacity: 0.5,
-    marginBottom: 10,
-    borderWidth: 3,
-    borderColor: "white",
-  },
-});
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    tabBar: {
+      height: 80,
+      paddingTop: 8,
+      paddingBottom: 12,
+      borderTopWidth: 0,
+      elevation: 8,
+      shadowColor: "#000",
+      borderRadius: 15,
+      shadowOpacity: 1.5,
+      shadowRadius: 8,
+      backgroundColor: colors.background.card,
+    },
+    tabBarLabel: {
+      fontSize: 12,
+      fontWeight: "500",
+      marginBottom: 4,
+    },
+    progressTab: {
+      backgroundColor: colors.primary,
+      width: 70,
+      height: 70,
+      borderRadius: 100,
+      justifyContent: "center",
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowRadius: 8,
+      shadowOpacity: 0.5,
+      marginBottom: 10,
+      borderWidth: 3,
+      borderColor: colors.background.card,
+    },
+  });
+}

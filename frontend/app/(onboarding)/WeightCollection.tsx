@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, SafeAreaView } from "react-native";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useOnboardingStore } from "@/store/useOnboardingStore";
 
 const WeightCollection = () => {
@@ -9,6 +9,7 @@ const WeightCollection = () => {
   const [heightFocused, setHeightFocused] = useState(false);
   const [weightFocused, setWeightFocused] = useState(false);
   const { updateFormData } = useOnboardingStore();
+  const { colors } = useTheme();
 
   const handleHeightChange = (text: string) => {
     setHeight(text);
@@ -21,20 +22,24 @@ const WeightCollection = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.main }]}>
       <View style={styles.content}>
-        <Text style={styles.subtitle}>Just a few more questions</Text>
+        <Text style={[styles.subtitle, { color: colors.text.primary }]}>Just a few more questions</Text>
 
         <View style={styles.inputRow}>
           <View style={styles.inputColumn}>
-            <Text style={styles.label}>How tall are you?</Text>
+            <Text style={[styles.label, { color: colors.text.primary }]}>How tall are you?</Text>
             <View
-              style={[styles.inputWrapper, heightFocused && styles.inputActive]}
+              style={[
+                styles.inputWrapper,
+                { borderColor: colors.border, backgroundColor: colors.background.main },
+                heightFocused && { borderColor: colors.primary, borderWidth: 2 }
+              ]}
             >
               <TextInput
                 onFocus={() => setHeightFocused(true)}
                 onBlur={() => setHeightFocused(false)}
-                style={styles.input}
+                style={[styles.input, { color: colors.text.primary }]}
                 placeholder="cm"
                 placeholderTextColor={colors.text.muted}
                 keyboardType="numeric"
@@ -45,20 +50,24 @@ const WeightCollection = () => {
             </View>
           </View>
           <View style={styles.unitContainer}>
-            <Text style={styles.unitText}>cm</Text>
+            <Text style={[styles.unitText, { color: colors.primary }]}>cm</Text>
           </View>
         </View>
 
         <View style={styles.inputRow}>
           <View style={styles.inputColumn}>
-            <Text style={styles.label}>How much do you weigh?</Text>
+            <Text style={[styles.label, { color: colors.text.primary }]}>How much do you weigh?</Text>
             <View
-              style={[styles.inputWrapper, weightFocused && styles.inputActive]}
+              style={[
+                styles.inputWrapper,
+                { borderColor: colors.border, backgroundColor: colors.background.main },
+                weightFocused && { borderColor: colors.primary, borderWidth: 2 }
+              ]}
             >
               <TextInput
                 onFocus={() => setWeightFocused(true)}
                 onBlur={() => setWeightFocused(false)}
-                style={styles.input}
+                style={[styles.input, { color: colors.text.primary }]}
                 placeholder="kg"
                 placeholderTextColor={colors.text.muted}
                 keyboardType="numeric"
@@ -69,11 +78,11 @@ const WeightCollection = () => {
             </View>
           </View>
           <View style={styles.unitContainer}>
-            <Text style={styles.unitText}>kg</Text>
+            <Text style={[styles.unitText, { color: colors.primary }]}>kg</Text>
           </View>
         </View>
 
-        <Text style={styles.note}>
+        <Text style={[styles.note, { color: colors.text.muted }]}>
           It's ok to estimate, you can update later.
         </Text>
       </View>
@@ -84,7 +93,6 @@ const WeightCollection = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background.main,
   },
   content: {
     flex: 1,
@@ -92,7 +100,6 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 20,
-    color: colors.text.primary,
     marginBottom: 32,
     fontWeight: "700",
   },
@@ -110,12 +117,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: "600",
-    color: colors.text.primary,
     marginBottom: 8,
   },
   inputWrapper: {
     borderWidth: 1,
-    borderColor: colors.border,
     borderRadius: 8,
     height: 60,
     justifyContent: "center",
@@ -123,17 +128,14 @@ const styles = StyleSheet.create({
   },
   input: {
     fontSize: 16,
-    color: colors.text.primary,
     padding: 0,
   },
   inputActive: {
     borderWidth: 2,
-    borderColor: colors.primary,
   },
   unitContainer: {
     width: 70,
     height: 60,
-    backgroundColor: colors.background.secondary,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 8,
@@ -142,11 +144,9 @@ const styles = StyleSheet.create({
   unitText: {
     fontWeight: "700",
     fontSize: 16,
-    color: colors.primary,
   },
   note: {
     fontSize: 14,
-    color: colors.text.muted,
     marginTop: 8,
   },
 });

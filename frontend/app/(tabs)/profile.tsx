@@ -1,4 +1,4 @@
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import {
@@ -27,7 +27,183 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main,
+    },
+    headerGradient: {
+      paddingTop: 40,
+      paddingBottom: 10,
+      paddingHorizontal: 15,
+    },
+    headerContentRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      width: '100%',
+      marginBottom: 16,
+    },
+    nameEmailContainer: {
+      marginLeft: 18,
+      flex: 1,
+      justifyContent: 'center',
+    },
+    profileImageContainer: {
+      width: 90,
+      height: 90,
+      borderRadius: 45,
+      backgroundColor: "rgba(255, 255, 255, 0.2)",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 16,
+      position: "relative",
+    },
+    profileImage: {
+      width: 90,
+      height: 90,
+      borderRadius: 45,
+    },
+    profileImagePlaceholder: {
+      fontSize: 36,
+      fontWeight: "bold",
+      color: "#fff",
+    },
+    cameraIcon: {
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: colors.primary,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 3,
+      borderColor: "#fff",
+    },
+    name: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: "#fff",
+      marginBottom: 4,
+    },
+    email: {
+      fontSize: 16,
+      color: "rgba(255, 255, 255, 0.8)",
+      marginBottom: 24,
+    },
+    statsContainer: {
+      flexDirection: "row",
+      width: "100%",
+      justifyContent: "space-between",
+      
+    },
+    statCard: {
+      flex: 1,
+      backgroundColor: "white",
+      borderRadius: 16,
+      padding: 16,
+      paddingLeft: 10,
+      paddingRight: 10,
+      alignItems: "center",
+      marginHorizontal: 4,
+      
+    },
+    statValue: {
+      fontSize: 18,
+      fontWeight: "bold",
+      color: "black",
+      marginTop: 4,
+    },
+    statLabel: {
+      fontSize: 12,
+      color: 'black',
+      marginTop: 2,
+      textAlign: "center",
+    },
+    scrollContent: {
+      flex: 1,
+      paddingTop: 24,
+    },
+    menuContainer: {
+      paddingHorizontal: 20,
+    },
+    menuCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: 'white',
+      borderRadius: 16,
+      padding: 20,
+      marginBottom: 12,
+      shadowColor: "#7F9497",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    menuItemLeft: {
+      flexDirection: "row",
+      alignItems: "center",
+      flex: 1,
+    },
+    iconContainer: {
+      width: 48,
+      height: 48,
+      borderRadius: 24,
+      backgroundColor: colors.background.secondary,
+      alignItems: "center",
+      justifyContent: "center",
+      marginRight: 16,
+    },
+    menuTextContainer: {
+      flex: 1,
+    },
+    menuItemTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text.primary,
+      marginBottom: 2,
+    },
+    menuItemSubtitle: {
+      fontSize: 14,
+      color: colors.text.secondary,
+    },
+    logoutCard: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: 'white',
+      borderRadius: 16,
+      padding: 20,
+      marginHorizontal: 20,
+      marginTop: 24,
+      marginBottom: 16,
+      shadowColor: "#7F9497",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    logoutText: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.danger,
+      marginLeft: 12,
+    },
+    versionText: {
+      fontSize: 12,
+      color: colors.text.light,
+      textAlign: "center",
+      marginBottom: 32,
+    },
+  });
+}
+
 export default function ProfileScreen() {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const router = useRouter();
   const { user, logout, updateUser } = useUserStore();
 
@@ -101,19 +277,19 @@ export default function ProfileScreen() {
       icon: <Bell size={22} color="#FFE66D" />,
       title: "Notifications",
       subtitle: "Customize your app notifications",
-      onPress: () => {},
+      onPress: () => {router.push("/settings/notifications")},
     },
     {
       icon: <HelpCircle size={22} color="#95E1D3" />,
       title: "Help & Support",
       subtitle: "Get help and contact support",
-      onPress: () => {},
+      onPress: () => {router.push("/settings/help")},
     },
     {
       icon: <Settings size={22} color="#A8E6CF" />,
       title: "App Settings",
       subtitle: "Configure app preferences",
-      onPress: () => {},
+      onPress: () => {router.push("/settings/app")},
     },
   ];
 
@@ -203,175 +379,3 @@ export default function ProfileScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-  },
-  headerGradient: {
-    paddingTop: 40,
-    paddingBottom: 10,
-    paddingHorizontal: 15,
-  },
-  headerContentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 16,
-  },
-  nameEmailContainer: {
-    marginLeft: 18,
-    flex: 1,
-    justifyContent: 'center',
-  },
-  profileImageContainer: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-    position: "relative",
-  },
-  profileImage: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-  },
-  profileImagePlaceholder: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: "#fff",
-  },
-  cameraIcon: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 3,
-    borderColor: "#fff",
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#fff",
-    marginBottom: 4,
-  },
-  email: {
-    fontSize: 16,
-    color: "rgba(255, 255, 255, 0.8)",
-    marginBottom: 24,
-  },
-  statsContainer: {
-    flexDirection: "row",
-    width: "100%",
-    justifyContent: "space-between",
-    
-  },
-  statCard: {
-    flex: 1,
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 16,
-    paddingLeft: 10,
-    paddingRight: 10,
-    alignItems: "center",
-    marginHorizontal: 4,
-    
-  },
-  statValue: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "black",
-    marginTop: 4,
-  },
-  statLabel: {
-    fontSize: 12,
-    color: 'black',
-    marginTop: 2,
-    textAlign: "center",
-  },
-  scrollContent: {
-    flex: 1,
-    paddingTop: 24,
-  },
-  menuContainer: {
-    paddingHorizontal: 20,
-  },
-  menuCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 12,
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  menuItemLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-    flex: 1,
-  },
-  iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: colors.background.secondary,
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 16,
-  },
-  menuTextContainer: {
-    flex: 1,
-  },
-  menuItemTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text.primary,
-    marginBottom: 2,
-  },
-  menuItemSubtitle: {
-    fontSize: 14,
-    color: colors.text.secondary,
-  },
-  logoutCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: 'white',
-    borderRadius: 16,
-    padding: 20,
-    marginHorizontal: 20,
-    marginTop: 24,
-    marginBottom: 16,
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  logoutText: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.danger,
-    marginLeft: 12,
-  },
-  versionText: {
-    fontSize: 12,
-    color: colors.text.light,
-    textAlign: "center",
-    marginBottom: 32,
-  },
-});

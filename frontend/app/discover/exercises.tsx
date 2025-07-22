@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Example API: https://wger.de/api/v2/exercise/?language=2&limit=12
@@ -38,18 +38,124 @@ type Exercise = {
   gifUrl?: string;
 };
 
-const ExerciseCard = ({ exercise }: { exercise: Exercise }) => (
-  <View style={styles.card}>
-    <Text style={styles.title}>{exercise.name}</Text>
-    <Text style={styles.category}>{exercise.bodyPart || exercise.target || "General"}</Text>
-    <Text style={styles.description} numberOfLines={2}>{exercise.equipment ? `Equipment: ${exercise.equipment}` : ""}</Text>
-    <TouchableOpacity style={styles.button}>
-      <Text style={styles.buttonText}>View Exercise</Text>
-    </TouchableOpacity>
-  </View>
-);
+function makeStyles(colors) {
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background.main,
+      padding: 16,
+    },
+    header: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: colors.primary,
+      marginBottom: 16,
+      textAlign: "center",
+    },
+    list: {
+      paddingBottom: 32,
+    },
+    card: {
+      backgroundColor: colors.background.card || "#fff",
+      borderRadius: 12,
+      padding: 12,
+      margin: 8,
+      flex: 1,
+      alignItems: "center",
+      shadowColor: "#7F9497",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 3,
+      minWidth: 150,
+      maxWidth: "48%",
+    },
+    title: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: colors.text.primary,
+      marginBottom: 4,
+      textAlign: "center",
+    },
+    category: {
+      fontSize: 13,
+      color: colors.primary,
+      marginBottom: 4,
+      textAlign: "center",
+    },
+    description: {
+      fontSize: 12,
+      color: colors.text.secondary,
+      marginBottom: 8,
+      textAlign: "center",
+    },
+    button: {
+      backgroundColor: colors.primary,
+      borderRadius: 8,
+      paddingVertical: 6,
+      paddingHorizontal: 16,
+      marginTop: 4,
+    },
+    buttonText: {
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: 14,
+    },
+    searchContainer: {
+      flexDirection: "row",
+      alignItems: "center",
+      marginBottom: 16,
+      backgroundColor: colors.background.card,
+      borderRadius: 8,
+      paddingHorizontal: 8,
+      paddingVertical: 4,
+    },
+    searchInput: {
+      flex: 1,
+      fontSize: 16,
+      color: colors.text.primary,
+      padding: 10,
+      height:50,
+      borderWidth: 1,
+      borderRadius: 8,
+      borderColor: colors.accent,
+      backgroundColor: "transparent",
+    },
+    searchButton: {
+      backgroundColor: colors.primary,
+      borderRadius: 8,
+      height:50,
+      justifyContent:"center",
+      paddingVertical: 6,
+      paddingHorizontal: 14,
+      marginLeft: 8,
+    },
+    searchButtonText: {
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: 15,
+    },
+  });
+}
+
+const ExerciseCard = ({ exercise }: { exercise: Exercise }) => {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
+  return (
+    <View style={styles.card}>
+      <Text style={styles.title}>{exercise.name}</Text>
+      <Text style={styles.category}>{exercise.bodyPart || exercise.target || "General"}</Text>
+      <Text style={styles.description} numberOfLines={2}>{exercise.equipment ? `Equipment: ${exercise.equipment}` : ""}</Text>
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>View Exercise</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const ExercisesPage = () => {
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -109,103 +215,5 @@ const ExercisesPage = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background.main,
-    padding: 16,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.primary,
-    marginBottom: 16,
-    textAlign: "center",
-  },
-  list: {
-    paddingBottom: 32,
-  },
-  card: {
-    backgroundColor: colors.background.card || "#fff",
-    borderRadius: 12,
-    padding: 12,
-    margin: 8,
-    flex: 1,
-    alignItems: "center",
-    shadowColor: "#7F9497",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 3,
-    minWidth: 150,
-    maxWidth: "48%",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: colors.text.primary,
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  category: {
-    fontSize: 13,
-    color: colors.primary,
-    marginBottom: 4,
-    textAlign: "center",
-  },
-  description: {
-    fontSize: 12,
-    color: colors.text.secondary,
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 16,
-    marginTop: 4,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 14,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-    backgroundColor: colors.background.card,
-    borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: colors.text.primary,
-    padding: 10,
-    height:50,
-    borderWidth: 1,
-    borderRadius: 8,
-    borderColor: colors.accent,
-    backgroundColor: "transparent",
-  },
-  searchButton: {
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    height:50,
-    justifyContent:"center",
-    paddingVertical: 6,
-    paddingHorizontal: 14,
-    marginLeft: 8,
-  },
-  searchButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 15,
-  },
-});
 
 export default ExercisesPage; 
