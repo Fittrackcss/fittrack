@@ -10,7 +10,7 @@ type DiscoverProps = {
     color?: string;
 };
 
-const DiscoverCards = () => {
+const DiscoverCards = ({ darkMode }: { darkMode?: boolean }) => {
     const router = useRouter();
     const { colors } = useTheme();
     const styles = makeStyles(colors);
@@ -73,7 +73,20 @@ const DiscoverCards = () => {
     return (
         <View style={styles.container}>
             {cards.map((card, index) => (
-                <TouchableOpacity key={index} style={styles.card} onPress={() => handleCardPress(card.title)}>
+                <TouchableOpacity
+                  key={index}
+                  style={[
+                    styles.card,
+                    !darkMode && {
+                      shadowColor: '#7F9497',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.10,
+                      shadowRadius: 8,
+                      elevation: 4,
+                    },
+                  ]}
+                  onPress={() => handleCardPress(card.title)}
+                >
                     <View style={styles.iconContainer}>
                         <MaterialCommunityIcons 
                             name={card.icon} 

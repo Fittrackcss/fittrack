@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 // Example API: https://wger.de/api/v2/exercise/?language=2&limit=12
 
@@ -139,12 +140,13 @@ function makeStyles(colors: any) {
 const ExerciseCard = ({ exercise }: { exercise: Exercise }) => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
+  const router = useRouter();
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{exercise.name}</Text>
       <Text style={styles.category}>{exercise.bodyPart || exercise.target || "General"}</Text>
       <Text style={styles.description} numberOfLines={2}>{exercise.equipment ? `Equipment: ${exercise.equipment}` : ""}</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push({ pathname: '/exercise/detail', params: { exercise: JSON.stringify(exercise) } })}>
         <Text style={styles.buttonText}>View Exercise</Text>
       </TouchableOpacity>
     </View>
@@ -189,6 +191,7 @@ const ExercisesPage = () => {
         <TextInput
           style={styles.searchInput}
           placeholder="Search exercises..."
+          placeholderTextColor={colors.text.muted}
           value={search}
           onChangeText={setSearch}
           onSubmitEditing={handleSearch}

@@ -110,7 +110,7 @@ function makeStyles(colors: any) {
       alignItems: "flex-start",
       padding: 10,
       borderRadius: 15,
-      backgroundColor: colors.background.card, // theme support
+      backgroundColor: colors.background.card, 
     },
     textContainer: {
       marginBottom: 15,
@@ -131,13 +131,13 @@ function makeStyles(colors: any) {
       width: "50%",
     },
     button: {
-      backgroundColor: colors.secondary, // theme support
+      backgroundColor: colors.secondary, 
       padding: 8,
       borderRadius: 15,
       alignItems: "center",
     },
     buttonText: {
-      color: colors.primary, // theme support
+      color: colors.primary, 
       fontSize: 14,
       fontWeight: "semibold",
     },
@@ -150,7 +150,7 @@ function makeStyles(colors: any) {
       flexDirection: "row",
     },
     card: {
-      backgroundColor: colors.background.card, // theme support
+      backgroundColor: colors.background.card, 
       borderRadius: 12,
       width: "50%",
       display: "flex",
@@ -161,11 +161,11 @@ function makeStyles(colors: any) {
       fontSize: 18,
       fontWeight: "bold",
       marginBottom: 8,
-      color: colors.primary, // theme support
+      color: colors.primary, 
     },
     cardSubtitle: {
       fontSize: 14,
-      color: colors.text.secondary, // theme support
+      color: colors.text.secondary, 
     },
     exerciseStats: {
       flexDirection: "column",
@@ -181,7 +181,7 @@ function makeStyles(colors: any) {
     },
     statValue: {
       fontSize: 14,
-      color: "#333",
+      color: colors.accent,
     },
     shadowContainer: {
       backgroundColor: "white",
@@ -301,7 +301,7 @@ function makeStyles(colors: any) {
 }
 
 export default function DashboardScreen() {
-  const { colors } = useTheme();
+  const { colors, darkMode } = useTheme();
   const router = useRouter();
   const { user } = useUserStore();
   const { getDailyNutritionSummary } = useNutritionStore();
@@ -623,7 +623,13 @@ export default function DashboardScreen() {
         {/* Step and Exercise */}
         <View style={styles.containerCard}>
           {/* Steps Card */}
-          <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/sync')}>
+          <TouchableOpacity style={[styles.card, !darkMode && {
+            shadowColor: '#7F9497',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.10,
+            shadowRadius: 8,
+            elevation: 4,
+          }]} onPress={() => router.push('/discover/sync')}>
             <Text style={styles.cardTitle}>Steps</Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialCommunityIcons name="run" size={30} color={colors.primary} />
@@ -639,7 +645,13 @@ export default function DashboardScreen() {
           </TouchableOpacity>
 
           {/* Exercise Card */}
-          <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/exercises')}>
+          <TouchableOpacity style={[styles.card, !darkMode && {
+            shadowColor: '#7F9497',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.10,
+            shadowRadius: 8,
+            elevation: 4,
+          }]} onPress={() => router.push('/discover/exercises')}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
@@ -714,7 +726,7 @@ export default function DashboardScreen() {
         >
           Discover
         </Text>
-        <DiscoverCards />
+        <DiscoverCards darkMode={darkMode} />
 
         <View style={styles.spacer} />
       </ScrollView>

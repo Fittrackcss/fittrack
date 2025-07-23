@@ -172,32 +172,46 @@ const WelcomeScreen = () => {
 
     if (currentIndex === onboardingSteps.length - 1) {
       // Onboarding complete - transfer data to user store
-      const { formData } = useOnboardingStore.getState();
+      const { formData, selections } = useOnboardingStore.getState();
       const { signup } = useUserStore.getState();
 
-      // Create user from onboarding data
-      await signup({
-        id: "", // Provide a generated or placeholder id if needed
-        email: formData.email || "", // Collect or default email
+      // Extract goals and other selections
+      const goals = selections["goals-screen"] || [];
+      const barriers = selections["barriers-screen"] || [];
+      const goalChoices = selections["goal-choices-screen"] || [];
+      const mealPlanning = selections["meal-planning-screen"] || [];
+
+      // Build user object from all collected data
+      const userObj = {
+        id: "",
+        email: formData.email || "",
         name: formData.name || "User",
-        password: formData.password || "temporary-password", // Use password from formData
-        gender: formData.gender || "male",
-        age: 0,
-        height: 0,
-        weight: 0,
-        goalWeight: 0,
-        activityLevel: "",
-        goal: "lose",
+        password: formData.password || "temporary-password",
+        gender: formData.sex || formData.gender || "male",
+        age: Number(formData.age) || 0,
+        height: Number(formData.height) || 0,
+        weight: Number(formData.weight) || 0,
+        goalWeight: Number(formData.goalWeight) || 0,
+        country: formData.country || "",
+        activityLevel: formData.activityLevel || "",
+        goal: goalChoices[0] || goals[0] || "maintain",
         dailyCalorieGoal: 0,
-        macroGoals: {
-          protein: 0,
-          carbs: 0,
-          fat: 0,
-        },
+        macroGoals: { protein: 0, carbs: 0, fat: 0 },
         weeklyWorkouts: 0,
         dailySteps: 0,
-        weightGoal: ""
-      });
+        weightGoal: "",
+        onboardingGoals: goals,
+        onboardingBarriers: barriers,
+        onboardingMealPlanning: mealPlanning,
+      };
+
+      // Log all onboarding data for debugging
+      console.log("ONBOARDING FORM DATA:", formData);
+      console.log("ONBOARDING SELECTIONS:", selections);
+      console.log("USER OBJECT TO STORE:", userObj);
+
+      // Create user from onboarding data
+      await signup(userObj);
 
       router.replace("/(tabs)/diary");
       return;

@@ -85,12 +85,12 @@ function makeStyles(colors: any) {
     name: {
       fontSize: 24,
       fontWeight: "bold",
-      color: "#fff",
+      color: colors.text.primary,
       marginBottom: 4,
     },
     email: {
       fontSize: 16,
-      color: "rgba(255, 255, 255, 0.8)",
+      color: colors.text.primary,
       marginBottom: 24,
     },
     statsContainer: {
@@ -133,15 +133,10 @@ function makeStyles(colors: any) {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: 'white',
+      backgroundColor: colors.background.card,
       borderRadius: 16,
       padding: 20,
       marginBottom: 12,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 4,
     },
     menuItemLeft: {
       flexDirection: "row",
@@ -174,7 +169,7 @@ function makeStyles(colors: any) {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: 'white',
+      backgroundColor: colors.background.card,
       borderRadius: 16,
       padding: 20,
       marginHorizontal: 20,
@@ -202,7 +197,7 @@ function makeStyles(colors: any) {
 }
 
 export default function ProfileScreen() {
-  const { colors } = useTheme();
+  const { colors, darkMode } = useTheme();
   const styles = makeStyles(colors);
   const router = useRouter();
   const { user, logout, updateUser } = useUserStore();
@@ -352,7 +347,16 @@ export default function ProfileScreen() {
           {menuItems.map((item, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.menuCard}
+              style={[
+                styles.menuCard,
+                !darkMode && {
+                  shadowColor: '#7F9497',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.10,
+                  shadowRadius: 8,
+                  elevation: 4,
+                },
+              ]}
               onPress={item.onPress}
             >
               <View style={styles.menuItemLeft}>

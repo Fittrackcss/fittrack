@@ -1,4 +1,5 @@
 import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
 import { Food } from "@/types";
 import { Plus } from "lucide-react-native";
 import React from "react";
@@ -9,7 +10,63 @@ type FoodSearchItemProps = {
   onAdd: (food: Food) => void;
 };
 
+function makeStyles(colors: any){
+  return  StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.divider,
+      backgroundColor: colors.background.card,
+    },
+    infoContainer: {
+      flex: 1,
+    },
+    name: {
+      fontSize: 16,
+      fontWeight: "500",
+      color: colors.text.primary,
+    },
+    brand: {
+      fontSize: 14,
+      color: colors.text.secondary,
+      marginTop: 2,
+    },
+    serving: {
+      fontSize: 12,
+      color: colors.text.light,
+      marginTop: 2,
+    },
+    nutritionContainer: {
+      marginRight: 16,
+      alignItems: "flex-end",
+    },
+    calories: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: colors.text.primary,
+    },
+    macrosContainer: {
+      flexDirection: "row",
+      marginTop: 4,
+      gap: 8,
+    },
+    macro: {
+      fontSize: 12,
+      color: colors.text.secondary,
+    },
+    addContainer: {
+      justifyContent: "center",
+      alignItems: "center",
+      width: 32,
+    },
+  });  
+}
+
 export const FoodSearchItem = ({ food, onAdd }: FoodSearchItemProps) => {
+  const {colors} = useTheme();
+  const styles = makeStyles(colors);
+
   return (
     <TouchableOpacity style={styles.container} onPress={() => onAdd(food)}>
       <View style={styles.infoContainer}>
@@ -32,53 +89,3 @@ export const FoodSearchItem = ({ food, onAdd }: FoodSearchItemProps) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
-    backgroundColor: colors.background.card,
-  },
-  infoContainer: {
-    flex: 1,
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: colors.text.primary,
-  },
-  brand: {
-    fontSize: 14,
-    color: colors.text.secondary,
-    marginTop: 2,
-  },
-  serving: {
-    fontSize: 12,
-    color: colors.text.light,
-    marginTop: 2,
-  },
-  nutritionContainer: {
-    marginRight: 16,
-    alignItems: "flex-end",
-  },
-  calories: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: colors.text.primary,
-  },
-  macrosContainer: {
-    flexDirection: "row",
-    marginTop: 4,
-    gap: 8,
-  },
-  macro: {
-    fontSize: 12,
-    color: colors.text.secondary,
-  },
-  addContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 32,
-  },
-});

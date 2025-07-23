@@ -41,7 +41,7 @@ export default function AppSettingsScreen() {
   const styles = makeStyles(colors);
   const router = useRouter();
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const darkMode = mode === "dark";
 
   const handleClearCache = () => {
     Alert.alert("Cache cleared!");
@@ -72,7 +72,7 @@ export default function AppSettingsScreen() {
             <Text style={styles.settingLabel}>Dark Mode</Text>
             <Switch
               value={darkMode}
-              onValueChange={setDarkMode}
+              onValueChange={(val) => setMode(val ? "dark" : "light")}
               trackColor={{ false: colors.divider, true: colors.primary }}
               thumbColor={darkMode ? colors.accent : "#f4f3f4"}
             />

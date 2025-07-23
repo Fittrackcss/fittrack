@@ -87,7 +87,6 @@ function makeStyles(colors: any) {
       borderTopWidth: 0,
       elevation: 8,
       shadowColor: "#000",
-      borderRadius: 15,
       shadowOpacity: 1.5,
       shadowRadius: 8,
       backgroundColor: colors.background.card,

@@ -10,7 +10,58 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { useFoodStore } from "@/store/foodStore";
-import { colors } from "@/constants/Colors";
+import { useTheme } from "@/constants/ThemeContext";
+
+
+function makeStyles(colors: any){
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      padding: 20,
+      backgroundColor: colors.background.main,
+    },
+    addContainer: {
+      marginBottom: 20,
+    },
+    listContainer: {
+      flex: 1,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      marginBottom: 20,
+    },
+    inputGroup: {
+      marginBottom: 15,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 10,
+      marginTop: 5,
+      borderRadius: 5,
+    },
+    mealTypeContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      marginTop: 5,
+    },
+    foodItem: {
+      padding: 15,
+      borderBottomWidth: 1,
+      borderBottomColor: "#eee",
+    },
+    foodName: {
+      fontWeight: "bold",
+      fontSize: 16,
+    },
+    emptyText: {
+      textAlign: "center",
+      marginTop: 20,
+      color: colors.text.muted,
+    },
+  });  
+}
 
 const foodstore = () => {
   const router = useRouter();
@@ -40,6 +91,9 @@ const foodstore = () => {
   const handleRemoveFood = (id: number) => {
     removeFood(id);
   };
+  
+  const {colors} = useTheme();
+  const styles = makeStyles(colors);
 
   return (
     <View style={styles.container}>
@@ -66,7 +120,7 @@ const foodstore = () => {
                   key={type}
                   title={type}
                   onPress={() => setMealType(type)}
-                  color={mealType === type ? "#6F4E37" : "#FFF5E5"}
+                  color={mealType === type ? colors.primary : colors.background.secondary}
                 />
               ))}
             </View>
@@ -75,13 +129,13 @@ const foodstore = () => {
           <Button
             title="Add to Food Log"
             onPress={handleAddFood}
-            color="#ff8e0c"
+            color={colors.primary}
           />
         </View>
       ) : (
         // Food list view
         <View style={styles.listContainer}>
-          <View style={{ height: "100%", backgroundColor: "red" }}>
+          <View style={{ height: "100%", backgroundColor: colors.background.card }}>
             <Text style={styles.title}>Your Food Log</Text>
           </View>
 
@@ -105,13 +159,12 @@ const foodstore = () => {
                   <Text>Quantity: {item.quantity}</Text>
                   <Text>Meal: {item.mealType}</Text>
                   <Text>
-                    Calories: {item.nutrition?.nutrients[0]?.amount || "N/A"}{" "}
-                    {item.nutrition?.nutrients[0]?.unit || ""}
+                    Calories: {item.nutrition?.nutrients[0]?.amount || "N/A"} {item.nutrition?.nutrients[0]?.unit || ""}
                   </Text>
                   <Button
                     title="Remove"
                     onPress={() => handleRemoveFood(item.id)}
-                    color="#FF5252"
+                    color={colors.danger}
                   />
                 </View>
               )}
@@ -122,52 +175,4 @@ const foodstore = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  addContainer: {
-    marginBottom: 20,
-  },
-  listContainer: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 10,
-    marginTop: 5,
-    borderRadius: 5,
-  },
-  mealTypeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 5,
-  },
-  foodItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  foodName: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  emptyText: {
-    textAlign: "center",
-    marginTop: 20,
-    color: "#888",
-  },
-});
 export default foodstore;

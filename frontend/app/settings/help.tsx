@@ -3,10 +3,42 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert, KeyboardAvo
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { colors } from "@/constants/Colors";
+import {useTheme} from "@/constants/ThemeContext"
+
+function makeStyles(colors: any) {
+  return StyleSheet.create({
+    container: { flex: 1, backgroundColor: colors.background.main },
+    header: {
+      paddingTop: 25, paddingBottom: 15, paddingHorizontal: 20, borderRadius: 20,
+      flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+    },
+    backButton: {
+      width: 40, height: 40, borderRadius: 20, backgroundColor: "rgba(255,255,255,0.2)",
+      alignItems: "center", justifyContent: "center",
+    },
+    headerTitle: { fontSize: 20, fontWeight: "bold", color: "#fff" },
+    placeholder: { width: 40 },
+    content: { flex: 1, paddingHorizontal: 20, paddingTop: 24 },
+    sectionTitle: { fontSize: 18, fontWeight: "bold", color: colors.text.primary, marginBottom: 12 },
+    emailRow: { flexDirection: "row", alignItems: "center", marginBottom: 20, gap: 8 },
+    emailText: { fontSize: 16, color: colors.primary, fontWeight: "600" },
+    input: {
+      backgroundColor: colors.background.card, borderRadius: 10, padding: 16,
+      fontSize: 15, color: colors.text.primary, minHeight: 100, marginBottom: 16,
+      borderWidth: 1, borderColor: colors.divider,
+    },
+    sendButton: {
+      backgroundColor: colors.primary, borderRadius: 10, paddingVertical: 14,
+      alignItems: "center", marginTop: 8,
+    },
+    sendButtonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
+  }); 
+}
 
 export default function HelpSupportScreen() {
   const router = useRouter();
+  const {colors} = useTheme();
+  const styles = makeStyles(colors);
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
@@ -54,30 +86,3 @@ export default function HelpSupportScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background.main },
-  header: {
-    paddingTop: 25, paddingBottom: 15, paddingHorizontal: 20, borderRadius: 20,
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-  },
-  backButton: {
-    width: 40, height: 40, borderRadius: 20, backgroundColor: "rgba(255,255,255,0.2)",
-    alignItems: "center", justifyContent: "center",
-  },
-  headerTitle: { fontSize: 20, fontWeight: "bold", color: "#fff" },
-  placeholder: { width: 40 },
-  content: { flex: 1, paddingHorizontal: 20, paddingTop: 24 },
-  sectionTitle: { fontSize: 18, fontWeight: "bold", color: colors.text.primary, marginBottom: 12 },
-  emailRow: { flexDirection: "row", alignItems: "center", marginBottom: 20, gap: 8 },
-  emailText: { fontSize: 16, color: colors.primary, fontWeight: "600" },
-  input: {
-    backgroundColor: colors.background.card, borderRadius: 10, padding: 16,
-    fontSize: 15, color: colors.text.primary, minHeight: 100, marginBottom: 16,
-    borderWidth: 1, borderColor: colors.divider,
-  },
-  sendButton: {
-    backgroundColor: colors.primary, borderRadius: 10, paddingVertical: 14,
-    alignItems: "center", marginTop: 8,
-  },
-  sendButtonText: { color: "#fff", fontWeight: "bold", fontSize: 16 },
-}); 
