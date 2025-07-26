@@ -19,7 +19,7 @@ const Layout = () => {
           backgroundColor: colors.background.main,
         },
         font: {
-          family: "OpenSans",
+          family: "inter",
         },
       }}
     >

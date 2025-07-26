@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 const API_KEY = "8d20b8334a854f338d0f7687407e46c0";
 
-const fetchRecipes = async (query = "chicken") => {
-  const url = `https://api.spoonacular.com/recipes/complexSearch?query=${query}&number=12&addRecipeInformation=true&apiKey=${API_KEY}`;
+const fetchFoods = async (query = "chicken") => {
+  const url = `https://api.spoonacular.com/food/ingredients/search?query=${query}&number=12&apiKey=${API_KEY}`;
   const res = await fetch(url);
   const data = await res.json();
   return data.results || [];
 };
 
-type Recipe = {
+type Food = {
   id: number;
-  title: string;
+  name: string;
   image: string;
-  summary?: string;
 };
 
 function makeStyles(colors: any) {
@@ -113,15 +113,15 @@ function makeStyles(colors: any) {
   });
 }
 
-const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
+const FoodCard = ({ food }: { food: Food }) => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
+  const router = useRouter();
   return (
     <View style={styles.card}>
-      <Image source={{ uri: recipe.image }} style={styles.image} />
-      <Text style={styles.title}>{recipe.title}</Text>
-      <Text style={styles.summary} numberOfLines={2}>{recipe.summary?.replace(/<[^>]+>/g, '')}</Text>
-      <TouchableOpacity style={styles.button}>
+      <Image source={{ uri: `https://spoonacular.com/cdn/ingredients_100x100/${food.image}` }} style={styles.image} />
+      <Text style={styles.title}>{food.name}</Text>
+      <TouchableOpacity style={styles.button} onPress={() => router.push({ pathname: '/food/recipe', params: { food: JSON.stringify(food) } })}>
         <Text style={styles.buttonText}>View Recipe</Text>
       </TouchableOpacity>
     </View>
@@ -131,15 +131,15 @@ const RecipeCard = ({ recipe }: { recipe: Recipe }) => {
 const RecipesPage = () => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState("chicken");
 
   useEffect(() => {
     setLoading(true);
-    fetchRecipes(query).then((data) => {
-      setRecipes(data);
+    fetchFoods(query).then((data) => {
+      setFoods(data);
       setLoading(false);
     });
   }, [query]);
@@ -150,11 +150,11 @@ const RecipesPage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Discover Recipes</Text>
+      <Text style={styles.header}>Discover Foods</Text>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Search recipes..."
+          placeholder="Search foods..."
           value={search}
           onChangeText={setSearch}
           onSubmitEditing={handleSearch}
@@ -169,9 +169,9 @@ const RecipesPage = () => {
         <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 50 }} />
       ) : (
         <FlatList
-          data={recipes}
+          data={foods}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => <RecipeCard recipe={item} />}
+          renderItem={({ item }) => <FoodCard food={item} />}
           numColumns={2}
           contentContainerStyle={styles.list}
         />

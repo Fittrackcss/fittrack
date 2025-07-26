@@ -1,55 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-// import { colors } from "../../constants/Colors";
-import { useTheme } from "@/constants/ThemeContext";
-
-function makeStyles(colors) {
-  return StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    text: {
-      fontSize: 20,
-      color: colors.text.primary,
-      textAlign: "center",
-      fontWeight: "800",
-      marginHorizontal: 20,
-    },
-    button: {
-      justifyContent: "center",
-      alignItems: "center",
-      width: "80%",
-      height: 50,
-      backgroundColor: colors.primary,
-      padding: 15,
-      borderRadius: 15,
-    },
-    googleButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: 12,
-      borderRadius: 50,
-      borderWidth: 1,
-      borderColor: colors.border,
-      width: "80%",
-    },
-
-    googleButtonText: {
-      fontSize: 16,
-      color: colors.text.secondary,
-      fontWeight: "500",
-    },
-  });
-}
+import { colors } from "../../constants/Colors";
 
 const SignUp = () => {
-  const { colors } = useTheme();
-  const styles = makeStyles(colors);
-
   const handleContinue = () => {
     // Handle continue logic here
     console.log("Continue Pressed");
@@ -100,3 +54,43 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontSize: 20,
+    color: colors.text.original,
+    textAlign: "center",
+    fontWeight: "800",
+    marginHorizontal: 20,
+  },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "80%",
+    height: 50,
+    backgroundColor: colors.primary,
+    padding: 15,
+    borderRadius: 15,
+  },
+  googleButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 12,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: colors.border,
+    width: "80%",
+  },
+
+  googleButtonText: {
+    fontSize: 16,
+    color: colors.text.secondary,
+    fontWeight: "500",
+  },
+});

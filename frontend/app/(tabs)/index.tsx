@@ -129,13 +129,13 @@ function makeStyles(colors: any) {
       width: "50%",
     },
     button: {
-      backgroundColor: colors.secondary,
+      backgroundColor: colors.secondary, // theme support
       padding: 8,
       borderRadius: 15,
       alignItems: "center",
     },
     buttonText: {
-      color: colors.primary,
+      color: colors.primary, // theme support
       fontSize: 14,
       fontWeight: "semibold",
     },
@@ -148,7 +148,7 @@ function makeStyles(colors: any) {
       flexDirection: "row",
     },
     card: {
-      backgroundColor: colors.background.card,
+      backgroundColor: colors.background.card, // theme support
       borderRadius: 12,
       width: "50%",
       display: "flex",
@@ -166,11 +166,11 @@ function makeStyles(colors: any) {
       fontSize: 18,
       fontWeight: "bold",
       marginBottom: 8,
-      color: colors.primary,
+      color: colors.primary, // theme support
     },
     cardSubtitle: {
       fontSize: 14,
-      color: colors.text.secondary,
+      color: colors.text.secondary, // theme support
     },
     exerciseStats: {
       flexDirection: "column",
@@ -186,7 +186,7 @@ function makeStyles(colors: any) {
     },
     statValue: {
       fontSize: 14,
-      color: colors.text.secondary,
+      color: "#333",
     },
     shadowContainer: {
       backgroundColor: "white",
@@ -306,7 +306,7 @@ function makeStyles(colors: any) {
 }
 
 export default function DashboardScreen() {
-  const { colors } = useTheme();
+  const { colors, darkMode } = useTheme();
   const router = useRouter();
   const { user } = useUserStore();
   const { getDailyNutritionSummary } = useNutritionStore();
@@ -849,7 +849,7 @@ export default function DashboardScreen() {
         >
           Discover
         </Text>
-        <DiscoverCards />
+        <DiscoverCards darkMode={darkMode} />
 
         <View style={styles.spacer} />
       </ScrollView>

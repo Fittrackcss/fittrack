@@ -1,4 +1,3 @@
-import { colors } from "@/constants/Colors";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -170,8 +169,6 @@ function makeStyles(colors: any) {
 
 export default function GoalsScreen() {
   const router = useRouter();
-  const { colors } = useTheme();
-  const styles = makeStyles(colors);
   const { user, updateUser } = useUserStore();
 
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(

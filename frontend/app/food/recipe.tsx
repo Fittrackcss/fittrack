@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, Alert } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useFoodStore } from "@/store/foodStore";
+
+const API_KEY = "8d20b8334a854f338d0f7687407e46c0";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -12,14 +15,6 @@ function makeStyles(colors: any) {
       flex: 1,
       backgroundColor: colors.background.main,
       padding: 24,
-    },
-    header: {
-      fontSize: 24,
-      fontWeight: "bold",
-      color: colors.primary,
-      marginBottom: 16,
-      textAlign: "center",
-      width: "100%",
     },
     card: {
       width: '100%',
@@ -79,7 +74,7 @@ function makeStyles(colors: any) {
       marginBottom: 8,
       alignSelf: 'flex-start',
     },
-    instructionsBox: {
+    summaryBox: {
       backgroundColor: colors.background.secondary,
       borderRadius: 12,
       padding: 16,
@@ -92,80 +87,122 @@ function makeStyles(colors: any) {
       shadowRadius: 4,
       elevation: 2,
     },
-    instructionsText: {
+    summaryText: {
       fontSize: 15,
       color: colors.text.primary,
       lineHeight: 22,
     },
+    addBtn: {
+      marginTop: 18,
+      width: '100%',
+    },
     goBackBtn: {
-      marginTop: 24,
+      marginTop: 12,
       width: '100%',
     },
   });
 }
 
-
-export default function ExerciseDetailPage() {
-  const { exercise } = useLocalSearchParams();
+export default function FoodRecipePage() {
+  const { food } = useLocalSearchParams();
+  const [recipe, setRecipe] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const {colors} = useTheme();
+  const { addFood } = useFoodStore();
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
 
-  let exerciseData: any = null;
-  if (exercise) {
+  // Parse food data from params
+  let foodData: any = null;
+  if (food) {
     try {
-      exerciseData = JSON.parse(exercise as string);
+      foodData = JSON.parse(food as string);
     } catch {}
   }
 
-  if (!exerciseData) {
+  useEffect(() => {
+    const fetchRecipe = async () => {
+      setLoading(true);
+      try {
+        if (foodData?.id) {
+          // Try to fetch a recipe for this ingredient
+          const res = await fetch(
+            `https://api.spoonacular.com/recipes/findByIngredients?ingredients=${encodeURIComponent(foodData.name)}&number=1&apiKey=${API_KEY}`
+          );
+          const data = await res.json();
+          if (data && data.length > 0) {
+            // Fetch full recipe info
+            const recipeRes = await fetch(
+              `https://api.spoonacular.com/recipes/${data[0].id}/information?apiKey=${API_KEY}`
+            );
+            const recipeData = await recipeRes.json();
+            setRecipe(recipeData);
+          } else {
+            setRecipe(null);
+          }
+        }
+      } catch (e) {
+        setRecipe(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (foodData?.id) fetchRecipe();
+    else setLoading(false);
+  }, [foodData]);
+
+  const handleAdd = () => {
+    if (!foodData) return;
+    addFood({
+      id: foodData.id,
+      name: foodData.name,
+      image: foodData.image,
+      nutrition: foodData.nutrition || null,
+      quantity: 1,
+      mealType: "breakfast",
+    });
+    Alert.alert("Added!", `${foodData.name} added to your food log.`);
+    router.back();
+  };
+
+  if (loading) {
     return (
       <View style={styles.card}>
-        <Text>No exercise data available.</Text>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!foodData) {
+    return (
+      <View style={styles.card}>
+        <Text>No food data available.</Text>
         <Button title="Go Back" onPress={() => router.back()} />
       </View>
     );
   }
 
+  const imageUrl = foodData?.image ? `https://spoonacular.com/cdn/ingredients_100x100/${foodData.image}` : null;
+  const title = foodData?.name || "Food";
+  const summary = recipe?.summary || "No recipe summary available.";
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <View
-        style={{
-          height: 60,
-          backgroundColor: colors.background.secondary,
-          marginBottom: 20,
-          justifyContent: "center",
-          alignItems: "flex-start",
-          paddingHorizontal: 10,
-          borderRadius: 10,
-        }}
-      >
-        <Text style={styles.header}>Discover Workouts</Text>
-      </View>
       <View style={styles.card}>
-        {exerciseData.gifUrl && (
-          <Image source={{ uri: exerciseData.gifUrl }} style={styles.image} />
+        {imageUrl && (
+          <Image source={{ uri: imageUrl }} style={styles.image} />
         )}
-        <Text style={styles.title}>{exerciseData.name}</Text>
-        <View style={styles.labelRow}>
-          <MaterialCommunityIcons name="dumbbell" size={20} color={colors.primary} style={styles.labelIcon} />
-          <Text style={styles.label}>Equipment Needed:</Text>
-        </View>
-        <Text style={styles.value}>{(exerciseData.equipment).toUpperCase() || "None"}</Text>
-        <View style={styles.labelRow}>
-          <MaterialCommunityIcons name="target" size={20} color={colors.primary} style={styles.labelIcon} />
-          <Text style={styles.label}>Target Body Part:</Text>
-        </View>
-        <Text style={styles.value}>{(exerciseData.target).toUpperCase() || "No target group available for this exercise."}</Text>
+        <Text style={styles.title}>{title}</Text>
         <View style={styles.labelRow}>
           <MaterialCommunityIcons name="book-open-variant" size={20} color={colors.primary} style={styles.labelIcon} />
-          <Text style={styles.label}>Instructions:</Text>
+          <Text style={styles.label}>Recipe:</Text>
         </View>
-        <View style={styles.instructionsBox}>
-          <Text style={styles.instructionsText}>{exerciseData.instructions || "No instructions available for this exercise."}</Text>
+        <View style={styles.summaryBox}>
+          <Text style={styles.summaryText}>{summary.replace(/<[^>]+>/g, "")}</Text>
         </View>
+        <Button title="Add to Food Log" onPress={handleAdd} style={styles.addBtn} />
         <Button title="Go Back" onPress={() => router.back()} style={styles.goBackBtn} />
       </View>
     </SafeAreaView>
   );
-}
+} 

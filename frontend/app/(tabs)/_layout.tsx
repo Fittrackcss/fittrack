@@ -84,8 +84,11 @@ function makeStyles(colors: any) {
       paddingTop: 8,
       paddingBottom: 12,
       borderTopWidth: 0,
-      // borderRadius: 15,
-      backgroundColor: colors.background.main,
+      elevation: 8,
+      shadowColor: "#000",
+      shadowOpacity: 1.5,
+      shadowRadius: 8,
+      backgroundColor: colors.background.card,
     },
     tabBarLabel: {
       fontSize: 12,

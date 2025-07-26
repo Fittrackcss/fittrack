@@ -10,7 +10,7 @@ type DiscoverProps = {
   color?: string;
 };
 
-const DiscoverCards = () => {
+const DiscoverCards = ({ darkMode }: { darkMode?: boolean }) => {
   const router = useRouter();
   const { colors } = useTheme();
   const styles = makeStyles(colors);
