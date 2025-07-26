@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+  TextInput,
+} from "react-native";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// Example API: https://wger.de/api/v2/exercise/?language=2&limit=12
-
 
 const RAPIDAPI_KEY = "1da1935727msh98758fdefa3e542p16676djsn53ef7394e79a";
 const RAPIDAPI_HOST = "exercisedb.p.rapidapi.com";
 
-const fetchExercises = async (query : string ) => {
+const fetchExercises = async (query: string) => {
   let url = "https://exercisedb.p.rapidapi.com/exercises";
   if (query) {
-    url = `https://exercisedb.p.rapidapi.com/exercises/name/${encodeURIComponent(query)}`;
+    url = `https://exercisedb.p.rapidapi.com/exercises/name/${encodeURIComponent(
+      query
+    )}`;
   }
   const res = await fetch(url, {
     headers: {
@@ -22,9 +29,8 @@ const fetchExercises = async (query : string ) => {
   });
   const data = await res.json();
   // The API returns an array of exercises
-  console.log(data)
+  console.log(data);
   return Array.isArray(data) ? data : [];
-
 };
 
 type Exercise = {
@@ -113,7 +119,7 @@ function makeStyles(colors: any) {
       fontSize: 16,
       color: colors.text.primary,
       padding: 10,
-      height:50,
+      height: 50,
       borderWidth: 1,
       borderRadius: 8,
       borderColor: colors.accent,
@@ -122,8 +128,8 @@ function makeStyles(colors: any) {
     searchButton: {
       backgroundColor: colors.primary,
       borderRadius: 8,
-      height:50,
-      justifyContent:"center",
+      height: 50,
+      justifyContent: "center",
       paddingVertical: 6,
       paddingHorizontal: 14,
       marginLeft: 8,
@@ -142,8 +148,12 @@ const ExerciseCard = ({ exercise }: { exercise: Exercise }) => {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{exercise.name}</Text>
-      <Text style={styles.category}>{exercise.bodyPart || exercise.target || "General"}</Text>
-      <Text style={styles.description} numberOfLines={2}>{exercise.equipment ? `Equipment: ${exercise.equipment}` : ""}</Text>
+      <Text style={styles.category}>
+        {exercise.bodyPart || exercise.target || "General"}
+      </Text>
+      <Text style={styles.description} numberOfLines={2}>
+        {exercise.equipment ? `Equipment: ${exercise.equipment}` : ""}
+      </Text>
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>View Exercise</Text>
       </TouchableOpacity>
@@ -173,18 +183,19 @@ const ExercisesPage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-        <View 
-            style={{
-                height:60, 
-                backgroundColor: colors.background.secondary, 
-                marginBottom: 20, 
-                justifyContent:"center", 
-                alignItems: "flex-start",
-                paddingHorizontal: 10,
-                borderRadius: 10,
-        }}>
-            <Text style={styles.header}>Discover Workouts</Text>
-        </View>
+      <View
+        style={{
+          height: 60,
+          backgroundColor: colors.background.secondary,
+          marginBottom: 20,
+          justifyContent: "center",
+          alignItems: "flex-start",
+          paddingHorizontal: 10,
+          borderRadius: 10,
+        }}
+      >
+        <Text style={styles.header}>Discover Workouts</Text>
+      </View>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -200,7 +211,11 @@ const ExercisesPage = () => {
         </TouchableOpacity>
       </View>
       {loading ? (
-        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 50 }} />
+        <ActivityIndicator
+          size="large"
+          color={colors.primary}
+          style={{ marginTop: 50 }}
+        />
       ) : (
         <FlatList
           data={exercises}
@@ -214,4 +229,4 @@ const ExercisesPage = () => {
   );
 };
 
-export default ExercisesPage; 
+export default ExercisesPage;

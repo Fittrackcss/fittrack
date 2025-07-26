@@ -25,7 +25,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -39,15 +39,15 @@ function makeStyles(colors: any) {
       paddingHorizontal: 15,
     },
     headerContentRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: '100%',
+      flexDirection: "row",
+      alignItems: "center",
+      width: "100%",
       marginBottom: 16,
     },
     nameEmailContainer: {
       marginLeft: 18,
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     profileImageContainer: {
       width: 90,
@@ -97,28 +97,26 @@ function makeStyles(colors: any) {
       flexDirection: "row",
       width: "100%",
       justifyContent: "space-between",
-      
     },
     statCard: {
       flex: 1,
-      backgroundColor: "white",
+      backgroundColor: colors.background.card,
       borderRadius: 16,
       padding: 16,
       paddingLeft: 10,
       paddingRight: 10,
       alignItems: "center",
       marginHorizontal: 4,
-      
     },
     statValue: {
       fontSize: 18,
       fontWeight: "bold",
-      color: "black",
+      color: colors.text.primary,
       marginTop: 4,
     },
     statLabel: {
       fontSize: 12,
-      color: 'black',
+      color: colors.accent,
       marginTop: 2,
       textAlign: "center",
     },
@@ -133,15 +131,10 @@ function makeStyles(colors: any) {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "space-between",
-      backgroundColor: 'white',
+      backgroundColor: colors.background.card,
       borderRadius: 16,
       padding: 20,
       marginBottom: 12,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 4,
     },
     menuItemLeft: {
       flexDirection: "row",
@@ -174,17 +167,12 @@ function makeStyles(colors: any) {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: 'white',
+      backgroundColor: colors.background.card,
       borderRadius: 16,
       padding: 20,
       marginHorizontal: 20,
       marginTop: 24,
       marginBottom: 16,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 4,
     },
     logoutText: {
       fontSize: 16,
@@ -208,8 +196,8 @@ export default function ProfileScreen() {
   const { user, logout, updateUser } = useUserStore();
 
   useEffect(() => {
-    console.log('Current user object:', user);
-    console.log('Profile photo URI:', user?.profilePhoto);
+    console.log("Current user object:", user);
+    console.log("Profile photo URI:", user?.profilePhoto);
   }, [user]);
 
   const handleLogout = () => {
@@ -231,26 +219,29 @@ export default function ProfileScreen() {
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Please grant permission to access your photo library');
+
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission needed",
+        "Please grant permission to access your photo library"
+      );
       return;
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: 'images',
+      mediaTypes: "images",
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.8,
     });
 
     if (!result.canceled && result.assets[0]) {
-      console.log('Selected image URI:', result.assets[0].uri);
+      console.log("Selected image URI:", result.assets[0].uri);
       updateUser({
         ...user,
         profilePhoto: result.assets[0].uri,
       });
-      console.log('User updated with profile photo');
+      console.log("User updated with profile photo");
     }
   };
 
@@ -259,37 +250,43 @@ export default function ProfileScreen() {
       icon: <User size={22} color={colors.primary} />,
       title: "Account Settings",
       subtitle: "Manage your profile and preferences",
-      onPress: () => router.push('/settings/account'),
+      onPress: () => router.push("/settings/account"),
     },
     {
       icon: <Heart size={22} color="#FF6B6B" />,
       title: "Health Profile",
       subtitle: "Your health metrics and goals",
-      onPress: () => router.push('/settings/health'),
+      onPress: () => router.push("/settings/health"),
     },
     {
       icon: <Target size={22} color="#4ECDC4" />,
       title: "Goals & Targets",
       subtitle: "Set and track your fitness goals",
-      onPress: () => router.push('/settings/goals'),
+      onPress: () => router.push("/settings/goals"),
     },
     {
       icon: <Bell size={22} color="#FFE66D" />,
       title: "Notifications",
       subtitle: "Customize your app notifications",
-      onPress: () => {router.push("/settings/notifications")},
+      onPress: () => {
+        router.push("/settings/notifications");
+      },
     },
     {
       icon: <HelpCircle size={22} color="#95E1D3" />,
       title: "Help & Support",
       subtitle: "Get help and contact support",
-      onPress: () => {router.push("/settings/help")},
+      onPress: () => {
+        router.push("/settings/help");
+      },
     },
     {
       icon: <Settings size={22} color="#A8E6CF" />,
       title: "App Settings",
       subtitle: "Configure app preferences",
-      onPress: () => {router.push("/settings/app")},
+      onPress: () => {
+        router.push("/settings/app");
+      },
     },
   ];
 
@@ -303,13 +300,16 @@ export default function ProfileScreen() {
         style={styles.headerGradient}
       >
         <View style={styles.headerContentRow}>
-          <TouchableOpacity style={styles.profileImageContainer} onPress={pickImage}>
+          <TouchableOpacity
+            style={styles.profileImageContainer}
+            onPress={pickImage}
+          >
             {user?.profilePhoto ? (
-              <Image 
-                source={{ uri: user.profilePhoto }} 
+              <Image
+                source={{ uri: user.profilePhoto }}
                 style={styles.profileImage}
-                onError={(error) => console.log('Image loading error:', error)}
-                onLoad={() => console.log('Image loaded successfully')}
+                onError={(error) => console.log("Image loading error:", error)}
+                onLoad={() => console.log("Image loaded successfully")}
               />
             ) : (
               <Text style={styles.profileImagePlaceholder}>
@@ -322,32 +322,49 @@ export default function ProfileScreen() {
           </TouchableOpacity>
           <View style={styles.nameEmailContainer}>
             <Text style={styles.name}>{user?.name || "User"}</Text>
-            <Text style={styles.email}>{user?.email || "user@example.com"}</Text>
+            <Text style={styles.email}>
+              {user?.email || "user@example.com"}
+            </Text>
           </View>
         </View>
 
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
-            <MaterialCommunityIcons name="scale" size={20} color={colors.primary} />
+            <MaterialCommunityIcons
+              name="scale"
+              size={20}
+              color={colors.primary}
+            />
             <Text style={styles.statValue}>{user?.weight || "--"} kg</Text>
             <Text style={styles.statLabel}>Current Weight</Text>
           </View>
 
           <View style={styles.statCard}>
-            <MaterialCommunityIcons name="target" size={20} color={colors.accent} />
+            <MaterialCommunityIcons
+              name="target"
+              size={20}
+              color={colors.accent}
+            />
             <Text style={styles.statValue}>{user?.goalWeight || "--"} kg</Text>
             <Text style={styles.statLabel}>Goal Weight</Text>
           </View>
 
           <View style={styles.statCard}>
-            <MaterialCommunityIcons name="human-male-height" size={20} color="#4ECDC4" />
+            <MaterialCommunityIcons
+              name="human-male-height"
+              size={20}
+              color="#4ECDC4"
+            />
             <Text style={styles.statValue}>{user?.height || "--"} cm</Text>
             <Text style={styles.statLabel}>Height</Text>
           </View>
         </View>
       </LinearGradient>
 
-      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.menuContainer}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
@@ -356,15 +373,17 @@ export default function ProfileScreen() {
               onPress={item.onPress}
             >
               <View style={styles.menuItemLeft}>
-                <View style={styles.iconContainer}>
-                  {item.icon}
-                </View>
+                <View style={styles.iconContainer}>{item.icon}</View>
                 <View style={styles.menuTextContainer}>
                   <Text style={styles.menuItemTitle}>{item.title}</Text>
                   <Text style={styles.menuItemSubtitle}>{item.subtitle}</Text>
                 </View>
               </View>
-              <MaterialCommunityIcons name="chevron-right" size={24} color={colors.text.light} />
+              <MaterialCommunityIcons
+                name="chevron-right"
+                size={24}
+                color={colors.text.light}
+              />
             </TouchableOpacity>
           ))}
         </View>

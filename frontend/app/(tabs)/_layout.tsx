@@ -1,4 +1,3 @@
-
 import { useTheme } from "@/constants/ThemeContext";
 import { Tabs } from "expo-router";
 import React from "react";
@@ -85,12 +84,8 @@ function makeStyles(colors: any) {
       paddingTop: 8,
       paddingBottom: 12,
       borderTopWidth: 0,
-      elevation: 8,
-      shadowColor: "#000",
-      borderRadius: 15,
-      shadowOpacity: 1.5,
-      shadowRadius: 8,
-      backgroundColor: colors.background.card,
+      // borderRadius: 15,
+      backgroundColor: colors.background.main,
     },
     tabBarLabel: {
       fontSize: 12,

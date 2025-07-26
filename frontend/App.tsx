@@ -1,6 +1,6 @@
 import React from "react";
 import { ThemeProvider } from "@/constants/ThemeContext";
-import MainApp from "./MainApp"; // or your main navigator
+import MainApp from "./app/_layout";
 
 export default function App() {
   return (
@@ -8,4 +8,4 @@ export default function App() {
       <MainApp />
     </ThemeProvider>
   );
-} 
+}

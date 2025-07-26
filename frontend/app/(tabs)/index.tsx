@@ -26,7 +26,6 @@ import { WeightEntry } from "@/types";
 import NotificationDrawer from "@/components/ui/NotificationDrawer";
 import { dummyNotifications } from "@/components/ui/NotificationDrawer";
 
-
 function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
@@ -74,7 +73,6 @@ function makeStyles(colors: any) {
       height: 100,
       backgroundColor: "white",
 
-
       // Optional styling
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
@@ -110,7 +108,7 @@ function makeStyles(colors: any) {
       alignItems: "flex-start",
       padding: 10,
       borderRadius: 15,
-      backgroundColor: colors.background.card, // theme support
+      backgroundColor: colors.background.card,
     },
     textContainer: {
       marginBottom: 15,
@@ -131,13 +129,13 @@ function makeStyles(colors: any) {
       width: "50%",
     },
     button: {
-      backgroundColor: colors.secondary, // theme support
+      backgroundColor: colors.secondary,
       padding: 8,
       borderRadius: 15,
       alignItems: "center",
     },
     buttonText: {
-      color: colors.primary, // theme support
+      color: colors.primary,
       fontSize: 14,
       fontWeight: "semibold",
     },
@@ -150,22 +148,29 @@ function makeStyles(colors: any) {
       flexDirection: "row",
     },
     card: {
-      backgroundColor: colors.background.card, // theme support
+      backgroundColor: colors.background.card,
       borderRadius: 12,
       width: "50%",
       display: "flex",
       padding: 16,
       marginBottom: 12,
+      shadowColor: colors.border,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 8, // For Android shadow
+      borderWidth: 1,
+      borderColor: colors.divider,
     },
     cardTitle: {
       fontSize: 18,
       fontWeight: "bold",
       marginBottom: 8,
-      color: colors.primary, // theme support
+      color: colors.primary,
     },
     cardSubtitle: {
       fontSize: 14,
-      color: colors.text.secondary, // theme support
+      color: colors.text.secondary,
     },
     exerciseStats: {
       flexDirection: "column",
@@ -181,7 +186,7 @@ function makeStyles(colors: any) {
     },
     statValue: {
       fontSize: 14,
-      color: "#333",
+      color: colors.text.secondary,
     },
     shadowContainer: {
       backgroundColor: "white",
@@ -264,8 +269,8 @@ function makeStyles(colors: any) {
       marginTop: 2,
     },
     headerIcons: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       gap: 8,
     },
     iconButton: {
@@ -280,22 +285,22 @@ function makeStyles(colors: any) {
       padding: 2,
     },
     notificationBadge: {
-      position: 'absolute',
+      position: "absolute",
       top: -4,
       right: -4,
       minWidth: 18,
       height: 18,
       borderRadius: 9,
       backgroundColor: colors.danger,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
       zIndex: 20,
       paddingHorizontal: 4,
     },
     notificationBadgeText: {
-      color: '#fff',
+      color: "#fff",
       fontSize: 12,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
   });
 }
@@ -306,9 +311,12 @@ export default function DashboardScreen() {
   const { user } = useUserStore();
   const { getDailyNutritionSummary } = useNutritionStore();
   const { getDailyExerciseSummary } = useExerciseStore();
-  const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } = useProgressStore();
+  const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } =
+    useProgressStore();
   const [weightData, setWeightData] = useState<WeightEntry[]>([]);
-  const [weightRange, setWeightRange] = useState<'week' | 'month' | 'year'>('week');
+  const [weightRange, setWeightRange] = useState<"week" | "month" | "year">(
+    "week"
+  );
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [notificationsViewed, setNotificationsViewed] = useState(false);
 
@@ -355,22 +363,34 @@ export default function DashboardScreen() {
   useEffect(() => {
     const today = new Date();
     let startDate = new Date();
-    if (weightRange === 'week') {
+    if (weightRange === "week") {
       startDate.setDate(today.getDate() - 7);
-    } else if (weightRange === 'month') {
+    } else if (weightRange === "month") {
       startDate.setMonth(today.getMonth() - 1);
     } else {
       startDate.setFullYear(today.getFullYear() - 1);
     }
-    const entries = getWeightEntriesByDateRange(startDate.toISOString(), today.toISOString());
+    const entries = getWeightEntriesByDateRange(
+      startDate.toISOString(),
+      today.toISOString()
+    );
     setWeightData(entries);
   }, [weightRange, weightEntries, getWeightEntriesByDateRange]);
 
   const renderWeightChart = () => {
     if (weightData.length === 0) {
       return (
-        <View style={{ height: 180, justifyContent: 'center', alignItems: 'center', marginVertical: 16 }}>
-          <Text style={{ color: colors.text.secondary }}>No weight data available</Text>
+        <View
+          style={{
+            height: 180,
+            justifyContent: "center",
+            alignItems: "center",
+            marginVertical: 16,
+          }}
+        >
+          <Text style={{ color: colors.text.secondary }}>
+            No weight data available
+          </Text>
         </View>
       );
     }
@@ -378,23 +398,57 @@ export default function DashboardScreen() {
     const maxWeight = Math.max(...weightData.map((d) => d.weight));
     const range = maxWeight - minWeight || 1;
     return (
-      <View style={{ flexDirection: 'row', height: 180, padding: 8, marginVertical: 16 }}>
-        <View style={{ width: 40, justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 8 }}>
-          <Text style={{ fontSize: 12, color: colors.text.secondary }}>{maxWeight.toFixed(1)}</Text>
-          <Text style={{ fontSize: 12, color: colors.text.secondary }}>{((maxWeight + minWeight) / 2).toFixed(1)}</Text>
-          <Text style={{ fontSize: 12, color: colors.text.secondary }}>{minWeight.toFixed(1)}</Text>
+      <View
+        style={{
+          flexDirection: "row",
+          height: 180,
+          padding: 8,
+          marginVertical: 16,
+        }}
+      >
+        <View
+          style={{
+            width: 40,
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            paddingRight: 8,
+          }}
+        >
+          <Text style={{ fontSize: 12, color: colors.text.secondary }}>
+            {maxWeight.toFixed(1)}
+          </Text>
+          <Text style={{ fontSize: 12, color: colors.text.secondary }}>
+            {((maxWeight + minWeight) / 2).toFixed(1)}
+          </Text>
+          <Text style={{ fontSize: 12, color: colors.text.secondary }}>
+            {minWeight.toFixed(1)}
+          </Text>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end', height: '100%', paddingBottom: 20 }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "flex-end",
+            height: "100%",
+            paddingBottom: 20,
+          }}
+        >
           {weightData.map((entry, index) => {
             const heightPercentage = ((entry.weight - minWeight) / range) * 100;
             const date = new Date(entry.date);
             const dateLabel = date.getDate().toString();
             return (
-              <View key={entry.id} style={{ flex: 1, alignItems: 'center' }}>
-                <View style={{ width: '60%', height: '100%', justifyContent: 'flex-end' }}>
+              <View key={entry.id} style={{ flex: 1, alignItems: "center" }}>
+                <View
+                  style={{
+                    width: "60%",
+                    height: "100%",
+                    justifyContent: "flex-end",
+                  }}
+                >
                   <View
                     style={{
-                      width: '100%',
+                      width: "100%",
                       height: `${Math.max(5, heightPercentage)}%`,
                       backgroundColor: colors.primary,
                       borderTopLeftRadius: 4,
@@ -402,7 +456,15 @@ export default function DashboardScreen() {
                     }}
                   />
                 </View>
-                <Text style={{ fontSize: 12, color: colors.text.secondary, marginTop: 4 }}>{dateLabel}</Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: colors.text.secondary,
+                    marginTop: 4,
+                  }}
+                >
+                  {dateLabel}
+                </Text>
               </View>
             );
           })}
@@ -441,59 +503,54 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Modern fixed header, similar to diary, but with 'FitTrack' */}
       <View style={styles.headerBar}>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>FitTrack</Text>
         </View>
         <View style={styles.headerIcons}>
-          <Animated.View style={{ transform: [{ scale: bellAnim }], position: 'relative' }}>
-            <TouchableOpacity style={styles.iconButton} onPress={handleBellPress}>
-              <MaterialCommunityIcons name="bell-outline" size={28} color={colors.primary} />
+          <Animated.View
+            style={{ transform: [{ scale: bellAnim }], position: "relative" }}
+          >
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={handleBellPress}
+            >
+              <MaterialCommunityIcons
+                name="bell-outline"
+                size={28}
+                color={colors.primary}
+              />
               {/* Notification count badge */}
-              {(!notificationsViewed && dummyNotifications.length > 0) ? (
+              {!notificationsViewed && dummyNotifications.length > 0 ? (
                 <View style={styles.notificationBadge}>
-                  <Text style={styles.notificationBadgeText}>{dummyNotifications.length}</Text>
+                  <Text style={styles.notificationBadgeText}>
+                    {dummyNotifications.length}
+                  </Text>
                 </View>
               ) : null}
             </TouchableOpacity>
           </Animated.View>
-          <TouchableOpacity style={styles.profileIcon} onPress={() => router.push('/profile')}>
-            <MaterialCommunityIcons name="account-circle" size={36} color={colors.primary} />
+          <TouchableOpacity
+            style={styles.profileIcon}
+            onPress={() => router.push("/profile")}
+          >
+            <MaterialCommunityIcons
+              name="account-circle"
+              size={36}
+              color={colors.primary}
+            />
           </TouchableOpacity>
         </View>
       </View>
       {/* Notification Drawer */}
-      <NotificationDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} />
+      <NotificationDrawer
+        visible={drawerVisible}
+        onClose={() => setDrawerVisible(false)}
+      />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Edit Button */}
-        {/* <TouchableOpacity>
-          <View
-            style={{
-              justifyContent: "center",
-              marginLeft: "80%",
-              marginRight: 50,
-              backgroundColor: colors.secondary,
-              borderRadius: 20,
-              height: 30,
-              width: 70,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                color: colors.primary,
-              }}
-            >
-              Edit
-            </Text>
-          </View>
-        </TouchableOpacity> */}
-
         <View style={styles.summaryContainer}>
           <Swiper
             style={styles.wrapper}
@@ -538,7 +595,7 @@ export default function DashboardScreen() {
                 style={[
                   styles.shadowContainer,
                   styles.macroShadowContainer,
-                  { backgroundColor: colors.background.card }, // <-- theme support
+                  { backgroundColor: colors.background.card },
                 ]}
               >
                 <View style={styles.macroContainer}>
@@ -552,7 +609,7 @@ export default function DashboardScreen() {
                           borderRightColor: macros.carbs.color,
                           borderBottomColor: macros.fat.color,
                           borderLeftColor: "transparent",
-                          backgroundColor: colors.background.main, // <-- theme support
+                          backgroundColor: colors.background.main,
                           transform: [
                             {
                               rotate: `${calculateAngle(
@@ -564,11 +621,20 @@ export default function DashboardScreen() {
                         },
                       ]}
                     >
-                      <View style={[
-                        styles.innerCircle,
-                        { backgroundColor: colors.background.card } // <-- theme support
-                      ]}>
-                        <Text style={[styles.macroTitle, { color: colors.text.primary }]}>Macros</Text>
+                      <View
+                        style={[
+                          styles.innerCircle,
+                          { backgroundColor: colors.background.card },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.macroTitle,
+                            { color: colors.text.primary },
+                          ]}
+                        >
+                          Macros
+                        </Text>
                       </View>
                     </View>
                   </View>
@@ -610,8 +676,12 @@ export default function DashboardScreen() {
         {/* Original dashboard content restored */}
         <View style={styles.containerText}>
           <View style={styles.textContainer}>
-            <Text style={[styles.title, { color: colors.text.primary }]}>Choose your next habit</Text>
-            <Text style={[styles.subtitle, { color: colors.text.secondary }]}>Big goals start with small habits.</Text>
+            <Text style={[styles.title, { color: colors.text.primary }]}>
+              Choose your next habit
+            </Text>
+            <Text style={[styles.subtitle, { color: colors.text.secondary }]}>
+              Big goals start with small habits.
+            </Text>
           </View>
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button}>
@@ -623,10 +693,17 @@ export default function DashboardScreen() {
         {/* Step and Exercise */}
         <View style={styles.containerCard}>
           {/* Steps Card */}
-          <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/sync')}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push("/discover/sync")}
+          >
             <Text style={styles.cardTitle}>Steps</Text>
             <View style={{ flexDirection: "row" }}>
-              <MaterialCommunityIcons name="run" size={30} color={colors.primary} />
+              <MaterialCommunityIcons
+                name="run"
+                size={30}
+                color={colors.primary}
+              />
               <View style={{ marginLeft: 4, width: "50%" }}>
                 <Text style={styles.cardSubtitle}>Connect to track steps.</Text>
               </View>
@@ -639,12 +716,19 @@ export default function DashboardScreen() {
           </TouchableOpacity>
 
           {/* Exercise Card */}
-          <TouchableOpacity style={styles.card} onPress={() => router.push('/discover/exercises')}>
+          <TouchableOpacity
+            style={styles.card}
+            onPress={() => router.push("/discover/exercises")}
+          >
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <Text style={styles.cardTitle}>Exercise</Text>
-              <MaterialCommunityIcons name="plus" size={24} color={colors.primary} />
+              <MaterialCommunityIcons
+                name="plus"
+                size={24}
+                color={colors.primary}
+              />
             </View>
             <View style={styles.exerciseStats}>
               <View style={styles.statItem}>
@@ -686,18 +770,69 @@ export default function DashboardScreen() {
             backgroundColor: colors.background.card,
             borderRadius: 18,
             padding: 16,
+            borderWidth: 1,
+            borderColor: colors.border,
           }}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 18, color: colors.primary, marginRight: 16 }}></Text>
-            <TouchableOpacity onPress={() => setWeightRange('week')} style={{ marginRight: 30 }}>
-              <Text style={{ color: weightRange === 'week' ? colors.primary : colors.text.secondary, fontWeight: weightRange === 'week' ? 'bold' : 'normal' }}>Week</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 8,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+                color: colors.primary,
+                marginRight: 16,
+              }}
+            ></Text>
+            <TouchableOpacity
+              onPress={() => setWeightRange("week")}
+              style={{ marginRight: 30 }}
+            >
+              <Text
+                style={{
+                  color:
+                    weightRange === "week"
+                      ? colors.primary
+                      : colors.text.secondary,
+                  fontWeight: weightRange === "week" ? "bold" : "normal",
+                }}
+              >
+                Week
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setWeightRange('month')} style={{ marginRight: 30 }}>
-              <Text style={{ color: weightRange === 'month' ? colors.primary : colors.text.secondary, fontWeight: weightRange === 'month' ? 'bold' : 'normal' }}>Month</Text>
+            <TouchableOpacity
+              onPress={() => setWeightRange("month")}
+              style={{ marginRight: 30 }}
+            >
+              <Text
+                style={{
+                  color:
+                    weightRange === "month"
+                      ? colors.primary
+                      : colors.text.secondary,
+                  fontWeight: weightRange === "month" ? "bold" : "normal",
+                }}
+              >
+                Month
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setWeightRange('year')}>
-              <Text style={{ color: weightRange === 'year' ? colors.primary : colors.text.secondary, fontWeight: weightRange === 'year' ? 'bold' : 'normal' }}>Year</Text>
+            <TouchableOpacity onPress={() => setWeightRange("year")}>
+              <Text
+                style={{
+                  color:
+                    weightRange === "year"
+                      ? colors.primary
+                      : colors.text.secondary,
+                  fontWeight: weightRange === "year" ? "bold" : "normal",
+                }}
+              >
+                Year
+              </Text>
             </TouchableOpacity>
           </View>
           {renderWeightChart()}
@@ -718,7 +853,6 @@ export default function DashboardScreen() {
 
         <View style={styles.spacer} />
       </ScrollView>
-
     </View>
   );
 }
