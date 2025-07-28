@@ -106,6 +106,10 @@ function makeStyles(colors: any) {
       color: colors.text.primary,
       padding: 8,
       backgroundColor: "transparent",
+      borderWidth: 1,
+      borderColor: colors.border,
+      borderRadius: 10,
+      padding: 10,
     },
     searchButton: {
       backgroundColor: colors.primary,

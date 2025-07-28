@@ -16,7 +16,7 @@ import { useTheme } from "@/constants/ThemeContext";
 
 const API_KEY = "8d20b8334a854f338d0f7687407e46c0";
 
-function makeStyles(colors){
+function makeStyles(colors) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -89,44 +89,44 @@ function makeStyles(colors){
       marginTop: 4,
     },
     foodCard: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       backgroundColor: colors.background.card,
       borderRadius: 18,
       marginBottom: 16,
       padding: 14,
-      shadowColor: '#7F9497',
+      shadowColor: "#7F9497",
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.10,
+      shadowOpacity: 0.1,
       shadowRadius: 8,
       elevation: 3,
       borderWidth: 1,
-      borderColor: 'rgba(0,0,0,0.03)',
-      transition: 'box-shadow 0.2s',
+      borderColor: "rgba(0,0,0,0.03)",
+      transition: "box-shadow 0.2s",
     },
     foodImage: {
       width: 90,
       height: 90,
       borderRadius: 16,
       marginRight: 18,
-      backgroundColor: '#f0f0f0',
+      backgroundColor: "#f0f0f0",
     },
     foodImagePlaceholder: {
       width: 90,
       height: 90,
       borderRadius: 16,
       marginRight: 18,
-      backgroundColor: '#f0f0f0',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "#f0f0f0",
+      justifyContent: "center",
+      alignItems: "center",
     },
     foodInfoSection: {
       flex: 1,
-      justifyContent: 'center',
+      justifyContent: "center",
     },
     foodName: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: colors.primary,
       marginBottom: 6,
     },
@@ -139,13 +139,13 @@ function makeStyles(colors){
       marginBottom: 2,
     },
     nutritionValue: {
-      fontWeight: '600',
+      fontWeight: "600",
       color: colors.text.primary,
     },
     addButtonContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignSelf: 'stretch',
+      justifyContent: "center",
+      alignItems: "center",
+      alignSelf: "stretch",
       marginLeft: 12,
     },
     addButtonModern: {
@@ -153,24 +153,21 @@ function makeStyles(colors){
       borderRadius: 8,
       paddingVertical: 6,
       paddingHorizontal: 18,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
       shadowColor: colors.primary,
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.10,
+      shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 2,
     },
     addButtonTextModern: {
-      color: '#fff',
-      fontWeight: 'bold',
+      color: "#fff",
+      fontWeight: "bold",
       fontSize: 15,
     },
   });
-  
-  
 }
-
 
 const FoodSearchScreen = () => {
   const [foods, setFoods] = useState([]);
@@ -178,9 +175,9 @@ const FoodSearchScreen = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const router = useRouter();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const styles = makeStyles(colors);
- 
+
   // Function to fetch detailed ingredient information like calories etc
   const fetchIngredientDetails = async (id) => {
     try {
@@ -245,9 +242,8 @@ const FoodSearchScreen = () => {
       },
     });
   };
-  
+
   return (
-    
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
@@ -263,7 +259,10 @@ const FoodSearchScreen = () => {
       </View>
       <View style={styles.divider} />
       {loading ? (
-        <ActivityIndicator size="large" style={{ marginTop: 100 }} />
+        <ActivityIndicator
+          size="large"
+          style={{ marginTop: 100, color: colors.primary }}
+        />
       ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -278,7 +277,9 @@ const FoodSearchScreen = () => {
               {item.image ? (
                 <Image
                   style={styles.foodImage}
-                  source={{ uri: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}` }}
+                  source={{
+                    uri: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}`,
+                  }}
                 />
               ) : (
                 <View style={styles.foodImagePlaceholder}>
@@ -289,13 +290,36 @@ const FoodSearchScreen = () => {
                 <Text style={styles.foodName}>{item.name}</Text>
                 {item.nutrition?.nutrients ? (
                   <View style={styles.nutritionRow}>
-                    <Text style={styles.nutritionLabel}>Calories: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[0]?.amount} {item.nutrition.nutrients[0]?.unit}</Text></Text>
-                    <Text style={styles.nutritionLabel}>Protein: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[1]?.amount}g</Text></Text>
-                    <Text style={styles.nutritionLabel}>Carbs: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[2]?.amount}g</Text></Text>
-                    <Text style={styles.nutritionLabel}>Fat: <Text style={styles.nutritionValue}>{item.nutrition.nutrients[3]?.amount}g</Text></Text>
+                    <Text style={styles.nutritionLabel}>
+                      Calories:{" "}
+                      <Text style={styles.nutritionValue}>
+                        {item.nutrition.nutrients[0]?.amount}{" "}
+                        {item.nutrition.nutrients[0]?.unit}
+                      </Text>
+                    </Text>
+                    <Text style={styles.nutritionLabel}>
+                      Protein:{" "}
+                      <Text style={styles.nutritionValue}>
+                        {item.nutrition.nutrients[1]?.amount}g
+                      </Text>
+                    </Text>
+                    <Text style={styles.nutritionLabel}>
+                      Carbs:{" "}
+                      <Text style={styles.nutritionValue}>
+                        {item.nutrition.nutrients[2]?.amount}g
+                      </Text>
+                    </Text>
+                    <Text style={styles.nutritionLabel}>
+                      Fat:{" "}
+                      <Text style={styles.nutritionValue}>
+                        {item.nutrition.nutrients[3]?.amount}g
+                      </Text>
+                    </Text>
                   </View>
                 ) : (
-                  <Text style={styles.details}>Nutrition data not available</Text>
+                  <Text style={styles.details}>
+                    Nutrition data not available
+                  </Text>
                 )}
               </View>
               <View style={styles.addButtonContainer}>

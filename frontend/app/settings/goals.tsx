@@ -169,6 +169,8 @@ function makeStyles(colors: any) {
 
 export default function GoalsScreen() {
   const router = useRouter();
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const { user, updateUser } = useUserStore();
 
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(
