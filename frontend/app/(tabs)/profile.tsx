@@ -173,11 +173,6 @@ function makeStyles(colors: any) {
       marginHorizontal: 20,
       marginTop: 24,
       marginBottom: 16,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
-      elevation: 4,
     },
     logoutText: {
       fontSize: 16,

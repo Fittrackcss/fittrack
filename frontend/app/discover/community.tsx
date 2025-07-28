@@ -151,7 +151,7 @@ function makeStyles(colors: any) {
       alignItems: "center",
       backgroundColor: colors.background.card,
       borderRadius: 20,
-      paddingVertical: 8,
+      paddingVertical: 10,
       paddingHorizontal: 16,
       marginRight: 12,
       shadowColor: "#7F9497",

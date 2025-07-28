@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import {useTheme} from "@/constants/ThemeContext"
+import { useTheme } from "@/constants/ThemeContext";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -164,13 +164,11 @@ function makeStyles(colors: any) {
       fontSize: 16,
       fontWeight: "600",
     },
-  }); 
+  });
 }
 
 export default function GoalsScreen() {
   const router = useRouter();
-  const {colors} = useTheme();
-  const styles = makeStyles(colors)
   const { user, updateUser } = useUserStore();
 
   const [dailyCalorieGoal, setDailyCalorieGoal] = useState(

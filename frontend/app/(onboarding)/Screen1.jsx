@@ -13,6 +13,7 @@ import { useTheme } from "@/constants/ThemeContext";
 import slide1 from "../../assets/images/slide1.jpg";
 import food from "../../assets/images/food.jpg";
 import image from "../../assets/images/image.png";
+import { useTheme } from "@/constants/ThemeContext";
 
 const { width } = Dimensions.get("window");
 

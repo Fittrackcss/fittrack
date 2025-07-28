@@ -1,4 +1,3 @@
-
 import { useTheme } from "@/constants/ThemeContext";
 import { Tabs } from "expo-router";
 import React from "react";
