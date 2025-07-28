@@ -129,13 +129,13 @@ function makeStyles(colors: any) {
       width: "50%",
     },
     button: {
-      backgroundColor: colors.secondary, // theme support
+      backgroundColor: colors.secondary,
       padding: 8,
       borderRadius: 15,
       alignItems: "center",
     },
     buttonText: {
-      color: colors.primary, // theme support
+      color: colors.primary,
       fontSize: 14,
       fontWeight: "semibold",
     },
@@ -148,29 +148,22 @@ function makeStyles(colors: any) {
       flexDirection: "row",
     },
     card: {
-      backgroundColor: colors.background.card, // theme support
+      backgroundColor: colors.background.card,
       borderRadius: 12,
       width: "50%",
       display: "flex",
       padding: 16,
       marginBottom: 12,
-      shadowColor: colors.border,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      elevation: 8, // For Android shadow
-      borderWidth: 1,
-      borderColor: colors.divider,
     },
     cardTitle: {
       fontSize: 18,
       fontWeight: "bold",
       marginBottom: 8,
-      color: colors.primary, // theme support
+      color: colors.primary,
     },
     cardSubtitle: {
       fontSize: 14,
-      color: colors.text.secondary, // theme support
+      color: colors.text.secondary,
     },
     exerciseStats: {
       flexDirection: "column",
@@ -186,7 +179,7 @@ function makeStyles(colors: any) {
     },
     statValue: {
       fontSize: 14,
-      color: "#333",
+      color: colors.accent,
     },
     shadowContainer: {
       backgroundColor: "white",
@@ -503,10 +496,7 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-<<<<<<< HEAD
       {/* Modern fixed header, similar to diary, but with 'Fittrack' */}
-=======
->>>>>>> 1440ffb19367701b034a40a066c95759bbe69d30
       <View style={styles.headerBar}>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerTitle}>Fittrack</Text>
@@ -555,6 +545,31 @@ export default function DashboardScreen() {
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
       >
+        {/* Edit Button */}
+        {/* <TouchableOpacity>
+          <View
+            style={{
+              justifyContent: "center",
+              marginLeft: "80%",
+              marginRight: 50,
+              backgroundColor: colors.secondary,
+              borderRadius: 20,
+              height: 30,
+              width: 70,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: colors.primary,
+              }}
+            >
+              Edit
+            </Text>
+          </View>
+        </TouchableOpacity> */}
+
         <View style={styles.summaryContainer}>
           <Swiper
             style={styles.wrapper}
@@ -599,7 +614,7 @@ export default function DashboardScreen() {
                 style={[
                   styles.shadowContainer,
                   styles.macroShadowContainer,
-                  { backgroundColor: colors.background.card },
+                  { backgroundColor: colors.background.card }, // <-- theme support
                 ]}
               >
                 <View style={styles.macroContainer}>
@@ -613,7 +628,7 @@ export default function DashboardScreen() {
                           borderRightColor: macros.carbs.color,
                           borderBottomColor: macros.fat.color,
                           borderLeftColor: "transparent",
-                          backgroundColor: colors.background.main,
+                          backgroundColor: colors.background.main, // <-- theme support
                           transform: [
                             {
                               rotate: `${calculateAngle(
@@ -628,7 +643,7 @@ export default function DashboardScreen() {
                       <View
                         style={[
                           styles.innerCircle,
-                          { backgroundColor: colors.background.card },
+                          { backgroundColor: colors.background.card }, // <-- theme support
                         ]}
                       >
                         <Text
@@ -698,7 +713,16 @@ export default function DashboardScreen() {
         <View style={styles.containerCard}>
           {/* Steps Card */}
           <TouchableOpacity
-            style={styles.card}
+            style={[
+              styles.card,
+              !darkMode && {
+                shadowColor: "#7F9497",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+                elevation: 4,
+              },
+            ]}
             onPress={() => router.push("/discover/sync")}
           >
             <Text style={styles.cardTitle}>Steps</Text>
@@ -721,7 +745,16 @@ export default function DashboardScreen() {
 
           {/* Exercise Card */}
           <TouchableOpacity
-            style={styles.card}
+            style={[
+              styles.card,
+              !darkMode && {
+                shadowColor: "#7F9497",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+                elevation: 4,
+              },
+            ]}
             onPress={() => router.push("/discover/exercises")}
           >
             <View
@@ -774,8 +807,6 @@ export default function DashboardScreen() {
             backgroundColor: colors.background.card,
             borderRadius: 18,
             padding: 16,
-            borderWidth: 1,
-            borderColor: colors.border,
           }}
         >
           <View

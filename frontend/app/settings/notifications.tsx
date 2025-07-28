@@ -11,59 +11,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTheme } from "@/constants/ThemeContext";
 import { dummyNotifications } from "@/components/ui/NotificationDrawer";
-import { useTheme } from "@/constants/ThemeContext";
-
-function makeStyles(colors: any) {
-  return StyleSheet.create({
-    container: { flex: 1, backgroundColor: colors.background.main },
-    header: {
-      paddingTop: 25,
-      paddingBottom: 15,
-      paddingHorizontal: 20,
-      borderRadius: 20,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
-    backButton: {
-      width: 40,
-      height: 40,
-      borderRadius: 20,
-      backgroundColor: "rgba(255,255,255,0.2)",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    headerTitle: { fontSize: 20, fontWeight: "bold", color: "#fff" },
-    placeholder: { width: 40 },
-    content: { flex: 1, paddingHorizontal: 20 },
-    notificationCard: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: colors.background.card,
-      borderRadius: 12,
-      padding: 16,
-      marginBottom: 16,
-      shadowColor: "#7F9497",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 4,
-      elevation: 2,
-    },
-    notificationTitle: {
-      fontSize: 16,
-      fontWeight: "bold",
-      color: colors.primary,
-      marginBottom: 4,
-    },
-    notificationMessage: { fontSize: 14, color: colors.text.secondary },
-    emptyText: {
-      textAlign: "center",
-      color: colors.text.secondary,
-      marginTop: 40,
-      fontSize: 16,
-    },
-  });
-}
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -121,8 +68,6 @@ export default function NotificationsSettingsScreen() {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const router = useRouter();
-  const { colors } = useTheme();
-  const styles = makeStyles(colors);
   const [notifications, setNotifications] = useState([...dummyNotifications]);
 
   const handleRemove = (id: string) => {
