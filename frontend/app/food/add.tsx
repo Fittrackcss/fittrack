@@ -7,7 +7,7 @@ import { Search } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 
-function makeStyles(colors) {
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,

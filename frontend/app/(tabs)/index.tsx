@@ -441,10 +441,10 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Modern fixed header, similar to diary, but with 'FitTrack' */}
+      {/* Modern fixed header, similar to diary, but with 'Fittrack' */}
       <View style={styles.headerBar}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.headerTitle}>FitTrack</Text>
+          <Text style={styles.headerTitle}>Fittrack</Text>
         </View>
         <View style={styles.headerIcons}>
           <Animated.View style={{ transform: [{ scale: bellAnim }], position: 'relative' }}>

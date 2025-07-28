@@ -4,23 +4,42 @@ import { Exercise } from "@/types";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View, Animated } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Animated,
+} from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Animated circular progress ring
 const AnimatedCircle = Animated.createAnimatedComponent(View);
-const AnimatedProgressRing = ({ percent, calories }: { percent: number; calories: number }) => {
+const AnimatedProgressRing = ({
+  percent,
+  calories,
+}: {
+  percent: number;
+  calories: number;
+}) => {
   const strokeWidth = 3;
   const size = 64;
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = circumference * (1 - percent);
   return (
-    <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+    <View
+      style={{
+        width: size,
+        height: size,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <AnimatedCircle
         style={{
-          position: 'absolute',
+          position: "absolute",
           width: size,
           height: size,
           borderRadius: size / 2,
@@ -30,14 +49,14 @@ const AnimatedProgressRing = ({ percent, calories }: { percent: number; calories
       />
       <AnimatedCircle
         style={{
-          position: 'absolute',
+          position: "absolute",
           width: size,
           height: size,
           borderRadius: size / 2,
           borderWidth: strokeWidth,
           borderColor: colors.accent,
-          borderRightColor: 'transparent',
-          borderBottomColor: 'transparent',
+          borderRightColor: "transparent",
+          borderBottomColor: "transparent",
           transform: [{ rotate: `${percent * 360}deg` }],
         }}
       />
@@ -82,12 +101,17 @@ export const ExerciseCard = ({ date }: ExerciseCardProps) => {
   const percent = Math.min(totalCaloriesBurned / 500, 1);
 
   const handleAddExercise = () => {
-    router.push(`/exercise/add?date=${date}`);
+    // router.push(`/exercise/add?date=${date}`);
+    router.push(`/discover/exercises`);
   };
 
   return (
     <LinearGradient
-      colors={[colors.accent, colors.background.secondary, colors.background.card]}
+      colors={[
+        colors.accent,
+        colors.background.secondary,
+        colors.background.card,
+      ]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.modernCard}
@@ -97,7 +121,10 @@ export const ExerciseCard = ({ date }: ExerciseCardProps) => {
           <Text style={styles.cardTitle}>Exercise</Text>
           <Text style={styles.cardSubtitle}>Keep moving, stay healthy!</Text>
         </View>
-        <AnimatedProgressRing percent={percent} calories={totalCaloriesBurned} />
+        <AnimatedProgressRing
+          percent={percent}
+          calories={totalCaloriesBurned}
+        />
       </View>
       {exerciseItems.length > 0 ? (
         <View style={styles.exerciseList}>
@@ -115,18 +142,27 @@ export const ExerciseCard = ({ date }: ExerciseCardProps) => {
               <Text style={styles.exerciseCalories}>
                 {Math.round(
                   item.exercise.caloriesBurnedPerMinute * item.duration
-                )} cal
+                )}{" "}
+                cal
               </Text>
             </View>
           ))}
         </View>
       ) : (
         <View style={styles.emptyStateModern}>
-          <MaterialCommunityIcons name="run-fast" size={36} color={colors.text.secondary} style={{ marginBottom: 8 }} />
+          <MaterialCommunityIcons
+            name="run-fast"
+            size={36}
+            color={colors.text.secondary}
+            style={{ marginBottom: 8 }}
+          />
           <Text style={styles.emptyTextModern}>No exercises added yet</Text>
         </View>
       )}
-      <TouchableOpacity style={styles.addButtonModern} onPress={handleAddExercise}>
+      <TouchableOpacity
+        style={styles.addButtonModern}
+        onPress={handleAddExercise}
+      >
         <Plus size={18} color="#fff" />
         <Text style={styles.addButtonTextModern}>Add Exercise</Text>
       </TouchableOpacity>
@@ -141,7 +177,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 4,
   },
@@ -154,7 +190,7 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    color: 'white',
+    color: "white",
     letterSpacing: 1,
   },
   cardSubtitle: {
@@ -162,20 +198,20 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginTop: 2,
     marginBottom: 2,
-    marginRight: 15
+    marginRight: 15,
   },
   progressCalories: {
     fontSize: 18,
     fontWeight: "bold",
     color: colors.accent,
     marginTop: 2,
-    textAlign: 'center',
+    textAlign: "center",
   },
   progressLabel: {
     fontSize: 12,
     color: colors.text.secondary,
     marginTop: -2,
-    textAlign: 'center',
+    textAlign: "center",
   },
   exerciseList: {
     marginBottom: 12,
@@ -228,7 +264,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     shadowColor: "#7F9497",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.10,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },

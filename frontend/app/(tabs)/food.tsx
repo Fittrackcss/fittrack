@@ -45,11 +45,15 @@ const foodstore = () => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background.main }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background.main }]}
+    >
       {incomingFood ? (
         // Add new food view
         <View style={styles.addContainer}>
-          <Text style={[styles.title, { color: colors.accent }]}>Add {incomingFood.name}</Text>
+          <Text style={[styles.title, { color: colors.accent }]}>
+            Add {incomingFood.name}
+          </Text>
 
           {incomingFood.image && (
             <Image
@@ -103,7 +107,9 @@ const foodstore = () => {
               alignItems: "flex-start",
             }}
           >
-            <Text style={[styles.title, { color: colors.accent }]}>Your Food Log</Text>
+            <Text style={[styles.title, { color: colors.accent }]}>
+              Your Food Log
+            </Text>
           </View>
 
           {foods.length === 0 ? (
@@ -113,16 +119,25 @@ const foodstore = () => {
               data={foods}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
-                <View style={[styles.foodItem, { backgroundColor: colors.background.card }]}>
+                <View
+                  style={[
+                    styles.foodItem,
+                    { backgroundColor: colors.background.card },
+                  ]}
+                >
                   {item.image && (
                     <Image
-                      source={{ uri: item.image }}
+                      source={{
+                        uri: `https://spoonacular.com/cdn/ingredients_100x100/${item.image}`,
+                      }}
                       style={styles.foodImage}
-                      resizeMode="contain"
+                      resizeMode="cover"
                     />
                   )}
                   <View style={styles.foodDetails}>
-                    <Text style={[styles.foodName, { color: colors.primary }]}>{item.name}</Text>
+                    <Text style={[styles.foodName, { color: colors.primary }]}>
+                      {item.name}
+                    </Text>
                     <Text style={{ color: colors.text.muted }}>
                       Quantity: {item.quantity}
                     </Text>

@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "FitTrack",
+    "name": "",
     "slug": "fittrack",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "",
+    "icon": "./assets/images/fit.png",
     "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/images/fit.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#ff8e0c"
     },
     "scheme": "fitnesspal",
     "userInterfaceStyle": "automatic",
@@ -19,7 +19,8 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/fit.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "resizeMode": "cover"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.sboakyeyiadom9.fittrack"
@@ -27,12 +28,9 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/fit.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-font"
-    ],
+    "plugins": ["expo-router", "expo-font"],
     "experiments": {
       "typedRoutes": true
     },

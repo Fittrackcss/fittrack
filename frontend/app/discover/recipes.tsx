@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ActivityIndicator, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  TextInput,
+} from "react-native";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -37,7 +46,7 @@ function makeStyles(colors: any) {
       paddingBottom: 32,
     },
     card: {
-      backgroundColor: colors.background.card || "#fff",
+      backgroundColor: colors.background.card,
       borderRadius: 12,
       padding: 12,
       margin: 8,
@@ -119,9 +128,22 @@ const FoodCard = ({ food }: { food: Food }) => {
   const router = useRouter();
   return (
     <View style={styles.card}>
-      <Image source={{ uri: `https://spoonacular.com/cdn/ingredients_100x100/${food.image}` }} style={styles.image} />
+      <Image
+        source={{
+          uri: `https://spoonacular.com/cdn/ingredients_100x100/${food.image}`,
+        }}
+        style={styles.image}
+      />
       <Text style={styles.title}>{food.name}</Text>
-      <TouchableOpacity style={styles.button} onPress={() => router.push({ pathname: '/food/recipe', params: { food: JSON.stringify(food) } })}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          router.push({
+            pathname: "/food/recipe",
+            params: { food: JSON.stringify(food) },
+          })
+        }
+      >
         <Text style={styles.buttonText}>View Recipe</Text>
       </TouchableOpacity>
     </View>
@@ -166,7 +188,11 @@ const RecipesPage = () => {
         </TouchableOpacity>
       </View>
       {loading ? (
-        <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 50 }} />
+        <ActivityIndicator
+          size="large"
+          color={colors.primary}
+          style={{ marginTop: 50 }}
+        />
       ) : (
         <FlatList
           data={foods}
@@ -180,4 +206,4 @@ const RecipesPage = () => {
   );
 };
 
-export default RecipesPage; 
+export default RecipesPage;

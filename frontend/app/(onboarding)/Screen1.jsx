@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import SafeAreaView from "react-native-safe-area-view";
 import { SwiperFlatList } from "react-native-swiper-flatlist";
-// import { colors } from "../../constants/Colors";
 import { useTheme } from "@/constants/ThemeContext";
 import slide1 from "../../assets/images/slide1.jpg";
 import food from "../../assets/images/food.jpg";
@@ -39,7 +38,7 @@ const slides = [
   },
 ];
 
-function makeStyles(colors){
+function makeStyles(colors) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -139,13 +138,13 @@ function makeStyles(colors){
       fontSize: 16,
       fontWeight: "bold",
     },
-  })
+  });
 }
 
 const Screen1 = () => {
   const router = useRouter();
-  const {colors} = useTheme();
-  const styles = makeStyles(colors)
+  const { colors } = useTheme();
+  const styles = makeStyles(colors);
   const handleSignUp = () => {
     router.push("/(onboarding)/SignUp");
   };
@@ -159,7 +158,7 @@ const Screen1 = () => {
       <View style={styles.header}>
         <Text style={{ fontSize: 15, color: "#ccc", textAlign: "center" }}>
           Welcome to {"\n"}
-          <Text style={styles.heading}>FitTrack</Text>
+          <Text style={styles.heading}>Fittrack</Text>
         </Text>
       </View>
       <View style={styles.sliderWrapper}>

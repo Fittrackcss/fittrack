@@ -53,7 +53,7 @@ export default function WelcomeScreen() {
   const router = useRouter();
   const { isAuthenticated } = useUserStore();
 
-  if (isAuthenticated) {
+  if (!isAuthenticated) {
     return <Redirect href="/(onboarding)" />;
   }
 
@@ -79,7 +79,7 @@ export default function WelcomeScreen() {
         />
         <Button
           title="Sign Up"
-          onPress={() => router.push("/signup")}
+          onPress={() => router.push("/(onboarding)/SignUp")}
           variant="outline"
           style={styles.button}
         />
