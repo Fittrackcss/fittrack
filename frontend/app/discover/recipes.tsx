@@ -104,12 +104,11 @@ function makeStyles(colors: any) {
       flex: 1,
       fontSize: 16,
       color: colors.text.primary,
-      padding: 8,
+      padding: 10,
       backgroundColor: "transparent",
       borderWidth: 1,
       borderColor: colors.border,
       borderRadius: 10,
-      padding: 10,
     },
     searchButton: {
       backgroundColor: colors.primary,

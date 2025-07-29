@@ -32,7 +32,7 @@ const fetchExercises = async (query: string) => {
   });
   const data = await res.json();
   // The API returns an array of exercises
-  console.log(data);
+  // console.log(data);
   return Array.isArray(data) ? data : [];
 };
 
@@ -56,7 +56,6 @@ function makeStyles(colors: any) {
       fontSize: 24,
       fontWeight: "bold",
       color: colors.primary,
-      marginBottom: 16,
       textAlign: "center",
     },
     list: {
@@ -158,7 +157,15 @@ const ExerciseCard = ({ exercise }: { exercise: Exercise }) => {
       <Text style={styles.description} numberOfLines={2}>
         {exercise.equipment ? `Equipment: ${exercise.equipment}` : ""}
       </Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          router.push({
+            pathname: "/exercise/detail",
+            params: { exercise: JSON.stringify(exercise) },
+          })
+        }
+      >
         <Text style={styles.buttonText}>View Exercise</Text>
       </TouchableOpacity>
     </View>
@@ -191,7 +198,6 @@ const ExercisesPage = () => {
         style={{
           height: 60,
           backgroundColor: colors.background.secondary,
-          marginBottom: 20,
           justifyContent: "center",
           alignItems: "flex-start",
           paddingHorizontal: 10,

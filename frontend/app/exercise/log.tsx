@@ -1,12 +1,18 @@
 import React from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useTheme } from "@/constants/ThemeContext";
 import { useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
 import { ExerciseEntry } from "@/types";
 
-function makeStyles(colors) {
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -119,7 +125,9 @@ const ExerciseLogPage = () => {
       <View style={styles.card}>
         <View style={styles.headerRow}>
           <Text style={styles.exerciseName}>{exercise.name}</Text>
-          <Text style={styles.date}>{new Date(item.date).toLocaleDateString()}</Text>
+          <Text style={styles.date}>
+            {new Date(item.date).toLocaleDateString()}
+          </Text>
         </View>
         <View style={styles.infoRow}>
           <Text style={styles.duration}>{item.duration} min</Text>
@@ -133,7 +141,10 @@ const ExerciseLogPage = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Exercise Log</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => router.push("/exercise/add")}> 
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => router.push("/exercise/add")}
+        >
           <Plus size={20} color={colors.primary} />
           <Text style={styles.addButtonText}>Add Exercise</Text>
         </TouchableOpacity>
@@ -154,4 +165,4 @@ const ExerciseLogPage = () => {
   );
 };
 
-export default ExerciseLogPage; 
+export default ExerciseLogPage;
