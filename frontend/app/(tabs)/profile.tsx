@@ -1,5 +1,6 @@
 import { useTheme } from "@/constants/ThemeContext";
 import { useUserStore } from "@/store/userStore";
+import { useOnboardingStore } from "@/store/useOnboardingStore";
 import { useRouter } from "expo-router";
 import {
   Award,
@@ -13,7 +14,7 @@ import {
   Target,
   Shield,
 } from "lucide-react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   ScrollView,
@@ -26,6 +27,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import CustomModal from "@/components/ui/CustomModal";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -194,27 +196,62 @@ export default function ProfileScreen() {
   const styles = makeStyles(colors);
   const router = useRouter();
   const { user, logout, updateUser } = useUserStore();
+  const { formData, selections } = useOnboardingStore();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  // Create fallback user from onboarding data if user store is null
+  const fallbackUser = user || (formData && Object.keys(formData).length > 0 ? {
+    id: "onboarding-user",
+    name: formData.name || "User",
+    email: formData.email || "",
+    age: Number(formData.age) || 0,
+    gender: formData.sex || formData.gender || "",
+    height: Number(formData.height) || 0,
+    weight: Number(formData.weight) || 0,
+    goalWeight: Number(formData.goalWeight) || 0,
+    activityLevel: formData.activityLevel || "",
+    goal: "maintain" as const,
+    dailyCalorieGoal: 0,
+    weeklyWorkouts: 0,
+    dailySteps: 0,
+    weightGoal: "",
+    profilePhoto: undefined,
+    macroGoals: { protein: 0, carbs: 0, fat: 0 },
+  } : null);
+
+  const displayUser = user || fallbackUser;
 
   useEffect(() => {
     console.log("Current user object:", user);
-    console.log("Profile photo URI:", user?.profilePhoto);
-  }, [user]);
+    console.log("Onboarding formData:", formData);
+    console.log("Onboarding selections:", selections);
+    console.log("Fallback user:", fallbackUser);
+    console.log("Display user:", displayUser);
+    console.log("Profile photo URI:", displayUser?.profilePhoto);
+    console.log("User name:", displayUser?.name);
+    console.log("User email:", displayUser?.email);
+    console.log("User weight:", displayUser?.weight);
+    console.log("User height:", displayUser?.height);
+    console.log("User goal weight:", displayUser?.goalWeight);
+    
+    // Check if user store is working
+    const { user: storeUser, isAuthenticated } = useUserStore.getState();
+    console.log("User store state - user:", storeUser);
+    console.log("User store state - isAuthenticated:", isAuthenticated);
+  }, [user, formData, selections, fallbackUser, displayUser]);
 
   const handleLogout = () => {
-    Alert.alert("Log Out", "Are you sure you want to log out?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Log Out",
-        style: "destructive",
-        onPress: () => {
-          logout();
-          router.replace("/(onboarding)/Screen1");
-        },
-      },
-    ]);
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    logout();
+    router.replace("/(onboarding)/Screen1");
+    setShowLogoutModal(false);
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   const pickImage = async () => {
@@ -237,10 +274,20 @@ export default function ProfileScreen() {
 
     if (!result.canceled && result.assets[0]) {
       console.log("Selected image URI:", result.assets[0].uri);
-      updateUser({
-        ...user,
-        profilePhoto: result.assets[0].uri,
-      });
+      
+      // If we have a real user, update it normally
+      if (user) {
+        updateUser({
+          profilePhoto: result.assets[0].uri,
+        });
+      } else {
+        // If we're using fallback data, create a new user with the photo
+        const newUser = {
+          ...fallbackUser!,
+          profilePhoto: result.assets[0].uri,
+        };
+        useUserStore.getState().setUser(newUser);
+      }
       console.log("User updated with profile photo");
     }
   };
@@ -304,16 +351,21 @@ export default function ProfileScreen() {
             style={styles.profileImageContainer}
             onPress={pickImage}
           >
-            {user?.profilePhoto ? (
+            {displayUser?.profilePhoto ? (
               <Image
-                source={{ uri: user.profilePhoto }}
+                source={{ uri: displayUser.profilePhoto }}
                 style={styles.profileImage}
-                onError={(error) => console.log("Image loading error:", error)}
+                onError={(error) => {
+                  console.log("Image loading error:", error);
+                  // If image fails to load, remove the profile photo
+                  updateUser({ profilePhoto: undefined });
+                }}
                 onLoad={() => console.log("Image loaded successfully")}
+                resizeMode="cover"
               />
             ) : (
               <Text style={styles.profileImagePlaceholder}>
-                {user?.name?.charAt(0) || "U"}
+                {displayUser?.name?.charAt(0)?.toUpperCase() || "U"}
               </Text>
             )}
             <View style={styles.cameraIcon}>
@@ -321,9 +373,9 @@ export default function ProfileScreen() {
             </View>
           </TouchableOpacity>
           <View style={styles.nameEmailContainer}>
-            <Text style={styles.name}>{user?.name || "User"}</Text>
+            <Text style={styles.name}>{displayUser?.name?.trim() || "User"}</Text>
             <Text style={styles.email}>
-              {user?.email || "user@example.com"}
+              {displayUser?.email || "user@example.com"}
             </Text>
           </View>
         </View>
@@ -335,7 +387,7 @@ export default function ProfileScreen() {
               size={20}
               color={colors.primary}
             />
-            <Text style={styles.statValue}>{user?.weight || "--"} kg</Text>
+            <Text style={styles.statValue}>{displayUser?.weight ? `${displayUser.weight} kg` : "-- kg"}</Text>
             <Text style={styles.statLabel}>Current Weight</Text>
           </View>
 
@@ -345,7 +397,7 @@ export default function ProfileScreen() {
               size={20}
               color={colors.accent}
             />
-            <Text style={styles.statValue}>{user?.goalWeight || "--"} kg</Text>
+            <Text style={styles.statValue}>{displayUser?.goalWeight ? `${displayUser.goalWeight} kg` : "-- kg"}</Text>
             <Text style={styles.statLabel}>Goal Weight</Text>
           </View>
 
@@ -355,7 +407,7 @@ export default function ProfileScreen() {
               size={20}
               color="#4ECDC4"
             />
-            <Text style={styles.statValue}>{user?.height || "--"} cm</Text>
+            <Text style={styles.statValue}>{displayUser?.height ? `${displayUser.height} cm` : "-- cm"}</Text>
             <Text style={styles.statLabel}>Height</Text>
           </View>
         </View>
@@ -404,6 +456,26 @@ export default function ProfileScreen() {
 
         <Text style={styles.versionText}>FitTrack v1.0.0</Text>
       </ScrollView>
+
+      <CustomModal
+        visible={showLogoutModal}
+        onClose={cancelLogout}
+        title="Log Out"
+        message="Are you sure you want to log out?"
+        type="warning"
+        buttons={[
+          {
+            text: "Cancel",
+            onPress: cancelLogout,
+            style: "secondary"
+          },
+          {
+            text: "Log Out",
+            onPress: confirmLogout,
+            style: "danger"
+          }
+        ]}
+      />
     </View>
   );
 }

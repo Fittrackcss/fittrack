@@ -1,5 +1,7 @@
 import { router } from "expo-router";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type ScreenSelections = {
   [screenId: string]: string[];
@@ -45,44 +47,47 @@ type OnboardingStore = {
   setCountry: (country: string) => void;
 };
 
-export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
-  // Navigation state
-  currentIndex: 0,
-  onboardingIndex: 0,
+export const useOnboardingStore = create<OnboardingStore>()(
+  persist(
+    (set, get) => ({
+      // Navigation state
+      currentIndex: 0,
+      onboardingIndex: 0,
 
-  // Navigation setters
-  setCurrentIndex: (index) =>
-    set({
-      currentIndex: index,
-      onboardingIndex: index,
-    }),
-  setOnboardingIndex: (index) =>
-    set({
-      onboardingIndex: index,
-      currentIndex: index,
-    }),
-  incrementIndex: () => {
-    const { currentIndex } = get();
-    const newIndex = currentIndex + 1;
-    set({
-      currentIndex: newIndex,
-      onboardingIndex: newIndex,
-    });
-    return newIndex;
-  },
-  decrementIndex: () => {
-    const { currentIndex } = get();
-    const newIndex = Math.max(0, currentIndex - 1);
-    set({
-      currentIndex: newIndex,
-      onboardingIndex: newIndex,
-    });
-    return newIndex;
-  },
+      // Navigation setters
+      setCurrentIndex: (index) =>
+        set({
+          currentIndex: index,
+          onboardingIndex: index,
+        }),
+      setOnboardingIndex: (index) =>
+        set({
+          onboardingIndex: index,
+          currentIndex: index,
+        }),
+      incrementIndex: () => {
+        const { currentIndex } = get();
+        const newIndex = currentIndex + 1;
+        set({
+          currentIndex: newIndex,
+          onboardingIndex: newIndex,
+        });
+        return newIndex;
+      },
+      decrementIndex: () => {
+        const { currentIndex } = get();
+        const newIndex = Math.max(0, currentIndex - 1);
+        set({
+          currentIndex: newIndex,
+          onboardingIndex: newIndex,
+        });
+        return newIndex;
+      },
 
-  // Selection management
-  selections: {},
-  toggleSelection: (screenId, itemId, mode) => {
+      // Selection management
+      selections: {},
+        toggleSelection: (screenId, itemId, mode) => {
+    console.log("toggleSelection called:", { screenId, itemId, mode });
     const current = get().selections[screenId] || [];
     let newSelection: string[];
 
@@ -107,40 +112,62 @@ export const useOnboardingStore = create<OnboardingStore>((set, get) => ({
         [screenId]: newSelection,
       },
     });
+    console.log("Updated selections:", get().selections);
   },
 
-  getSelections: (screenId) => get().selections[screenId] || [],
+      getSelections: (screenId) => get().selections[screenId] || [],
 
-  // Specific getter for sex
-  getSelectedSex: () => {
-    const sex = get().formData.sex;
-    return sex === "male" || sex === "female" ? sex : undefined;
-  },
-
-  // Form data management
-  formData: {},
-  updateFormData: (data) =>
-    set((state) => ({
-      formData: { ...state.formData, ...data },
-    })),
-
-  // Specific setters for InfoCollection data
-  setSex: (sex) =>
-    set((state) => ({
-      formData: { ...state.formData, sex },
-      selections: {
-        ...state.selections,
-        "info-collection-screen": [sex],
+      // Specific getter for sex
+      getSelectedSex: () => {
+        const sex = get().formData.sex;
+        return sex === "male" || sex === "female" ? sex : undefined;
       },
-    })),
 
-  setAge: (age) =>
-    set((state) => ({
-      formData: { ...state.formData, age },
-    })),
+        // Form data management
+  formData: {},
+  updateFormData: (data) => {
+    console.log("updateFormData called with:", data);
+    set((state) => {
+      const newFormData = { ...state.formData, ...data };
+      console.log("Updated formData:", newFormData);
+      return { formData: newFormData };
+    });
+  },
 
-  setCountry: (country) =>
-    set((state) => ({
-      formData: { ...state.formData, country },
-    })),
-}));
+      // Specific setters for InfoCollection data
+      setSex: (sex) =>
+        set((state) => ({
+          formData: { ...state.formData, sex },
+          selections: {
+            ...state.selections,
+            "info-collection-screen": [sex],
+          },
+        })),
+
+      setAge: (age) =>
+        set((state) => ({
+          formData: { ...state.formData, age },
+        })),
+
+      setCountry: (country) =>
+        set((state) => ({
+          formData: { ...state.formData, country },
+        })),
+    }),
+    {
+      name: "onboarding-storage",
+      storage: {
+        getItem: async (name) => {
+          const value = await AsyncStorage.getItem(name);
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: async (name, value) => {
+          await AsyncStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: async (name) => {
+          await AsyncStorage.removeItem(name);
+        },
+      },
+    }
+  )
+);

@@ -6,6 +6,8 @@ import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFoodStore } from "@/store/foodStore";
+import { useNutritionStore } from "@/store/nutritionStore";
+import CustomModal from "@/components/ui/CustomModal";
 
 const API_KEY = "8d20b8334a854f338d0f7687407e46c0";
 
@@ -104,10 +106,10 @@ function makeStyles(colors: any) {
 }
 
 export default function FoodRecipePage() {
-  const { food } = useLocalSearchParams();
-  const router = useRouter();
   const { colors } = useTheme();
   const { addFood } = useFoodStore();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Memoize food data parsing
   const foodData = useMemo(() => {
@@ -171,9 +173,9 @@ export default function FoodRecipePage() {
       quantity: 1,
       mealType: "breakfast",
     });
-    Alert.alert("Added!", `${foodData.name} added to your food log.`);
-    router.back();
-  }, [foodData, addFood, router]);
+    setShowSuccessModal(true);
+    setSuccessMessage(`${foodData.name} added to your food log.`);
+  }, [foodData, addFood]);
 
   // Memoize derived values
   const imageUrl = useMemo(
@@ -241,6 +243,16 @@ export default function FoodRecipePage() {
           />
         </View>
       </ScrollView>
+      <CustomModal
+        visible={showSuccessModal}
+        title="Added!"
+        message={successMessage}
+        type="success"
+        onClose={() => {
+          setShowSuccessModal(false);
+          router.back();
+        }}
+      />
     </SafeAreaView>
   );
 }

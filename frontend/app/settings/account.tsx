@@ -5,8 +5,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useUserStore } from "@/store/userStore";
 import { useTheme } from "@/constants/ThemeContext";
+import CustomModal from "@/components/ui/CustomModal";
 
-function makeStyles(colors) {
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -144,6 +145,10 @@ export default function AccountSettingsScreen() {
   const styles = makeStyles(colors);
   const router = useRouter();
   const { user, updateUser } = useUserStore();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
 
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
@@ -153,7 +158,9 @@ export default function AccountSettingsScreen() {
 
   const handleSaveProfile = () => {
     if (!name.trim() || !email.trim()) {
-      Alert.alert("Error", "Please fill in all required fields");
+      setModalTitle("Error");
+      setModalMessage("Please fill in all required fields");
+      setShowErrorModal(true);
       return;
     }
 
@@ -163,27 +170,37 @@ export default function AccountSettingsScreen() {
       email: email.trim(),
     });
 
-    Alert.alert("Success", "Profile updated successfully!");
+    setModalTitle("Success");
+    setModalMessage("Profile updated successfully!");
+    setShowSuccessModal(true);
   };
 
   const handleChangePassword = () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all password fields");
+      setModalTitle("Error");
+      setModalMessage("Please fill in all password fields");
+      setShowErrorModal(true);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert("Error", "New passwords do not match");
+      setModalTitle("Error");
+      setModalMessage("New passwords do not match");
+      setShowErrorModal(true);
       return;
     }
 
     if (newPassword.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters");
+      setModalTitle("Error");
+      setModalMessage("Password must be at least 6 characters");
+      setShowErrorModal(true);
       return;
     }
 
     // Here you would typically validate current password and update
-    Alert.alert("Success", "Password changed successfully!");
+    setModalTitle("Success");
+    setModalMessage("Password changed successfully!");
+    setShowSuccessModal(true);
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
@@ -369,6 +386,21 @@ export default function AccountSettingsScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      <CustomModal
+        visible={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={modalTitle}
+        message={modalMessage}
+        type="success"
+      />
+      <CustomModal
+        visible={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        title={modalTitle}
+        message={modalMessage}
+        type="error"
+      />
     </View>
   );
 }

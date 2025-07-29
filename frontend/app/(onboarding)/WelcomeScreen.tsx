@@ -132,7 +132,8 @@ const WelcomeScreen = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
-  const swiperRef = useRef(null);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const swiperRef = useRef<SwiperFlatList>(null);
   const router = useRouter();
 
   // Store state
@@ -144,13 +145,21 @@ const WelcomeScreen = () => {
     incrementIndex,
     decrementIndex,
   } = useOnboardingStore();
+  
+  // Check user store state
+  const { user: currentUser } = useUserStore();
+  console.log("Current user from store:", currentUser);
 
   // Get current step
   const currentStep = onboardingSteps[currentIndex];
+  
+  // Debug current state
+  console.log("Current index:", currentIndex, "Total steps:", onboardingSteps.length);
+  console.log("Current formData:", formData);
 
   // Handle validation
   const validateCurrentStep = useCallback(() => {
-    if (currentStep?.input && !formData[currentStep.key]?.trim()) {
+    if (currentStep?.input && currentStep?.field && !formData[currentStep.field]?.trim()) {
       setValidationMessage(`Please ${currentStep.placeholder}`);
       setShowValidationModal(true);
       return false;
@@ -160,7 +169,7 @@ const WelcomeScreen = () => {
 
   // Navigation handlers
   const goToNext = useCallback(async () => {
-    if (!validateCurrentStep()) return;
+    if (!validateCurrentStep() || isNavigating) return;
 
     const nextIndex = currentIndex + 1;
 
@@ -170,18 +179,26 @@ const WelcomeScreen = () => {
       return;
     }
 
-    if (currentIndex === onboardingSteps.length - 1) {
-      // Onboarding complete - transfer data to user store
-      const { formData, selections } = useOnboardingStore.getState();
-      const { signup } = useUserStore.getState();
+    // Always get the latest onboarding data
+    const { formData, selections } = useOnboardingStore.getState();
+    const { signup, user: currentUser } = useUserStore.getState();
 
+    if (currentIndex === onboardingSteps.length - 1) {
+      setIsNavigating(true);
+      
       // Extract goals and other selections
       const goals = selections["goals-screen"] || [];
       const barriers = selections["barriers-screen"] || [];
       const goalChoices = selections["goal-choices-screen"] || [];
       const mealPlanning = selections["meal-planning-screen"] || [];
 
-      // Build user object from all collected data
+      // Determine the goal type with proper validation
+      const goalChoice = goalChoices[0] || goals[0] || "maintain";
+      const validGoal = goalChoice === "lose" || goalChoice === "gain" || goalChoice === "maintain"
+        ? goalChoice as "lose" | "maintain" | "gain"
+        : "maintain";
+
+      // Build user object from all collected data - only include fields that match User type
       const userObj = {
         id: "",
         email: formData.email || "",
@@ -192,28 +209,36 @@ const WelcomeScreen = () => {
         height: Number(formData.height) || 0,
         weight: Number(formData.weight) || 0,
         goalWeight: Number(formData.goalWeight) || 0,
-        country: formData.country || "",
         activityLevel: formData.activityLevel || "",
-        goal: goalChoices[0] || goals[0] || "maintain",
+        goal: validGoal,
         dailyCalorieGoal: 0,
         macroGoals: { protein: 0, carbs: 0, fat: 0 },
         weeklyWorkouts: 0,
         dailySteps: 0,
         weightGoal: "",
-        onboardingGoals: goals,
-        onboardingBarriers: barriers,
-        onboardingMealPlanning: mealPlanning,
       };
 
-      // Log all onboarding data for debugging
-      console.log("ONBOARDING FORM DATA:", formData);
-      console.log("ONBOARDING SELECTIONS:", selections);
-      console.log("USER OBJECT TO STORE:", userObj);
+      console.log("Final onboarding data:", { formData, selections });
+      console.log("User object to signup:", userObj);
 
       // Create user from onboarding data
-      await signup(userObj);
-
-      router.replace("/(tabs)/diary");
+      const signupResult = await signup(userObj);
+      console.log("Signup result:", signupResult);
+      let afterSignupUser = useUserStore.getState().user;
+      let waitCount = 0;
+      while (!afterSignupUser && waitCount < 20) { // wait up to 2 seconds
+        await new Promise((res) => setTimeout(res, 100));
+        afterSignupUser = useUserStore.getState().user;
+        waitCount++;
+      }
+      console.log("User after signup (waited):", afterSignupUser);
+      
+      // Add a small delay to ensure smooth transition
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // Clear the entire navigation stack and go to main app
+      // This ensures no back navigation to onboarding screens
+      router.replace("/(tabs)");
       return;
     }
 
@@ -224,11 +249,12 @@ const WelcomeScreen = () => {
     } else {
       router.replace("/(auth)/login");
     }
-  }, [currentIndex, validateCurrentStep]);
+  }, [currentIndex, validateCurrentStep, isNavigating]);
 
   const goToPrev = useCallback(() => {
     if (currentIndex > 0) {
-      const prevIndex = decrementIndex();
+      decrementIndex();
+      const prevIndex = currentIndex - 1;
       swiperRef.current?.scrollToIndex({ index: prevIndex, animated: true });
     } else {
       router.back();
@@ -274,8 +300,8 @@ const WelcomeScreen = () => {
               <View style={{ width: "100%", marginTop: 20 }}>
                 <Text style={styles.inputLabel}>{item.label}</Text>
                 <TextInput
-                  value={formData[item.key] || ""}
-                  onChangeText={(text) => updateFormData({ [item.key]: text })}
+                  value={formData[item.field] || ""}
+                  onChangeText={(text) => updateFormData({ [item.field]: text })}
                   onFocus={() => setIsFocused(true)}
                   onBlur={() => setIsFocused(false)}
                   style={[styles.input, isFocused && styles.inputFocused]}
@@ -309,9 +335,11 @@ const WelcomeScreen = () => {
           <Ionicons name="arrow-back" size={24} color={colors.primary} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={goToNext} style={styles.nextButton}>
+        <TouchableOpacity onPress={goToNext} style={styles.nextButton} disabled={isNavigating}>
           <Text style={styles.nextText}>
-            {currentIndex === onboardingSteps.length - 1
+            {isNavigating 
+              ? "Setting up..." 
+              : currentIndex === onboardingSteps.length - 1
               ? "Get Started"
               : "Next"}
           </Text>

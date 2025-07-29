@@ -202,5 +202,3 @@ const Screen1 = () => {
 };
 
 export default Screen1;
-
-// const styles = ;

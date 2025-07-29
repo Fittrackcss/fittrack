@@ -69,15 +69,22 @@ interface UserState {
 
 export const useUserStore = create<UserState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
-      setUser: (user) => set({ user, isAuthenticated: true }),
+      setUser: (user) => {
+        console.log("setUser called with:", user);
+        set({ user, isAuthenticated: true });
+      },
 
-      updateUser: (userData) =>
-        set((state) => ({
-          user: state.user ? { ...state.user, ...userData } : null,
-        })),
+      updateUser: (userData) => {
+        console.log("updateUser called with:", userData);
+        set((state) => {
+          const updatedUser = state.user ? { ...state.user, ...userData } : null;
+          console.log("Updated user:", updatedUser);
+          return { user: updatedUser };
+        });
+      },
 
       login: async (email, password) => {
         // In a real app, you would verify credentials with your backend
@@ -102,6 +109,7 @@ export const useUserStore = create<UserState>()(
       logout: () => set({ user: null, isAuthenticated: false }),
 
       signup: async (userData) => {
+        console.log("Signup called with userData:", userData);
         if (userData.email && userData.password) {
           // Create new user from the actual provided data
           const newUser: User = {
@@ -123,9 +131,16 @@ export const useUserStore = create<UserState>()(
             weightGoal: userData.weightGoal || "",
           };
 
+          console.log("Created newUser:", newUser);
           set({ user: newUser, isAuthenticated: true });
+          console.log("User state set successfully");
+          
+          // Verify the state was actually set
+          const currentState = get();
+          console.log("Current state after set:", currentState);
           return true;
         }
+        console.log("Signup failed - missing email or password");
         return false;
       },
     }),

@@ -17,14 +17,16 @@ import {
   Text,
   TouchableOpacity,
   Animated,
+  Alert,
+  BackHandler,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import DiscoverCards from "@/components/Discover";
-import { Bold } from "lucide-react-native";
 import { useProgressStore } from "@/store/progressStore";
 import { WeightEntry } from "@/types";
 import NotificationDrawer from "@/components/ui/NotificationDrawer";
 import { dummyNotifications } from "@/components/ui/NotificationDrawer";
+import CustomModal from "@/components/ui/CustomModal";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -312,6 +314,19 @@ export default function DashboardScreen() {
   );
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [notificationsViewed, setNotificationsViewed] = useState(false);
+  const [isExitConfirmationModalVisible, setIsExitConfirmationModalVisible] = useState(false);
+
+  // Handle back button press for exit confirmation
+  useEffect(() => {
+    const backAction = () => {
+      setIsExitConfirmationModalVisible(true);
+      return true; // Prevent default back behavior
+    };
+
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+
+    return () => backHandler.remove();
+  }, []);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [nutritionSummary, setNutritionSummary] = useState({
@@ -540,6 +555,25 @@ export default function DashboardScreen() {
       <NotificationDrawer
         visible={drawerVisible}
         onClose={() => setDrawerVisible(false)}
+      />
+      <CustomModal
+        visible={isExitConfirmationModalVisible}
+        onClose={() => setIsExitConfirmationModalVisible(false)}
+        title="Exit App"
+        message="Are you sure you want to exit the app?"
+        type="warning"
+        buttons={[
+          {
+            text: "No",
+            onPress: () => setIsExitConfirmationModalVisible(false),
+            style: "secondary"
+          },
+          {
+            text: "Yes",
+            onPress: () => BackHandler.exitApp(),
+            style: "danger"
+          }
+        ]}
       />
       <ScrollView
         style={styles.scrollView}
