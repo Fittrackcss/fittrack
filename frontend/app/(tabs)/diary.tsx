@@ -28,8 +28,7 @@ const mealIcons: { [key: string]: any } = {
   snack: require("@/assets/images/food.jpg"),
 };
 
-
-function makeStyles(colors: any){
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -40,7 +39,7 @@ function makeStyles(colors: any){
       paddingTop: 30,
       paddingBottom: 16,
       paddingHorizontal: 20,
-      
+
       shadowColor: "#7F9497",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
@@ -84,9 +83,8 @@ function makeStyles(colors: any){
       padding: 12,
       marginHorizontal: 20,
       marginBottom: 8,
-      
+
       borderRadius: 32,
-     
     },
     searchInputContainer: {
       flex: 1,
@@ -104,12 +102,11 @@ function makeStyles(colors: any){
       height: 40,
       fontSize: 16,
       color: colors.text.primary,
-      backgroundColor: '#fff',
+      backgroundColor: "#fff",
       borderRadius: 24,
       borderWidth: 1.5,
       borderColor: colors.accent,
       paddingHorizontal: 16,
-     
     },
     cancelButton: {
       marginLeft: 12,
@@ -298,36 +295,43 @@ function makeStyles(colors: any){
     searchButton: {
       marginLeft: 8,
       borderRadius: 24,
-      overflow: 'hidden',
-      shadowColor: '#7F9497',
+      overflow: "hidden",
+      shadowColor: "#7F9497",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.12,
       shadowRadius: 6,
       elevation: 2,
     },
     searchButtonGradient: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 24,
       minWidth: 40,
       minHeight: 40,
     },
-  
-  })}
+  });
+}
 
 export default function ExerciseScreen() {
   const router = useRouter();
   const { searchExercise, searchResults } = useExerciseStore();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { colors } = useTheme();
-  const styles = makeStyles(colors)
+  const styles = makeStyles(colors);
   const renderExerciseCard = () => (
     <View style={styles.sectionCard}>
-      <Text style={[styles.sectionHeader, { color: colors.primary }]}>Today's Exercise</Text>
-      <View style={[styles.exerciseGradientCard, { backgroundColor: colors.background.secondary }]}>
+      <Text style={[styles.sectionHeader, { color: colors.primary }]}>
+        Today's Exercise
+      </Text>
+      <View
+        style={[
+          styles.exerciseGradientCard,
+          { backgroundColor: colors.background.secondary },
+        ]}
+      >
         <ExerciseCard date={selectedDate.toISOString()} />
         {/* Example: Progress ring or calories summary */}
         {/* <View style={styles.exerciseSummary}>
@@ -347,11 +351,17 @@ export default function ExerciseScreen() {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.background.main }]}>
+    <View
+      style={[styles.container, { backgroundColor: colors.background.main }]}
+    >
       {/* Modern fixed header */}
-      <View style={[styles.headerBar, { backgroundColor: colors.background.card }]}>
+      <View
+        style={[styles.headerBar, { backgroundColor: colors.background.card }]}
+      >
         <View style={{ flex: 1 }}>
-          <Text style={[styles.headerTitle, { color: colors.primary }]}>Diary</Text>
+          <Text style={[styles.headerTitle, { color: colors.primary }]}>
+            Diary
+          </Text>
           <Text style={[styles.headerDate, { color: colors.text.secondary }]}>
             {selectedDate.toLocaleDateString(undefined, {
               weekday: "long",
@@ -360,26 +370,52 @@ export default function ExerciseScreen() {
             })}
           </Text>
         </View>
-        <TouchableOpacity style={[styles.profileIcon, { backgroundColor: colors.background.secondary }]}>
-          <MaterialCommunityIcons name="account-circle" size={36} color={colors.primary} />
+        <TouchableOpacity
+          style={[
+            styles.profileIcon,
+            { backgroundColor: colors.background.secondary },
+          ]}
+          onPress={() => router.push("/profile")}
+        >
+          <MaterialCommunityIcons
+            name="account-circle"
+            size={36}
+            color={colors.primary}
+          />
         </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
         {/* Daily summary card */}
-        <View style={[styles.summaryCard, { backgroundColor: colors.background.card }]}>
+        <View
+          style={[
+            styles.summaryCard,
+            { backgroundColor: colors.background.card },
+          ]}
+        >
           <Text style={[styles.summaryText, { color: colors.text.primary }]}>
-            You’ve logged {dailySummary.mealsLogged}/{dailySummary.totalMeals} meals and {dailySummary.workoutsLogged}/{dailySummary.totalWorkouts} workout today!
+            You’ve logged {dailySummary.mealsLogged}/{dailySummary.totalMeals}{" "}
+            meals and {dailySummary.workoutsLogged}/{dailySummary.totalWorkouts}{" "}
+            workout today!
           </Text>
         </View>
 
         <DateSelector date={selectedDate} onDateChange={setSelectedDate} />
         {renderExerciseCard()}
         {/* Section divider */}
-        <View style={[styles.sectionDivider, { backgroundColor: colors.divider }]} />
+        <View
+          style={[styles.sectionDivider, { backgroundColor: colors.divider }]}
+        />
         {/* Meal cards section */}
-        <View style={[styles.mealSectionContainer, { backgroundColor: colors.background.card }]}>
-          <Text style={[styles.sectionHeader, { color: colors.primary }]}>Meals</Text>
+        <View
+          style={[
+            styles.mealSectionContainer,
+            { backgroundColor: colors.background.card },
+          ]}
+        >
+          <Text style={[styles.sectionHeader, { color: colors.primary }]}>
+            Meals
+          </Text>
           <View style={styles.mealCardsList}>
             {[
               { title: "Breakfast", mealType: "breakfast" },
@@ -402,6 +438,6 @@ export default function ExerciseScreen() {
   );
 }
 
-// const styles = 
+// const styles =
 //   // ... keep other styles as needed ...
 // });

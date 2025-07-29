@@ -1,17 +1,41 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Modal, TextInput, Alert, Linking, Platform } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  Modal,
+  TextInput,
+  Alert,
+  Linking,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/constants/ThemeContext";
-import { Ionicons } from '@expo/vector-icons';
-import * as Contacts from 'expo-contacts'; // Make sure expo-contacts is installed
+import { Ionicons } from "@expo/vector-icons";
+import * as Contacts from "expo-contacts"; // Make sure expo-contacts is installed
 
 const suggestedFriends = [
-  { id: '1', name: 'Alex Johnson', avatar: 'https://randomuser.me/api/portraits/men/32.jpg' },
-  { id: '2', name: 'Maria Lee', avatar: 'https://randomuser.me/api/portraits/women/44.jpg' },
-  { id: '3', name: 'Chris Smith', avatar: 'https://randomuser.me/api/portraits/men/65.jpg' },
+  {
+    id: "1",
+    name: "Alex Johnson",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+  },
+  {
+    id: "2",
+    name: "Maria Lee",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+  },
+  {
+    id: "3",
+    name: "Chris Smith",
+    avatar: "https://randomuser.me/api/portraits/men/65.jpg",
+  },
 ];
 
-function makeStyles(colors:any) {
+function makeStyles(colors: any) {
   return StyleSheet.create({
     container: {
       flex: 1,
@@ -32,36 +56,36 @@ function makeStyles(colors:any) {
       textAlign: "center",
     },
     inviteButton: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       backgroundColor: colors.primary,
       borderRadius: 8,
       paddingVertical: 10,
       paddingHorizontal: 18,
-      alignSelf: 'center',
+      alignSelf: "center",
       marginBottom: 18,
     },
     inviteButtonText: {
-      color: '#fff',
-      fontWeight: 'bold',
+      color: "#fff",
+      fontWeight: "bold",
       fontSize: 16,
       marginLeft: 8,
     },
     sectionTitle: {
       fontSize: 18,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: colors.text.primary,
       marginBottom: 8,
       marginTop: 8,
     },
     friendItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       backgroundColor: colors.background.card,
       borderRadius: 10,
       padding: 12,
       marginBottom: 10,
-      shadowColor: '#7F9497',
+      shadowColor: "#7F9497",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.08,
       shadowRadius: 4,
@@ -85,32 +109,32 @@ function makeStyles(colors:any) {
     },
     modalOverlay: {
       flex: 1,
-      backgroundColor: 'rgba(0,0,0,0.3)',
-      justifyContent: 'center',
-      alignItems: 'center',
+      backgroundColor: "rgba(0,0,0,0.3)",
+      justifyContent: "center",
+      alignItems: "center",
     },
     modalContent: {
-      backgroundColor: '#fff',
+      backgroundColor: colors.background.card,
       borderRadius: 16,
       padding: 24,
-      width: '85%',
-      shadowColor: '#7F9497',
+      width: "85%",
+      shadowColor: "#7F9497",
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.12,
       shadowRadius: 8,
       elevation: 6,
-      alignItems: 'stretch',
+      alignItems: "stretch",
     },
     modalTitle: {
       fontSize: 20,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       color: colors.primary,
       marginBottom: 18,
-      textAlign: 'center',
+      textAlign: "center",
     },
     modalOption: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       paddingVertical: 12,
       paddingHorizontal: 8,
       borderRadius: 8,
@@ -120,7 +144,7 @@ function makeStyles(colors:any) {
     modalOptionText: {
       fontSize: 16,
       color: colors.text.primary,
-      fontWeight: '500',
+      fontWeight: "500",
     },
     divider: {
       height: 1,
@@ -134,8 +158,8 @@ function makeStyles(colors:any) {
       marginLeft: 2,
     },
     emailRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignItems: "center",
       marginBottom: 12,
     },
     emailInput: {
@@ -152,17 +176,17 @@ function makeStyles(colors:any) {
       backgroundColor: colors.primary,
       borderRadius: 8,
       padding: 10,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     closeButton: {
       marginTop: 8,
-      alignSelf: 'center',
+      alignSelf: "center",
     },
     closeButtonText: {
       color: colors.danger,
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "bold",
     },
   });
 }
@@ -171,48 +195,70 @@ const DiscoverFriends = () => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const [modalVisible, setModalVisible] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [sending, setSending] = useState(false);
 
   const handleInviteByEmail = async () => {
-    if (!email || !email.includes('@')) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address.');
+    if (!email || !email.includes("@")) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
       return;
     }
     setSending(true);
-    const subject = encodeURIComponent('Join me on FitTrack!');
-    const body = encodeURIComponent('Hey! I am using FitTrack to track my fitness journey. Join me and let\'s get fit together!');
+    const subject = encodeURIComponent("Join me on FitTrack!");
+    const body = encodeURIComponent(
+      "Hey! I am using FitTrack to track my fitness journey. Join me and let's get fit together!"
+    );
     const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
     await Linking.openURL(mailto);
     setSending(false);
     setModalVisible(false);
-    setEmail('');
+    setEmail("");
   };
 
   const handleInviteFromContacts = async () => {
     const { status } = await Contacts.requestPermissionsAsync();
-    if (status !== 'granted') {
-      Alert.alert('Permission needed', 'Please grant permission to access your contacts.');
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission needed",
+        "Please grant permission to access your contacts."
+      );
       return;
     }
-    const { data } = await Contacts.getContactsAsync({ fields: [Contacts.Fields.Emails] });
+    const { data } = await Contacts.getContactsAsync({
+      fields: [Contacts.Fields.Emails],
+    });
     if (data.length === 0) {
-      Alert.alert('No contacts found', 'You have no contacts with email addresses.');
+      Alert.alert(
+        "No contacts found",
+        "You have no contacts with email addresses."
+      );
       return;
     }
     // Pick the first contact with an email for demo purposes
-    const contact = data.find((c: Contacts.Contact) => c.emails && c.emails.length > 0);
+    const contact = data.find(
+      (c: Contacts.Contact) => c.emails && c.emails.length > 0
+    );
     if (!contact) {
-      Alert.alert('No contacts with email', 'None of your contacts have email addresses.');
+      Alert.alert(
+        "No contacts with email",
+        "None of your contacts have email addresses."
+      );
       return;
     }
     const contactEmail = contact.emails && contact.emails[0]?.email;
     if (!contactEmail) {
-      Alert.alert('No email found', 'Selected contact does not have an email address.');
+      Alert.alert(
+        "No email found",
+        "Selected contact does not have an email address."
+      );
       return;
     }
-    const subject = encodeURIComponent('Join me on FitTrack!');
-    const body = encodeURIComponent(`Hey ${contact.name || ''}! I am using FitTrack to track my fitness journey. Join me and let\'s get fit together!`);
+    const subject = encodeURIComponent("Join me on FitTrack!");
+    const body = encodeURIComponent(
+      `Hey ${
+        contact.name || ""
+      }! I am using FitTrack to track my fitness journey. Join me and let\'s get fit together!`
+    );
     const mailto = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
     await Linking.openURL(mailto);
     setModalVisible(false);
@@ -221,15 +267,20 @@ const DiscoverFriends = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Friends</Text>
-      <Text style={styles.subheader}>Find and connect with friends to share your fitness journey.</Text>
-      <TouchableOpacity style={styles.inviteButton} onPress={() => setModalVisible(true)}>
+      <Text style={styles.subheader}>
+        Find and connect with friends to share your fitness journey.
+      </Text>
+      <TouchableOpacity
+        style={styles.inviteButton}
+        onPress={() => setModalVisible(true)}
+      >
         <Ionicons name="person-add" size={20} color="#fff" />
         <Text style={styles.inviteButtonText}>Invite Friends</Text>
       </TouchableOpacity>
       <Text style={styles.sectionTitle}>Suggested Friends</Text>
       <FlatList
         data={suggestedFriends}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.friendItem}>
             <Image source={{ uri: item.avatar }} style={styles.avatar} />
@@ -251,8 +302,16 @@ const DiscoverFriends = () => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Invite a Friend</Text>
-            <TouchableOpacity style={styles.modalOption} onPress={handleInviteFromContacts}>
-              <Ionicons name="people" size={22} color={colors.primary} style={{ marginRight: 10 }} />
+            <TouchableOpacity
+              style={styles.modalOption}
+              onPress={handleInviteFromContacts}
+            >
+              <Ionicons
+                name="people"
+                size={22}
+                color={colors.primary}
+                style={{ marginRight: 10 }}
+              />
               <Text style={styles.modalOptionText}>Invite from Contacts</Text>
             </TouchableOpacity>
             <View style={styles.divider} />
@@ -266,11 +325,18 @@ const DiscoverFriends = () => {
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
-              <TouchableOpacity style={styles.sendButton} onPress={handleInviteByEmail} disabled={sending}>
+              <TouchableOpacity
+                style={styles.sendButton}
+                onPress={handleInviteByEmail}
+                disabled={sending}
+              >
                 <Ionicons name="send" size={20} color="#fff" />
               </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setModalVisible(false)}
+            >
               <Text style={styles.closeButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -280,4 +346,4 @@ const DiscoverFriends = () => {
   );
 };
 
-export default DiscoverFriends; 
+export default DiscoverFriends;
