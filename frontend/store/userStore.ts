@@ -3,59 +3,8 @@ import { User } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-
-// interface UserState {
-//   user: User | null;
-//   isAuthenticated: boolean;
-//   setUser: (user: User) => void;
-//   updateUser: (userData: Partial<User>) => void;
-//   login: (email: string, password: string) => Promise<boolean>;
-//   logout: () => void;
-//   signup: (userData: Partial<User> & { password: string }) => Promise<boolean>;
-// }
-
-// export const useUserStore = create<UserState>()(
-//   persist(
-//     (set) => ({
-//       user: null,
-//       isAuthenticated: false,
-//       setUser: (user) => set({ user, isAuthenticated: true }),
-//       updateUser: (userData) =>
-//         set((state) => ({
-//           user: state.user ? { ...state.user, ...userData } : null,
-//         })),
-//       login: async (email, password) => {
-//         // Mock login - in a real app, this would call your backend API
-//         if (email && password) {
-//           const typedMockUser = mockUser as User;
-//           set({ user: typedMockUser, isAuthenticated: true });
-//           return true;
-//         }
-//         return false;
-//       },
-//       logout: () => set({ user: null, isAuthenticated: false }),
-//       signup: async (userData) => {
-//         // Mock signup - in a real app, this would call your backend API
-//         if (userData.email && userData.password) {
-//           const newUser = {
-//             ...mockUser,
-//             ...userData,
-//             id: Math.random().toString(),
-//             goal: (userData.goal as "lose" | "maintain" | "gain") || "maintain",
-//           };
-//           const typedNewUser = newUser as User;
-//           set({ user: typedNewUser, isAuthenticated: true });
-//           return true;
-//         }
-//         return false;
-//       },
-//     }),
-//     {
-//       name: "user-storage",
-//       storage: createJSONStorage(() => AsyncStorage),
-//     }
-//   )
-// );
+import { apiClient } from "@/services/apiClient";
+import { UserProfile, UserUpdateRequest } from "@/services/api";
 
 interface UserState {
   user: User | null;
@@ -65,6 +14,7 @@ interface UserState {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   signup: (userData: User & { password: string }) => Promise<boolean>;
+  fetchCurrentUser: () => Promise<void>;
 }
 
 export const useUserStore = create<UserState>()(
@@ -72,76 +22,167 @@ export const useUserStore = create<UserState>()(
     (set, get) => ({
       user: null,
       isAuthenticated: false,
+      
       setUser: (user) => {
         console.log("setUser called with:", user);
         set({ user, isAuthenticated: true });
       },
 
-      updateUser: (userData) => {
+      updateUser: async (userData) => {
         console.log("updateUser called with:", userData);
-        set((state) => {
-          const updatedUser = state.user ? { ...state.user, ...userData } : null;
-          console.log("Updated user:", updatedUser);
-          return { user: updatedUser };
-        });
+        try {
+          // Update user on backend
+          const updatedProfile = await apiClient.updateUser(userData);
+          console.log("Backend update response:", updatedProfile);
+          
+          // Update local state
+          set((state) => {
+            const updatedUser = state.user ? { ...state.user, ...userData } : null;
+            console.log("Updated user:", updatedUser);
+            return { user: updatedUser };
+          });
+        } catch (error) {
+          console.error("Error updating user:", error);
+          throw error;
+        }
       },
 
       login: async (email, password) => {
-        // In a real app, you would verify credentials with your backend
-        // For now, we'll just check if credentials exist and match
-        if (email && password) {
-          // Get any existing user data from storage
-          const storedData = await AsyncStorage.getItem("user-storage");
-          const parsedData = storedData ? JSON.parse(storedData) : null;
-          const storedUser = parsedData?.state?.user;
-
-          if (
-            storedUser?.email === email &&
-            storedUser?.password === password
-          ) {
-            set({ user: storedUser, isAuthenticated: true });
-            return true;
-          }
+        try {
+          console.log("Attempting login with:", { email, password });
+          
+          // Call backend API
+          const response = await apiClient.login(email, password);
+          console.log("Login response:", response);
+          
+          // Fetch user profile
+          const userProfile = await apiClient.getCurrentUser() as UserProfile;
+          console.log("User profile:", userProfile);
+          
+          // Convert UserProfile to User type
+          const user: User = {
+            id: userProfile.id.toString(),
+            name: userProfile.name,
+            email: userProfile.email,
+            password: password, // Keep password for local validation
+            gender: userProfile.gender || "male",
+            age: userProfile.age || 0,
+            height: userProfile.height || 0,
+            weight: userProfile.weight || 0,
+            goalWeight: userProfile.goalWeight || 0,
+            activityLevel: userProfile.activityLevel || "",
+            goal: (userProfile.goal as "lose" | "maintain" | "gain") || "maintain",
+            dailyCalorieGoal: userProfile.dailyCalorieGoal || 0,
+            macroGoals: userProfile.macroGoals || { protein: 0, carbs: 0, fat: 0 },
+            weeklyWorkouts: 0,
+            dailySteps: 0,
+            weightGoal: "",
+          };
+          
+          set({ user, isAuthenticated: true });
+          console.log("Login successful, user set:", user);
+          return true;
+        } catch (error) {
+          console.error("Login failed:", error);
+          return false;
         }
-        return false;
       },
 
-      logout: () => set({ user: null, isAuthenticated: false }),
+      logout: async () => {
+        try {
+          await apiClient.logout();
+        } catch (error) {
+          console.error("Error during logout:", error);
+        }
+        set({ user: null, isAuthenticated: false });
+      },
 
       signup: async (userData) => {
-        console.log("Signup called with userData:", userData);
-        if (userData.email && userData.password) {
-          // Create new user from the actual provided data
-          const newUser: User = {
-            id: Math.random().toString(36).substring(7),
-            name: userData.name || "",
-            email: userData.email || "",
-            weight: userData.weight || 0,
-            height: userData.height || 0,
-            goalWeight: userData.goalWeight || 0,
-            goal: userData.goal || "maintain",
+        try {
+          console.log("Attempting signup with:", userData);
+          
+          // Prepare signup data for backend
+          const signupData = {
+            name: userData.name,
+            email: userData.email,
+            password: userData.password,
+            height: userData.height,
+            weight: userData.weight,
+            dateOfBirth: (userData as any).dateOfBirth,
+            sex: userData.gender,
+            country: (userData as any).country,
+            activityLevel: userData.activityLevel,
+            goalWeight: userData.goalWeight,
+            weeklyGoal: userData.goal,
+            goals: [userData.goal],
+            goalReasons: [],
+            healthBenefits: [],
+            referralSource: "",
+          };
+          
+          // Call backend API
+          const response = await apiClient.signup(signupData);
+          console.log("Signup response:", response);
+          
+          // Convert to User type and set
+          const user: User = {
+            id: Math.random().toString(), // Backend will assign real ID
+            name: userData.name,
+            email: userData.email,
+            password: userData.password,
+            gender: userData.gender || "male",
             age: userData.age || 0,
-            gender: userData.gender || "",
+            height: userData.height || 0,
+            weight: userData.weight || 0,
+            goalWeight: userData.goalWeight || 0,
             activityLevel: userData.activityLevel || "",
+            goal: userData.goal || "maintain",
             dailyCalorieGoal: userData.dailyCalorieGoal || 0,
             macroGoals: userData.macroGoals || { protein: 0, carbs: 0, fat: 0 },
-            password: userData.password,
-            weeklyWorkouts: userData.weeklyWorkouts || 0,
-            dailySteps: userData.dailySteps || 0,
-            weightGoal: userData.weightGoal || "",
+            weeklyWorkouts: 0,
+            dailySteps: 0,
+            weightGoal: "",
           };
-
-          console.log("Created newUser:", newUser);
-          set({ user: newUser, isAuthenticated: true });
-          console.log("User state set successfully");
           
-          // Verify the state was actually set
-          const currentState = get();
-          console.log("Current state after set:", currentState);
+          set({ user, isAuthenticated: true });
+          console.log("Signup successful, user set:", user);
           return true;
+        } catch (error) {
+          console.error("Signup failed:", error);
+          return false;
         }
-        console.log("Signup failed - missing email or password");
-        return false;
+      },
+
+      fetchCurrentUser: async () => {
+        try {
+          const userProfile = await apiClient.getCurrentUser() as UserProfile;
+          console.log("Fetched user profile:", userProfile);
+          
+          // Convert UserProfile to User type
+          const user: User = {
+            id: userProfile.id.toString(),
+            name: userProfile.name,
+            email: userProfile.email,
+            password: "", // Don't store password from API
+            gender: userProfile.gender || "male",
+            age: userProfile.age || 0,
+            height: userProfile.height || 0,
+            weight: userProfile.weight || 0,
+            goalWeight: userProfile.goalWeight || 0,
+            activityLevel: userProfile.activityLevel || "",
+            goal: (userProfile.goal as "lose" | "maintain" | "gain") || "maintain",
+            dailyCalorieGoal: userProfile.dailyCalorieGoal || 0,
+            macroGoals: userProfile.macroGoals || { protein: 0, carbs: 0, fat: 0 },
+            weeklyWorkouts: 0,
+            dailySteps: 0,
+            weightGoal: "",
+          };
+          
+          set({ user, isAuthenticated: true });
+        } catch (error) {
+          console.error("Error fetching current user:", error);
+          set({ user: null, isAuthenticated: false });
+        }
       },
     }),
     {

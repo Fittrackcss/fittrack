@@ -107,16 +107,14 @@ const InfoCollection = () => {
             onPress={() => handleSexSelection("female")}
           >
             <View style={[styles.radio, { borderColor: colors.primary }]}>
-              {selectedSex === "female" && (
-                <View style={[styles.radioSelected, { backgroundColor: colors.primary }]} />
-              )}
+              {selectedSex === "female" && <View style={[styles.radioSelected, { backgroundColor: colors.primary }]} />}
             </View>
             <Text style={[styles.optionText, { color: colors.text.primary }]}>Female</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.hintContainer}>
-          <View style={[styles.hintIcon, { backgroundColor: colors.text.muted }]}>
+          <View style={[styles.hintIcon, { backgroundColor: colors.primary }]}>
             <Text style={[styles.hintIconText, { color: colors.background.main }]}>i</Text>
           </View>
           <Text style={[styles.hint, { color: colors.text.muted }]}>Which one should I choose?</Text>
@@ -149,7 +147,7 @@ const InfoCollection = () => {
         <TouchableOpacity
           style={[
             styles.countryInput,
-            { backgroundColor: colors.background.main, color: colors.text.primary, borderColor: colors.border, borderWidth: 2 }
+            { backgroundColor: colors.background.main, borderColor: colors.border, borderWidth: 2 }
           ]}
           onPress={() => setShowCountryModal(true)}
         >

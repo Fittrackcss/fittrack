@@ -18,7 +18,7 @@ const FinishScreens = () => {
   const renderItem = ({ item }: { item: (typeof onboardingSteps)[0] }) => {
     return (
       <View style={[styles.slide, { width }]}>
-        <Text style={[styles.title, { color: colors.text.primary }]}>{item.header}</Text>
+        <Text style={[styles.title, { color: colors.text.secondary }]}>{item.header}</Text>
         {item.customComponent ? (
           <item.customComponent 
             currentIndex={currentIndex}

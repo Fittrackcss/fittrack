@@ -64,4 +64,5 @@ export type User = {
     fat: number;
   };
   password?: string; // Add password as optional
+  isEmailVerified?: boolean; // Add email verification status
 };

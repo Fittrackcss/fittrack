@@ -2,32 +2,20 @@ import React from "react";
 import { Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View, FlatList } from "react-native";
 import { useTheme } from "@/constants/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNotificationStore } from "@/store/notificationStore";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
-
-const dummyNotifications = [
-  { id: "1", title: "Welcome to FitTrack!", message: "Start tracking your fitness journey today." },
-  { id: "2", title: "Goal Reminder", message: "Don't forget to log your meals and workouts." },
-  { id: "3", title: "Progress Update", message: "You hit your weekly step goal! 🎉" },
-];
-
-interface Notification {
-  id: string;
-  title: string;
-  message: string;
-}
 
 interface NotificationDrawerProps {
   visible: boolean;
   onClose: () => void;
-  notifications?: Notification[];
 }
 
-export { dummyNotifications };
-export default function NotificationDrawer({ visible, onClose, notifications = dummyNotifications }: NotificationDrawerProps) {
+export default function NotificationDrawer({ visible, onClose }: NotificationDrawerProps) {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const translateX = React.useRef(new Animated.Value(-SCREEN_WIDTH)).current;
+  const { notifications } = useNotificationStore();
 
   React.useEffect(() => {
     if (visible) {
@@ -67,6 +55,11 @@ export default function NotificationDrawer({ visible, onClose, notifications = d
             </View>
           )}
           contentContainerStyle={styles.listContent}
+          ListEmptyComponent={
+            <Text style={[styles.emptyText, { color: colors.text.secondary }]}>
+              No notifications at the moment 🎉
+            </Text>
+          }
         />
       </Animated.View>
     </>
@@ -138,6 +131,11 @@ function makeStyles(colors: any) {
     notificationMessage: {
       fontSize: 14,
       color: colors.text.secondary,
+    },
+    emptyText: {
+      textAlign: "center",
+      paddingVertical: 20,
+      fontSize: 16,
     },
   });
 } 

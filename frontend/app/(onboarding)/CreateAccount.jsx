@@ -25,7 +25,7 @@ function makeStyles(colors) {
     title: {
       fontSize: 21,
       fontWeight: "bold",
-      color: colors.text.primary,
+      color: colors.text.secondary,
       marginBottom: 30,
     },
     inputContainer: {

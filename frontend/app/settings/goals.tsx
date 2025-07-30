@@ -8,11 +8,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "@/constants/ThemeContext";
+import CustomModal from "@/components/ui/CustomModal";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -184,6 +184,11 @@ export default function GoalsScreen() {
   );
   const [weightGoal, setWeightGoal] = useState(user?.weightGoal || "lose");
 
+  // Modal states
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+
   const weightGoals = [
     {
       key: "lose",
@@ -207,7 +212,8 @@ export default function GoalsScreen() {
 
   const handleSaveGoals = () => {
     if (!dailyCalorieGoal || !weeklyWorkouts || !dailySteps) {
-      Alert.alert("Error", "Please fill in all required fields");
+      setModalMessage("Please fill in all required fields");
+      setShowErrorModal(true);
       return;
     }
 
@@ -219,7 +225,8 @@ export default function GoalsScreen() {
       weightGoal,
     });
 
-    Alert.alert("Success", "Goals updated successfully!");
+    setModalMessage("Goals updated successfully!");
+    setShowSuccessModal(true);
   };
 
   return (
@@ -414,6 +421,21 @@ export default function GoalsScreen() {
           <Text style={styles.saveButtonText}>Save Goals</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <CustomModal
+        visible={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        title="Error"
+        message={modalMessage}
+        type="error"
+      />
+      <CustomModal
+        visible={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title="Success"
+        message={modalMessage}
+        type="success"
+      />
     </View>
   );
 }

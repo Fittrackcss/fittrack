@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Keyboard,
 } from "react-native";
 import { useUserStore } from "../../store/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,6 +17,7 @@ import { useTheme } from "@/constants/ThemeContext";
 import { useOnboardingStore } from "../../store/useOnboardingStore";
 import { onboardingSteps } from "../../constants/onboardingScreens";
 import CustomModal from "../../components/ui/CustomModal";
+import { User } from "@/types";
 
 const { width } = Dimensions.get("window");
 
@@ -34,7 +36,7 @@ function makeStyles(colors: any) {
     },
     title: {
       fontSize: 25,
-      color: colors.text.primary,
+      color: colors.text.secondary,
       fontWeight: "600",
     },
     slide: {
@@ -118,7 +120,7 @@ function makeStyles(colors: any) {
     paginationWrapper: {
       flexDirection: "row",
       position: "absolute",
-      top: "11%",
+      top: "8%",
       alignSelf: "center",
       justifyContent: "center",
       alignItems: "center",
@@ -132,7 +134,6 @@ const WelcomeScreen = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [showValidationModal, setShowValidationModal] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
-  const [isNavigating, setIsNavigating] = useState(false);
   const swiperRef = useRef<SwiperFlatList>(null);
   const router = useRouter();
 
@@ -164,12 +165,22 @@ const WelcomeScreen = () => {
       setShowValidationModal(true);
       return false;
     }
+    
+    // Email validation - check if email contains "@"
+    if (currentStep?.field === "email" && formData.email) {
+      if (!formData.email.includes("@")) {
+        setValidationMessage("Please enter a valid email address with @ symbol");
+        setShowValidationModal(true);
+        return false;
+      }
+    }
+    
     return true;
   }, [currentStep, formData]);
 
   // Navigation handlers
   const goToNext = useCallback(async () => {
-    if (!validateCurrentStep() || isNavigating) return;
+    if (!validateCurrentStep()) return;
 
     const nextIndex = currentIndex + 1;
 
@@ -184,7 +195,6 @@ const WelcomeScreen = () => {
     const { signup, user: currentUser } = useUserStore.getState();
 
     if (currentIndex === onboardingSteps.length - 1) {
-      setIsNavigating(true);
       
       // Extract goals and other selections
       const goals = selections["goals-screen"] || [];
@@ -224,21 +234,16 @@ const WelcomeScreen = () => {
       // Create user from onboarding data
       const signupResult = await signup(userObj);
       console.log("Signup result:", signupResult);
-      let afterSignupUser = useUserStore.getState().user;
-      let waitCount = 0;
-      while (!afterSignupUser && waitCount < 20) { // wait up to 2 seconds
-        await new Promise((res) => setTimeout(res, 100));
-        afterSignupUser = useUserStore.getState().user;
-        waitCount++;
+      
+      if (signupResult) {
+        // Navigate directly to main app
+        router.replace("/(tabs)");
+      } else {
+        // Handle signup failure
+        setValidationMessage("Signup failed. Please try again.");
+        setShowValidationModal(true);
       }
-      console.log("User after signup (waited):", afterSignupUser);
       
-      // Add a small delay to ensure smooth transition
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      // Clear the entire navigation stack and go to main app
-      // This ensures no back navigation to onboarding screens
-      router.replace("/(tabs)");
       return;
     }
 
@@ -249,7 +254,7 @@ const WelcomeScreen = () => {
     } else {
       router.replace("/(auth)/login");
     }
-  }, [currentIndex, validateCurrentStep, isNavigating]);
+  }, [currentIndex, validateCurrentStep]);
 
   const goToPrev = useCallback(() => {
     if (currentIndex > 0) {
@@ -271,80 +276,90 @@ const WelcomeScreen = () => {
     [currentIndex]
   );
 
+  // Dismiss keyboard when tapping outside
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{currentStep?.title}</Text>
-      </View>
+    <SafeAreaView style={styles.container} >
+      <TouchableOpacity 
+        style={{ flex: 1 }} 
+        activeOpacity={1} 
+        onPress={dismissKeyboard}
+      >
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{currentStep?.title}</Text>
+        </View>
 
-      <SwiperFlatList
-        ref={swiperRef}
-        index={currentIndex}
-        data={onboardingSteps}
-        horizontal
-        showPagination={false}
-        scrollEnabled={false}
-        onChangeIndex={handleIndexChange}
-        renderItem={({ item }) => (
-          <View style={[styles.slide, item.customComponent && { padding: 0 }]}>
-            {item.header && (
-              <View style={[item.customComponent && { padding: 20 }]}>
-                <Text style={styles.header}>{item.header}</Text>
-                <Text style={styles.sub}>{item.sub}</Text>
-              </View>
-            )}
+        <SwiperFlatList
+          ref={swiperRef}
+          index={currentIndex}
+          data={onboardingSteps}
+          horizontal
+          showPagination={false}
+          scrollEnabled={false}
+          onChangeIndex={handleIndexChange}
+          renderItem={({ item }) => (
+            <View style={[styles.slide, item.customComponent && { padding: 0 }]}>
+              {item.header && (
+                <View style={[item.customComponent && { padding: 20 }]}>
+                  <Text style={styles.header}>{item.header}</Text>
+                  <Text style={styles.sub}>{item.sub}</Text>
+                </View>
+              )}
 
-            {item.customComponent ? (
-              <item.customComponent />
-            ) : item.input ? (
-              <View style={{ width: "100%", marginTop: 20 }}>
-                <Text style={styles.inputLabel}>{item.label}</Text>
-                <TextInput
-                  value={formData[item.field] || ""}
-                  onChangeText={(text) => updateFormData({ [item.field]: text })}
-                  onFocus={() => setIsFocused(true)}
-                  onBlur={() => setIsFocused(false)}
-                  style={[styles.input, isFocused && styles.inputFocused]}
-                  selectionColor={colors.primary}
-                  placeholder={item.placeholder}
-                  placeholderTextColor="#999"
-                  returnKeyType="done"
-                />
-              </View>
-            ) : null}
+              {item.customComponent ? (
+                <item.customComponent />
+              ) : item.input ? (
+                <View style={{ width: "100%", marginTop: 20 }}>
+                  <Text style={styles.inputLabel}>{item.label}</Text>
+                  <TextInput
+                    value={formData[item.field] || ""}
+                    onChangeText={(text) => updateFormData({ [item.field]: text })}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    style={[styles.input, isFocused && styles.inputFocused]}
+                    selectionColor={colors.primary}
+                    placeholder={item.placeholder}
+                    placeholderTextColor="#999"
+                    returnKeyType="done"
+                    blurOnSubmit={true}
+                  />
+                </View>
+              ) : null}
+            </View>
+          )}
+        />
+
+        {currentStep && !currentStep.componentExists && (
+          <View style={styles.paginationWrapper}>
+            {onboardingSteps.map((_, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.paginationItem,
+                  i === currentIndex && styles.paginationItemActive,
+                ]}
+              />
+            ))}
           </View>
         )}
-      />
 
-      {currentStep && !currentStep.componentExists && (
-        <View style={styles.paginationWrapper}>
-          {onboardingSteps.map((_, i) => (
-            <View
-              key={i}
-              style={[
-                styles.paginationItem,
-                i === currentIndex && styles.paginationItemActive,
-              ]}
-            />
-          ))}
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={goToPrev} style={styles.circleButton}>
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={goToNext} style={styles.nextButton}>
+            <Text style={styles.nextText}>
+              {currentIndex === onboardingSteps.length - 1
+                ? "Get Started"
+                : "Next"}
+            </Text>
+          </TouchableOpacity>
         </View>
-      )}
-
-      <View style={styles.footer}>
-        <TouchableOpacity onPress={goToPrev} style={styles.circleButton}>
-          <Ionicons name="arrow-back" size={24} color={colors.primary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={goToNext} style={styles.nextButton} disabled={isNavigating}>
-          <Text style={styles.nextText}>
-            {isNavigating 
-              ? "Setting up..." 
-              : currentIndex === onboardingSteps.length - 1
-              ? "Get Started"
-              : "Next"}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
 
       <CustomModal
         visible={showValidationModal}

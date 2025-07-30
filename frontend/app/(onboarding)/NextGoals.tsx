@@ -77,7 +77,7 @@ const NextGoals = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background.main }}>
       <View style={styles.header}>
-        <Text style={[styles.headerText, { color: colors.text.primary }]}>Goals</Text>
+        <Text style={[styles.headerText, { color: colors.text.secondary }]}>Goals</Text>
         <Text style={[styles.headerDesc, { color: colors.text.primary }]}>
           In the past, what have been your barriers to maintaining weight?
         </Text>
@@ -110,7 +110,7 @@ export default NextGoals;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1.2,
+    flex: 1,
     padding: 20,
   },
   item: {

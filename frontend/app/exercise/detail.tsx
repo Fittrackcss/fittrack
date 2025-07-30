@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -129,6 +129,7 @@ export default function ExerciseDetailPage() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
+      <ScrollView>
       <View
         style={{
           height: 60,
@@ -166,6 +167,7 @@ export default function ExerciseDetailPage() {
         </View>
         <Button title="Go Back" onPress={() => router.back()} style={styles.goBackBtn} />
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

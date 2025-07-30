@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useMemo, useCallback } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { View, Text, Image, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { Button } from "@/components/ui/Button";
 import { useTheme } from "@/constants/ThemeContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFoodStore } from "@/store/foodStore";
-import { useNutritionStore } from "@/store/nutritionStore";
 import CustomModal from "@/components/ui/CustomModal";
 
 const API_KEY = "8d20b8334a854f338d0f7687407e46c0";
@@ -108,6 +107,8 @@ function makeStyles(colors: any) {
 export default function FoodRecipePage() {
   const { colors } = useTheme();
   const { addFood } = useFoodStore();
+  const router = useRouter();
+  const { food } = useLocalSearchParams();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 

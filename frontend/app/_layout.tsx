@@ -9,7 +9,7 @@ export default function RootLayout() {
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hideAsync();
-    }, 5000);
+    }, 3000);
   }, []);
 
   return (

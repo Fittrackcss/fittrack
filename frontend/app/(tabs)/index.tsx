@@ -25,7 +25,7 @@ import DiscoverCards from "@/components/Discover";
 import { useProgressStore } from "@/store/progressStore";
 import { WeightEntry } from "@/types";
 import NotificationDrawer from "@/components/ui/NotificationDrawer";
-import { dummyNotifications } from "@/components/ui/NotificationDrawer";
+import { useNotificationStore } from "../../store/notificationStore";
 import CustomModal from "@/components/ui/CustomModal";
 
 function makeStyles(colors: any) {
@@ -246,7 +246,7 @@ function makeStyles(colors: any) {
     headerBar: {
       flexDirection: "row",
       alignItems: "center",
-      paddingTop: 45,
+      paddingTop: 40,
       paddingBottom: 4,
       paddingHorizontal: 20,
       backgroundColor: colors.background.card,
@@ -304,6 +304,7 @@ export default function DashboardScreen() {
   const { colors, darkMode } = useTheme();
   const router = useRouter();
   const { user } = useUserStore();
+  const { notifications } = useNotificationStore();
   const { getDailyNutritionSummary } = useNutritionStore();
   const { getDailyExerciseSummary } = useExerciseStore();
   const { weightEntries, getWeightEntriesByDateRange, getLatestWeight } =
@@ -530,10 +531,10 @@ export default function DashboardScreen() {
                 color={colors.primary}
               />
               {/* Notification count badge */}
-              {!notificationsViewed && dummyNotifications.length > 0 ? (
+              {!notificationsViewed && notifications.length > 0 ? (
                 <View style={styles.notificationBadge}>
                   <Text style={styles.notificationBadgeText}>
-                    {dummyNotifications.length}
+                    {notifications.length}
                   </Text>
                 </View>
               ) : null}

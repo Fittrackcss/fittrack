@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTheme } from "@/constants/ThemeContext";
-import { dummyNotifications } from "@/components/ui/NotificationDrawer";
+import { useNotificationStore } from "@/store/notificationStore";
 
 function makeStyles(colors: any) {
   return StyleSheet.create({
@@ -68,10 +68,10 @@ export default function NotificationsSettingsScreen() {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
   const router = useRouter();
-  const [notifications, setNotifications] = useState([...dummyNotifications]);
+  const { notifications, removeNotification } = useNotificationStore();
 
   const handleRemove = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id));
+    removeNotification(id);
   };
 
   return (

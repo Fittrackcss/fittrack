@@ -74,25 +74,6 @@ const SignUp = () => {
             Continue
           </Text>
         </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: 20,
-            fontWeight: "800",
-            color: colors.text.primary,
-          }}
-        >
-          OR
-        </Text>
-
-        <TouchableOpacity style={styles.googleButton}>
-          <Ionicons
-            name="logo-google"
-            size={20}
-            color={colors.accent}
-            style={{ marginRight: 10 }}
-          />
-          <Text style={styles.googleButtonText}>Continue with Google</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
